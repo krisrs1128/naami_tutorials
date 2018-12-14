@@ -20,7 +20,7 @@ I. Introduction
          examples, which you can refer to whenever you read a new abstract paper
       3. Understand underlying math and code for a few example algorithms, so
          you can use them in your own applications
-  C. HThe value of deep learning is that it attempts to automatically learn these sorts of
+  C. The value of deep learning is that it attempts to automatically learn these sorts of
 features from the overall class labels.
 ow we will learn
       1. Draw pictures. Fancy math is usually just a way of capturing some
@@ -450,7 +450,7 @@ prior. The `iarange` wrapper makes sure operations can be done in parallel.
 
 Suppose we have observed 30 draws from the coin, and we observe 20 ones and 10
 zeros. We know in this case that the posterior is computable by integration (in
-this case it's ${mtex`\Bet\left(30, 2009\right)`}), but as a prelude to the more
+this case it's ${mtex`\Bet\left(30, 20\right)`}), but as a prelude to the more
 complex situations to come, where the posterior isn't available in closed form,
 what can we do?
 
@@ -488,8 +488,76 @@ def guide(data):
 We'll skip over the details of how the search is done.
 
 
-But at the end of the
-day, the parameter finds
+But at the end of the day, the package identifies a ${mtex`\Beta\left(30.093, 15.415\right)`}
+as the best approximation to the true posterior. This is a bit off from the
+truth, even if all you cared about was the posterior mean (${mtex`\frac{20 + 10}{30 +
+20}`}). But perhaps this is the price to pay for getting an answer immediately,
+without doing any calculations by hand.
+
+The complete code for this experiment is given in [this
+script](https://github.com/krisrs1128/naami_tutorials/blob/master/notebooks/betabinomial.py).
+
+## Variational Inference
+
+In this and the next section we'll give some of the details behind the inference
+procedure that's running behind the scene in \`pyro\`. The set of techniques,
+which fall under the umbrella term Variational Inference, are of interest both
+in their own right and as a precursor for understanding variational autoencoders.
+
+The basic idea of variational inference is that posterior inference can be framed
+as an optimization problem. That is, if we had a good measure of the distance
+between probability densities, then we could try to search over a class of
+densities to find one that seems closest to the true posterior. This is an
+interesting idea in the case that the true posterior can't be written exactly,
+but distances from candidates to the posterior can be easily calculated.
+
+This is maybe easiest to understand with an example. Consider a Gaussian
+mixture model, where the data ${mtex`x_i`} are assumed to have been drawn from
+the following process,
+
+mtex_block`
+\begin{aligned}
+z_i &\sim \Cat\left(z_i \vert p\right) \\
+x_i \vert z_i = k &\sim \Gsn\left(x_i \vert \mu_{k}, \Sigma_k\right)
+\end{aligned}`
+
+where ${mtex`p`} is some probability over ${mtex`K`} categories.
+
+That is, we have ${mtex`K`} underlying Gaussians, each with a different mean
+${mtex`\mu_k`} and covariance ${mtex`\Sigma_k`}. When we sample a new datapoint
+${mtex`x_i`}, we first pick some index between 1 and ${mtex`K`} at random,
+according to the probabilities ${mtex`p`}, and then we draw from the Gaussian
+distribution given by the index that we've just picked from.
+
+Here's an example of the kind of histogram you would observe for a
+one-dimensional version, where ${mtex`K = 3`}. There is a narrow gaussian near
+the center, and two wide ones on either end.
+
+If we knew which of the underlying gaussians any new data point belonged to
+(that is, if we knew it's ${mtex`z_i`}), we would be able to write down its
+exact (gaussian) density. The "complete" loglikelihood when we observe both
+${mtex`x_i`} and ${mtex`z_i`} for each sample has the following form,
+
+mtex_block`
+\begin{aligned}
+\log p\left(x, z\right) &= \log \left[]\prod_{i = 1}^{n} \prod_{k = 1}^{K} \left(p_{k}\Gsn\left(x_i \vert \mu_k, \Sigma_k\right)^{\indic{z_i = k}}\right)\right]
+&= \sum_{i = 1}^{n} \sum_{k = 1}^{K} \indic{z_i = k} \log p_{k} \log \Gsn\left(x_i \vert \mu_k, \Sigma_k\right)
+&= \sum_{i = 1}^{n} \sum_{k = 1}^{K} \indic{z_i = k} \log p_{k} \left[-\frac{D}{2}\log\left(2\pi) - \log \left|\Sigma_k\right| - \frac{1}{2} \left(x_i - \mu_k\right)^{T}\Sigma^{-1}_{k} \left(x_i - \mu_k)
+\end{aligned}
+`
+
+While this might look a little messy to those who aren't battled-scarred by
+statistics, it's actually pretty nice, because you can run all these operations
+in a computer and get probabilities for any configurations of the ${mtex`x_i`}
+and ${mtex`z_i`}'s that you are interested in.
+
+Unfortunately, we often don't have direct access to the underlying
+${mtex`z_i`}'s which generated the process.
+
+
+## Stochastic Variational Inference
+
+## Variational Autoencoders
 
 ## Miscellaneous References
 
