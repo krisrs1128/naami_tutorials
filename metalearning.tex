@@ -1,5 +1,6 @@
 \documentclass[10pt,mathserif]{beamer}
 
+\input{preamble.tex}
 \usepackage{graphicx,amsmath,amssymb}
 \usepackage{listings}
 \lstset{language=Python}
@@ -24,7 +25,12 @@
       {\insertframenumber}
     \end{beamercolorbox}
     \vskip 0.45cm
-  }
+  }\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/hard_a_fun}
+  \caption{\label{fig:hard_a_fun} }
+\end{figure}
+
 }
 \footlineon
 
@@ -76,6 +82,7 @@ Mila}
   \end{figure}
 \end{frame}
 
+
 \begin{frame}
   \frametitle{Transfer Learning}
   \begin{itemize}\itemsep=12pt
@@ -87,6 +94,15 @@ Mila}
   \begin{figure}
     \includegraphics[width=0.6\paperwidth]{figure/transfer_drawing}
   \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Connection to Real-World}
+  \begin{itemize}
+  \item Different users of an app
+  \item Different regions of satellite imagery
+  \item Different hospital databases
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -119,11 +135,296 @@ Mila}
 \end{frame}
 
 \begin{frame}
-  \begin{itemize}
+  \begin{itemize}\itemsep=12pt
   \item The same underlying features seem useful across a lot of tasks...
   \item Transfer learning is nice, but lots of hand-tuning
   \item Can we learn models that automatically adapt in scarce data settings?
   \end{itemize}
 \end{frame}
+
+\begin{frame}
+  \frametitle{Metalearning Setup}
+  \begin{itemize}\itemsep=12pt
+    \item Forget about solutions for now, how should we formulate the problem?
+    \item Create many small train / test datasets (calls these ``episodes'')
+    \item Same classes don't have to appear in each episode
+    \item Metalearner maps new datasets to new (hopefully adapted) algorithm
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Metalearning Setup}
+  \begin{itemize}\itemsep=12pt
+    \item Metalearner maps new datasets to new (hopefully adapted) algorithm
+    \item Usual training / testing is like
+      \begin{itemize}
+        \item $D_{train} = \left(x_i, y_i\right)_{i = 1}^{n}$
+        \item $D_{test} = \left(x_i, y_i\right)_{i = 1}^{n^\prime}$
+      \end{itemize}
+    \item New training / testing is like
+      \begin{itemize}
+      \item $D_{metatrain} = \left\{D_{train}^{n}, D_{test}^{n}\right\}_{n = 1}^{N}$
+      \item $D_{metatest} = \left\{D_{train}^{n}, D_{test}^{n}\right\}_{n = 1}^{N^\prime}$
+      \end{itemize}
+    \item You don't have to fine-tune to each training / testing episode!
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Metalearning Setup (picture)}
+  \begin{itemize}
+  \item Given a new user, domain, etc $\rightarrow$ return a new algorithm
+  \item Hope that you can share information across users / domains
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+   %% \includegraphics[width=0.8\paperwidth]{figure/metalearning_setup_boxes}
+    \caption{\label{fig:metalearning_setup_boxes}}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Metalearning Setup (picture)}
+\begin{itemize}
+\item Given a new user, domain, etc $\rightarrow$ return a new algorithm
+\item Hope that you can share information across users / domains
+\end{itemize}
+ \begin{figure}[ht]
+   \centering
+   %% \includegraphics[width=0.8\paperwidth]{figure/metalearning_setup_curves}
+   \caption{\label{fig:metalearning_setup_curves} }
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{How to do this?}
+  \begin{itemize}
+  \item \textbf{Idea 1}: Draw inspiration from existing algorithms that can
+    adapt to new classes
+  \item \textbf{Idea 2}: Learn a global model that can be ``perturbed'' to work
+    in many different domains
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{How to do this?}
+  \begin{itemize}
+  \item \textbf{Idea 1}: Draw inspiration from existing algorithms that can
+    adapt to new classes
+    \begin{itemize}
+    \item Nearest Neighbors
+    \item Prototype methods
+    \end{itemize}
+  \item \textbf{Idea 2}: Learn a global model that can be ``perturbed'' to work
+    in many different domains
+    \begin{itemize}
+    \item Like hierarchical / empirical bayesian models
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\section{Extending Existing Algorithms}
+
+\begin{frame}
+  \frametitle{Nearest Neighbors}
+  \begin{itemize}
+  \item Nearest neighbors knows how to handle new classes (e.g., Yaks)
+  \item Key is that it has a distance between all examples
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+  %% \includegraphics{figure/nneighbor_1}
+    \caption{The original data, just two classes. \label{fig:nneighbor_1} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Nearest Neighbors}
+ \begin{itemize}
+ \item Nearest neighbors knows how to handle new classes (e.g., Yaks)
+ \item Key is that it has a distance between all examples
+ \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  %% \includegraphics{figure/nneighbor_2}
+  \caption{Can draw the decision boundary between two classes. \label{fig:nneighbor_2} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Nearest Neighbors}
+ \begin{itemize}
+ \item Nearest neighbors knows how to handle new classes (e.g., Yaks)
+ \item Key is that it has a distance between all examples
+ \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  %% \includegraphics{figure/nneighbor_3}
+  \caption{What if we see a third class? \label{fig:nneighbor_3} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Nearest Neighbors}
+  \begin{itemize}
+  \item Nearest neighbors knows how to handle new classes (e.g., yaks)
+  \item Key is that it has a distance between all examples
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+    %% \includegraphics{figure/nneighbor_4}
+    \caption{Just introduce new decision boundaries. \label{fig:nneighbor_4} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Nearest Neighbors (Sharing Information)}
+ \begin{itemize}
+ \item If we run nearest neighbors separately on each task, we aren't sharing
+   any information
+ \item We want to use information we learned from data with horses to be able to
+   classify yaks.
+ \item Idea: Learn a good cross-task representation.
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}[]
+  \frametitle{Smoothing Nearest Neighbors}
+ \begin{itemize}
+ \item To learn shared representation, we to use deep learning
+ \item But nearest neighbors is not differentiable! Can't use backprop.
+ \item Idea: Smooth nearest neighbors
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Smoothing Nearest Neighbors}
+ \begin{itemize}
+ \item Idea: Smooth nearest neighbors
+ \end{itemize} 
+ \begin{align}
+   \hat{y}\left(x\right) &= y_i \indic{N\left(x\right) = x_i} \\
+   &= \sum_{j = 1}^{n} y_j a\left(x, x_j\right)
+ \end{align} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/hard_a_fun}
+  \caption{Nearest neighbors bases its prediction entirely on the nearest
+    neighbor. \label{fig:hard_a_fun} }
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Smoothing Nearest Neighbors}
+ \begin{itemize}
+ \item Idea: Smooth nearest neighbors
+ \end{itemize} 
+ \begin{align}
+   \hat{y}\left(x\right) &\approx \sum_{j = 1}^{n} y_j \tilde{a}\left(x, x_j\right) \\
+   \tilde{a}\left(x, x_i\right) &:= \frac{\exp{-d\left(x, x_i\right)}}{\sum_{j = 1}^{n} \exp{-d\left(x, x_j\right)}}
+ \end{align} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/soft_a_fun}
+  \caption{We can smooth this out by allowing contributions that decay with
+    distance. \label{fig:soft_a_fun} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Shared Embeddings}
+ \begin{itemize}
+ \item How to share representations across tasks? 
+ \item Learn shared embedding functions: $x \rightarrow f\left(x\right)$
+ \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Prototypes}
+ \begin{itemize}
+ \item An alternative to nearest neighbors that also works with new classes is
+   the prototype method
+ \item Define prototypes for each class, and assign new examples to the closest
+   prototype
+ \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/prototypes_1}
+  \caption{The original two class dataset.\label{fig:prototypes_1} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Prototypes}
+ \begin{itemize}
+ \item Prototypes: $c_k = \frac{1}{N_k} \sum_{i : y_i = k} x_i$
+ \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/prototypes_2}
+  \caption{Define prototypes for each class.\label{fig:prototypes_2} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Prototypes}
+ \begin{itemize}
+ \item $\hat{y}\left(x\right) = \arg\min_{k \in \{\text{green, purple}\}} d\left(x, c_k\right)$
+ \item If you want probabilities, $\Parg{y\left(x\right) = k \vert D^{n}} \propto \exp{-d\left(x, c_k \right)}$
+ \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/prototypes_3}
+  \caption{Predictions are made according to distance to the prototypes.\label{fig:prototypes_3} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Prototypes}
+ \begin{itemize}
+   \item Now we see $\left(x_i, y_i = \text{blue}\right)$
+ \item This blue class may have never appeared in any of our metatraining
+   examples
+ \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/prototypes_4}
+  \caption{We can introduce a new class.\label{fig:prototypes_4} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Prototypes}
+ \begin{itemize}
+ \item $\hat{y}\left(x\right) = \arg\min_{k \in \{\text{green, purple, blue}\}} d\left(x, c_k\right)$
+ \item If you want probabilities, $\Parg{y\left(x\right) = k \vert D^n} \propto \exp{-d\left(x, c_k \right)}$
+ \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/prototypes_5}
+  \caption{The new datapoint becomes a prototype, and we make classifications
+    according to distance to prototypes, as before.\label{fig:prototypes_5} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Prototypes: Sharing across tasks}
+ \begin{itemize}
+ \item Sharing accomplshed through a common embedding $f_{\varphi}\left(x\right)$
+ \item Prototypes: $c_k = \frac{1}{N_k} \sum_{i : y_i = k} f_{\varphi}\left(x_i\right)$
+ \item $\hat{y}\left(x\right) = \arg \min_{k} d\left(f_\varphi\left(x\right), c_k\right)$
+ \item $\Parg{\hat{y}\left(x\right) = k \vert D^{n}} \propto \exp{-d\left(f_\varphi\left(x\right), c_k\right)}$
+ \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/prototypes_5}
+  \caption{The new datapoint becomes a prototype, and we make classifications
+    according to distance to prototypes, as before.\label{fig:prototypes_5} }
+\end{figure}
+\end{frame}
+
+\section{Perturbation Based}
 
 \end{document}
