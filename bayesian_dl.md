@@ -781,6 +781,9 @@ our lower bound by updating one ${mtex`q_i`} at a time.
 
 ## Stochastic Variational Inference
 
+There is a form of variational inference that appears a lot in practice, which
+we haven't talked about yet, but which si important in understanding
+
 ## Variational Autoencoders
 
 ## Miscellaneous References

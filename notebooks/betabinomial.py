@@ -57,7 +57,7 @@ print(pyro.param("alpha_q").item())
 print(pyro.param("beta_q").item())
 
 # true posterior mean
-(20 + 10) / (30 + 20) 
+(20 + 10) / (30 + 20)
 
 # estimated posterior mean
 pyro.param("beta_q") / pyro.param("alpha_q")
