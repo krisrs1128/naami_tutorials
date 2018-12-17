@@ -1,0 +1,244 @@
+\documentclass[10pt,mathserif]{beamer}
+
+\usepackage{graphicx,amsmath,amssymb,tikz,psfrag}
+
+\input{preamble}
+
+%% formatting
+
+\mode<presentation>
+{
+\usetheme{default}
+}
+\setbeamertemplate{navigation symbols}{}
+\usecolortheme[rgb={0.13,0.28,0.59}]{structure}
+\setbeamertemplate{itemize subitem}{--}
+\setbeamertemplate{frametitle} {
+	\begin{center}
+	  {\large\bf \insertframetitle}
+	\end{center}
+}
+
+\newcommand\footlineon{
+  \setbeamertemplate{footline} {
+    \begin{beamercolorbox}[ht=2.5ex,dp=1.125ex,leftskip=.8cm,rightskip=.6cm]{structure}
+      \footnotesize \insertsection
+      \hfill
+      {\insertframenumber}
+    \end{beamercolorbox}
+    \vskip 0.45cm
+  }
+}
+\footlineon
+
+\AtBeginSection[]
+{
+	\begin{frame}<beamer>
+		\frametitle{Outline}
+		\tableofcontents[currentsection,currentsubsection]
+	\end{frame}
+}
+
+%% begin presentation
+
+\title{\large \bfseries Interpretability in Machine Learning}
+
+\author{Kris Sankaran\\[3ex]
+Mila}
+
+\date{\today}
+
+\begin{document}
+
+\frame{
+  \thispagestyle{empty}
+  \titlepage
+}
+
+\section{Introduction}
+
+\begin{frame}
+  \frametitle{Learning Objectives}
+ \begin{itemize}
+   \item Realize that deep learning models aren't necessarily black boxes
+   \item Distinguish between types of interpretability studied in literature
+   \item Understand foundational distillation and perturbation-based methods
+ \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{What is interpretability?}
+  \begin{itemize}
+  \item ``Ability to explain or present in
+    understandable terms to a human.''
+  \item I would add: ability to predict (by hand) the model's behavior under
+    different interventions
+    \begin{itemize}
+      \item Do I get the same prediction if I slightly change neuron 132 in
+        layer 3?
+      \item What if I deploy my self-driving cars in snowy Montreal, after
+        training in sunny Palo Alto?
+      \item What if change the subject's race in data point $x_i$?
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{General Approaches}
+  \begin{itemize}
+  \item Resort to a more easily interpretable model
+    \begin{itemize}
+    \item Distillation: Compress complex model into simpler, more interpretable
+      one
+    \item Design: Create new model classes competitive with Deep Learning, but
+      easier to interpret
+    \end{itemize}
+  \item Quantify effect of perturbations
+    \begin{itemize}
+    \item Saliency maps: Pixel-level feature importance
+    \item Influence Functions: Importance of individual training examples
+    \item Concept Activation: Sensitivity to user-defined concepts
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Linear Models}
+\begin{itemize}
+  \item In some ways, a gold standard
+    \begin{itemize}
+    \item Sign and size of $\beta_j$ is meaningful
+    \item Effects of changes in $x_j$ easy to predict (even when extrapolating!)
+    \end{itemize}
+  \item But even here, can be issues
+    \begin{itemize}
+    \item True effect can be null, but still see nonzero $\beta_j$
+    \item Correlated input lead to unstable coefficients
+    \item Outliers lead to counterintuitive behavior
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Decision Trees}
+\begin{itemize}
+  \item In some ways, a gold standard
+    \begin{itemize}
+    \item Can trace ``decision-making'' process
+    \item Effects of changes in $x_j$ easy to predict (even when extrapolating!)
+    \end{itemize}
+  \item But even here, can be issues
+    \begin{itemize}
+    \item Paths can get complicated for even moderately deep trees
+    \item Correlated input lead to unstable splitting patterns
+    \end{itemize}
+\end{itemize}
+\end{frame}
+
+
+\section{Distillations}
+
+\begin{frame}
+  \frametitle{Distillation}
+  \item Intuition: Large models do well because they have better search
+    strategies, but learned decision boundaries can be approximated by simpler
+    model classes
+  \item Strategy: Train a complicated teacher model, and ``distill'' it into a
+    simpler student model
+  \item (Besides interpretability, often useful for model compression)
+\end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/distillation_overview}
+  \caption{Distilling a complex model to a simple model class often works better
+    than attempting to directly learn within the simple model
+    class. \label{fig:distillation_overview} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Distillation by Trees}
+  \begin{itemize}
+  \item Proposal: Approximate teacher logits by class of soft decision trees
+    \begin{itemize}
+    \item Branching probabilities at node $i$: $\sigma\left(x^{T}w_i +
+      b_i\right)$
+    \item Internal nodes still learn filters $w_i$
+    \item But now can inspect paths for each decision
+    \end{itemize}
+  \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\paperwidth]{figure/connect4}
+  \caption{\label{fig:label} }
+\end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Additive Models}
+  \begin{itemize}
+  \item Approximate regression / decision surface by additive model with
+    interactions
+    \begin{itemize}
+    \item $F\left(x\right) = b_0 + \sum h_{j} \left(x_j\right) + \sum_{j \neq k} h_{jk}\left(x_{j}, x_{k}\right) + \dots$
+    \end{itemize}
+  \item Can directly inspect changes in predictions when changing values of
+    specific features
+  \item Good for tabular data
+  \item Bad when features need to be learned from raw inputs
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Additive Models}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics[width=0.7\paperwidth]{figure/additive}
+   \caption{Example first-order additive features learned by
+     distillation. \label{fig:additive} }
+ \end{figure}
+\end{frame}
+
+\section{Perturbations}
+
+\begin{frame}
+  \frametitle{Perturbations}
+  \begin{itemize}
+  \item Intentional perturbation can be illuminating
+  \item What happens when you change...
+    \begin{itemize}
+    \item Raw pixel values?
+    \item Presence of training example?
+    \item Layer activation values?
+    \end{itemize}
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Saliency Maps}
+  \begin{itemize}
+  \item For a given image, how would class predictions change if you manipulated
+    a pixel?
+  \item Simplest version: $\nabla_{x} f_{\theta}\left(x\right)$ change in class
+    given infinitesimal changes in inputs
+  \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/saliency}
+  \caption{Example saliency maps. Smooth-grad just averages the gradient map
+    over many noisy versions of input image.\label{fig:saliency} }
+\end{figure}
+
+\end{frame}
+
+\subsection{Influence Functions}
+
+\subsection{Concept Activation Vectors}
+
+\begin{frame}
+  \frametitle{Conclusion}
+
+\end{frame}
+
+\end{document}

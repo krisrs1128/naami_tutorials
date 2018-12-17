@@ -34,7 +34,7 @@
 }
 \footlineon
 
-\AtBeginSection[]
+\AtBeginSection
 {
 	\begin{frame}<beamer>
 		\frametitle{Outline}
@@ -289,7 +289,7 @@ Mila}
  \end{itemize} 
 \end{frame}
 
-\begin{frame}[]
+\begin{frame}
   \frametitle{Smoothing Nearest Neighbors}
  \begin{itemize}
  \item To learn shared representation, we to use deep learning
@@ -337,8 +337,24 @@ Mila}
   \frametitle{Shared Embeddings}
  \begin{itemize}
  \item How to share representations across tasks? 
- \item Learn shared embedding functions: $x \rightarrow f\left(x\right)$
+ \item Learn shared embedding functions: $x \rightarrow g_\varphi\left(x\right)$
  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Overall Process}
+ \begin{itemize}
+ \item  Across all the tasks, learn a common embedding
+ \item Task-specific nearest neighbors classifiers (since task-specific classes)
+ \item Since function $a\left(x, x_i\right)$ is smooth, can backpropagate errors
+   to learn optimal $g$
+ \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[\width=0.7\paperwidth]{figure/nn_full_process}
+  \caption{\label{fig:nn_full_process} }
+\end{figure}
+
 \end{frame}
 
 \begin{frame}
@@ -412,19 +428,108 @@ Mila}
 \begin{frame}
   \frametitle{Prototypes: Sharing across tasks}
  \begin{itemize}
- \item Sharing accomplshed through a common embedding $f_{\varphi}\left(x\right)$
+ \item Sharing accomplshed through a common embedding $g_{\varphi}\left(x\right)$
  \item Prototypes: $c_k = \frac{1}{N_k} \sum_{i : y_i = k} f_{\varphi}\left(x_i\right)$
  \item $\hat{y}\left(x\right) = \arg \min_{k} d\left(f_\varphi\left(x\right), c_k\right)$
  \item $\Parg{\hat{y}\left(x\right) = k \vert D^{n}} \propto \exp{-d\left(f_\varphi\left(x\right), c_k\right)}$
  \end{itemize} 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/prototypes_5}
+  \includegraphics[width=0.7\paperwidth]{figure/prototypes_6}
   \caption{The new datapoint becomes a prototype, and we make classifications
-    according to distance to prototypes, as before.\label{fig:prototypes_5} }
+    according to distance to prototypes, as before.\label{fig:prototypes_6} }
 \end{figure}
 \end{frame}
 
 \section{Perturbation Based}
+
+\begin{frame}
+  \frametitle{MAML}
+ \begin{itemize}
+ \item Imagine that the model parameters will be similar across tasks
+ \item Learn a global parameter and adapt it on a task-by-task basis
+ \item (This is analogous to transfer learning)
+ \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/maml_global}
+  \caption{On new tasks, adapt the global parameter.\label{fig:maml_global} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Learning Strategy}
+ \begin{itemize}
+ \item Imagine that the model parameters will be similar across tasks
+ \item Learn a global parameter and adapt it on a task-by-task basis
+ \item (This is analogous to transfer learning)
+ \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/maml_learning_1}
+  \caption{Each task has it's own loss landscape over
+    $\Theta$. \label{fig:maml_learning_1} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Learning Strategy}
+ \begin{itemize}
+ \item Imagine that the model parameters will be similar across tasks
+ \item Learn a global parameter and adapt it on a task-by-task basis
+ \item (This is analogous to transfer learning)
+   \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/maml_learning_2}
+  \caption{We start with some guess at a global
+    $\theta$. \label{fig:maml_learning_2} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Learning Strategy}
+ \begin{itemize}
+ \item Imagine that the model parameters will be similar across tasks
+ \item Learn a global parameter and adapt it on a task-by-task basis
+ \item (This is analogous to transfer learning)
+   \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/maml_learning_3}
+  \caption{We find task-specific $\theta_i$'s by taking a step from this global
+    $\theta$. \label{fig:maml_learning_3} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Learning Strategy}
+ \begin{itemize}
+ \item Imagine that the model parameters will be similar across tasks
+ \item Learn a global parameter and adapt it on a task-by-task basis
+ \item (This is analogous to transfer learning)
+ \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/maml_learning_4}
+  \caption{We update the global $\theta$ according to the averarge direction across all the tasks.
+    \label{fig:maml_learning_4} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Learning Strategy}
+ \begin{itemize}
+ \item Imagine that the model parameters will be similar across tasks
+ \item Learn a global parameter and adapt it on a task-by-task basis
+ \item (This is analogous to transfer learning)
+ \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/maml_paper}
+  \caption{In case you don't believe it's this geometrical, check against the actual paper
+    \label{fig:maml_paper} }
+\end{figure}
+\end{frame}
 
 \end{document}
