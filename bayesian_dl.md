@@ -154,8 +154,8 @@ at the associated discussion papers. It's too bad that this was the case: in an
 alternate universe, the tension might have lead to a concerted effort to get the
 best of both cultures: representation learning in an inferential framework.
 
-Fast forwards twenty years, and it seems like this reconciliation might finally
-be happening, in a field called Bayesian Deep Learning.
+Fast forwards nearly 30 years, and it seems like this reconciliation might
+finally be happening, in a field called Bayesian Deep Learning.
 
 ## Why do we do ML?
 
