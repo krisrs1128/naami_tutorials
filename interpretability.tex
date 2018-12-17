@@ -169,8 +169,9 @@ Mila}
   \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.5\paperwidth]{figure/connect4}
-  \caption{\label{fig:label} }
+  \includegraphics[width=0.4\paperwidth]{figure/connect4}
+  \caption{It's possible to inpsect learned features at decision nodes, as in
+    this Connect 4 example. \label{fig:connect4} }
 \end{figure}
 
 \end{frame}
@@ -225,20 +226,166 @@ Mila}
   \end{itemize} 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/saliency}
+  \includegraphics[width=0.4\paperwidth]{figure/saliency}
   \caption{Example saliency maps. Smooth-grad just averages the gradient map
     over many noisy versions of input image.\label{fig:saliency} }
 \end{figure}
+\end{frame}
 
+\begin{frame}
+  \frametitle{Cautionary advice...}
+ \begin{itemize}
+ \item While simple to implement, use cases aren't entirely clear
+ \item Still have to inspect one example at a time
+ \item Many proposals don't pass \textit{sanity checks}
+ \end{itemize} 
 \end{frame}
 
 \subsection{Influence Functions}
 
+\begin{frame}
+  \frametitle{Influence Functions}
+  \begin{itemize}
+  \item Classical notion from statistics: Influential datapoints
+  \item Measures sensitivity of fit to removal of points
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/classical_influence}
+    \caption{\label{fig:classical_influence} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Contributions}
+  \begin{itemize}
+  \item Change in loss at (potentially new point) $z$ when $\eps$-upweight
+    training pair $z_i = \left(x_i, y_i\right)$
+    \begin{align*}
+    I\left(z, z_i\right) = -\nabla_{\theta} \ell\left(z, \hat{\theta}\right)^{T} H^{-1}_{\hat{\theta}} \nabla_{\theta} \ell\left(z_i, \hat{\theta}\right)
+    \end{align*}
+  \item Alignment between gradients of loss at new and old points, after
+    adjusting for local curvature 
+    \begin{itemize}
+    \item More alignment $\rightarrow$ larger decrease in loss
+    \end{itemize}
+  \item Applied of SGD-able approximations to Hessian $H^{-1}_{\hat{\theta}}$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Applications}
+  \begin{itemize}
+  \item Identifying most influential points for specific test cases
+  \item Identifying mislabled points in training data
+  \item Not restricted to deep learning!
+  \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.45\paperwidth]{figure/influential}
+  \caption{Example influential observations from \citep{}\label{fig:influential}
+  }
+\end{figure}
+\end{frame}
+
 \subsection{Concept Activation Vectors}
 
 \begin{frame}
-  \frametitle{Conclusion}
+  \frametitle{Concept Activation Vectors}
+  \begin{itemize}
+  \item What if you had a specific ``concept'' that you wanted to test model
+    sensitivity to?
+    \begin{itemize}
+    \item Importance of anemone to predicting clownfish?
+    \end{itemize}
+  \item Need workable definition of a concept...
+  \end{itemize}
+\end{frame}
 
+\begin{frame}
+  \frametitle{Formulation}
+  \begin{itemize}
+  \item Idea: Have the user provide concepts!
+  \item Study how concept affects feature activations, one layer at a time
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{User concepts}
+  \begin{itemize}
+  \item User creates set of ``concept'' samples (or chooses them from a
+    database, using image tags, say)
+  \item Create activations $f_{l}$ at layer $l$ for both concept and random
+    nonconcept examples
+  \item Define concept activation $v_{C}^l$ based on learned linear decision
+    boundary
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/cav_space}
+    \caption{\label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Effect of Concepts}
+  \begin{itemize}
+  \item See how logit $h_{lk}$ changes when nudging layer $l$ activations
+    $f_{l}\left(x\right)$ for example $x$ towards concept $C$
+    \begin{align*}
+      S_{k, C, l}\left(x\right) &= \lim_{\eps \downarrow 0} \frac{h_{lk}\left(f_{l}\left(x\right) + \eps v_{C}^l\right) - h_{lk}\left(f_l\left(x\right)\right)}{\eps}
+    \end{align*} 
+  \item Averaging this over examples $x$ from class of interest
+  \end{itemize} 
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\paperwidth]{figure/cav_derivs}
+  \caption{\label{fig:cav_derivs} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Applications}
+  \begin{itemize}
+  \item Find examples within a class most and least similar to specified concept
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=0.7\paperwidth]{figure/cav_app1}
+      \caption{\label{fig:cav_app1} }
+    \end{figure}
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Applications}
+  \begin{itemize}
+  \item Quantify potential sources of bias
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=0.7\paperwidth]{figure/cav_app2}
+      \caption{\label{fig:cav_app2} }
+    \end{figure}
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Applications}
+  \begin{itemize}
+  \item Measuring consistency with codified medical practice
+    \begin{figure}[ht]
+      \centering
+      \includegraphics[width=0.7\paperwidth]{figure/cav_app3}
+      \caption{\label{fig:cav_app3} }
+    \end{figure}
+  \end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion}
+\begin{itemize}
+\item As complicated as it can be to interpret models... still usually simpler
+  than interpreting people
+\end{itemize}
 \end{frame}
 
 \end{document}
