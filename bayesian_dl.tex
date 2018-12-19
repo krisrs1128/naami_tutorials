@@ -49,6 +49,7 @@
 \date{\today}
 
 \begin{document}
+\maketitle
 
 \section{Introduction}
 \label{sec:introduction}
@@ -226,19 +227,7 @@
   \item Way too many configurations to actual do this sum
   \end{itemize} 
   \begin{align*}
-    \log p\left(x\right) &= \log \sum_{z} p\left(x, z\right) dz
-  \end{align*} 
-\end{frame}
-
-\begin{frame}
-  \frametitle{Marginalizing $z$}
-  \begin{itemize}
-  \item This often makes posterior inference difficult too
-  \item (There are workarounds for the Gaussian Mixture Model though)
-  \end{itemize}
-  \begin{align*}
-    p\left(z \vert x\right) &= \frac{p\left(x \vert z\right)p\left(z\right)}{p\left(x\right)} \\
-    &= \frac{p\left(x \vert z\right)p\left(z\right)}{\sum_{z} p\left(x, z\right)}
+    \log p\left(x\right) &= \log \sum_{z} p\left(x, z\right)
   \end{align*} 
 \end{frame}
 
@@ -246,7 +235,7 @@
   \frametitle{Evidence Lower Bound}
   \begin{itemize}
   \item It's counterintuitive, but one problem-solving strategy is to deliberately introduce complexity
-  \item Complexity $\rightarrow$ create additional degrees of freedom
+  \item Complexity $\rightarrow$ more degrees of freedom
   \end{itemize} 
 \end{frame}
 
@@ -264,6 +253,26 @@
   \end{align*}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Studying the bound}
+  \begin{align*}
+    \log p\left(x\right) &= \Esubarg{q}{\log p\left(x \vert z\right)} - D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z\right)\right) + D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z \vert x\right)\right) \\
+     &\geq \Esubarg{q}{\log p\left(x \vert z\right)} - D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z\right)\right)
+  \end{align*}
+  \begin{itemize}
+  \item Reconstruction error: How plausible is the observed $x$, averaging over
+    assignments $z$, and considering the current likelihood estimate?
+  \item Approximation complexity: How far is the approximating $q\left(z \vert
+    x\right)$ from the posterior?
+  \item How different is the posterior approximation $p\left(z \vert x\right)$
+    from the actual posterior?
+    \begin{itemize}
+    \item $D_{KL} \geq 0$ for any pair of probabilities
+    \item Hard to compute, so just drop and turn into an inequality
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
 \section{Variational Inference}
 \label{sec:introduction}
 
@@ -275,7 +284,245 @@
   \end{itemize} 
 \end{frame}
 
+\begin{frame}
+  \frametitle{Doing Variational Inference}
+  To practically implement this idea need to determine
+  \begin{itemize}
+  \item What densities $\mathcal{Q}$ can we actually work with?
+  \item How are we going to measure the quality of an approximation?
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Doing Variational Inference}
+  To practically implement this idea need to determine
+  \begin{itemize}
+  \item What densities $\mathcal{Q}$ can we actually work with?
+    \begin{itemize}
+    \item Mean-Field, Structured Mean-Field approximations, or even implicit densities
+    \end{itemize}
+  \item How are we going to measure the quality of an approximation?
+    \begin{itemize}
+    \item ELBO, $f$-divergences, Wasserstein distance, ...
+    \end{itemize}
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Doing Variational Inference}
+  To practically implement this idea need to determine
+  \begin{itemize}
+  \item What densities $\mathcal{Q}$ can we actually work with?
+    \begin{itemize}
+    \item \textbf{Mean-Field}, Structured Mean-Field approximations, or even implicit densities
+    \end{itemize}
+  \item How are we going to measure the quality of an approximation?
+    \begin{itemize}
+    \item \textbf{ELBO}, $f$-divergences, Wasserstein distance, ...
+    \end{itemize}
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mean-Field Approximation}
+  Consider a family where all the variables factor
+  \begin{align*}
+    q\left(z_1, \dots, z_n\right) = \prod_{i = 1}^{n} q_{i}\left(z_i\right)
+  \end{align*} 
+  (notice that we drop conditioning on $x_$, this is actually more general than
+  before)
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/mean_field_geometry}
+  \caption{\label{fig:mean_field_geometry} }
+\end{figure}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Optimization}
+  \begin{itemize}
+  \item Fixing all but the $i^{th}$ coordinate's distribution, can find how to
+    optimize ELBO directly
+  \end{itemize} 
+  \begin{align*}
+q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\right)}}
+  \end{align*} 
+\end{frame}
+
+%% Maybe put some examples of this update here
+%% mention that this is a lot of algebra, every time you want a model
+
+\begin{frame}
+  The proof of this fact is only a few lines (not at all obvious though)
+\begin{align*}
+\log p\left(x\right) &\geq
+\Esubarg{q}{\log p\left(x \vert z\right)} - D_{KL}\left( q\left(z\right) \vert\vert p\left(z\right)\right) \\
+&= \Esubarg{q}{\log p\left(x, z\right)} - \Esubarg{q}{\log q\left(z\right)}\\
+&= \Esubarg{q_i}{\Esubarg{q_{-i \vert i}}{\log p\left(x, z_i, z_{-i})}} - \sum \Esubarg{q_j}{\log q_j\left(z_j\right)} \\
+&\stackrel{c}{=} -D_{KL}\left(q_{i}\left(z_i\right) \vert \vert \exp{\Esubarg{q_{-i}}{p\left(x, z_i, z_{-i}\right)}}\right)
+\end{align*}
+Since KL is always $\geq 0$, can maximize this expression by setting it to zero
+(set $q_i$ to right hand side distribution)
+\end{frame}
 
 \section{Variational Autoencoders}
+
+\begin{frame}
+  \frametitle{A Calculated Tradeoff}
+  \begin{itemize}
+  \item It's nice that this approach works for arbitrary mean-field $\prod
+    q_{i}\left(z_i\right)$
+  \item But it's restrictive to have to compute
+    \begin{align*}
+      q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\right)}}
+    \end{align*}
+    in closed form (not to mention tedious)
+    \begin{itemize}
+    \item How could we have (say) $p\left(x \vert z\right) &= \Gsn\left(x \vert
+      f_{\theta}\left(z\right), \exp{g_{\theta}\left(x\right)}\right)$ for some
+      complicated $f, g$?
+    \end{itemize} 
+  \item Idea: Restrict family $\mathcal{Q}$ (hopefully not too much), and make
+    optimization more automatic
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Inference Networks}
+  \begin{itemize}
+  \item New approximating family: $q_{\varphi}\left(z \vert x\right) &= \Gsn\left(z \vert
+    \mu_{\varphi}\left(x\right), \sigma^{2}_{\varphi}\left(x\right) I\right)$
+  \item Let $\mu_{\varphi}$ and $\sigma^{2}_{\varphi}$ be arbitrary nonlinear
+    functions
+    \begin{figure}[
+        \centering
+        \includegraphics[width=0.7\paperwidth]{figure/vae_inference}
+        \caption{\label{fig:vae_inference} }
+    \end{figure}
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Optimization}
+\begin{itemize}
+\item Instead of optimizing one coordinate at a time, optimize all at once
+  through $\varphi$
+\item Can also optimize $\theta$ in the likelihood
+\end{itemize}  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Reparametrization Trick}
+  \begin{itemize}
+  \item Taking gradient step along
+  \begin{align*}
+    \nabla_{\varphi} \Esubarg{q}{\log p_{\theta}\left(x \vert z\right)}
+  \end{align*}
+  is complicated, because
+
+  \begin{align*}
+    \nabla_{\varphi} \Esubarg{q}{\log p_{\theta}\left(x \vert z\right)} &= \int \log p_{\theta}\left(x \vert z\right)
+    \nabla_{\varphi}q_{\varphi}\left(z \vert x\right)dz
+  \end{align*}
+  is no longer an expectation over $q_{\varphi}$.
+  \item Can't just sample, and can't do integral analytically.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Reparametrization Trick}
+  \begin{itemize}
+  \item Sampling
+  \begin{align*}
+    z \vert x \sim q_{\varphi}\left(z \vert x\right)
+  \end{align*}
+  is sometimes the same as
+  \begin{align*}
+    \eps &\sim p_{0}\left(\eps\right) \\
+    z \vert \eps, x &\equiv g_{\varphi}\left(x, \eps\right)
+  \end{align*}
+  for some deterministic $g_{\varphi}$
+  \item Large family of densities $\rightarrow$ one density with large family of
+    transformations
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Reparametrization Trick}
+  Most common example, if you want to sample
+  \begin{align*}
+    z \vert x &\sim \Gsn\left(z \vert \mu_{\varphi}\left(x\right), \sigma_{\varphi}^{2}\left(x\right)\right)
+  \end{align*} 
+  instead use
+  \begin{align*}
+    \eps &\sim \Gsn\left(0, I\right) \\
+    z \vert x, \eps &\equiv \mu_{\varphi}\left(x\right) + \sigma_{\varphi}^{2}\left(x\right) \odot \eps
+  \end{align*}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Optimization after Reparameterization}
+  \begin{itemize}
+  \item Since $g_{\varphi}$ is deterministic, gradient can be easily
+    approximated,
+  \begin{align*}
+    \nabla_{\varphi} \Esubarg{q_{\varphi}}{\log p_{\theta}\left(x \vert z\right)} &=
+    \nabla_{\varphi} \Esubarg{p\left(\eps\right)}{\log p_{\theta}\left(x \vert g_{\varphi}\left(\eps\right)\right)} \\
+    &= \Esubarg{p\left(\eps\right)}{\nabla \log p_{\theta}\left(x \vert g_{\varphi}\left(\eps\right)\right)} \\
+      &\approx \sum_{i} \nalba \log_{\theta}p_{\theta}\left(x \vert g_{\varphi}\left(\eps_{i}\right)\right)
+  \end{align*}
+  after sampling lots of $\eps_{i} \sim p\left(\eps\right)$.
+  \item We can optimize the ELBO!
+  \end{itemize}
+\end{frame}
+
+\section{Applications}
+\label{sec:applications}
+
+\begin{frame}
+  \frametitle{Latent Space & Generation}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\paperwidth]{figure/}
+  \caption{\label{fig:} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Latent Space & Generation}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\paperwidth]{figure/vae_conditional}
+  \caption{\label{fig:vae_conditional} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Probabilistic Tumor Segmentation}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\paperwidth]{figure/vae_unet}
+  \caption{\label{fig:vae_unet} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Drug Design & Discovery}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\paperwidth]{figure/vae_molecule}
+  \caption{\label{fig:vae_molecule} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{One-Shot Generalization}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\paperwidth]{figure/vae_omniglot}
+  \caption{\label{fig:vae_omniglot} }
+\end{figure}
+\end{frame}
 
 \end{document}
