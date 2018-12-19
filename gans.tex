@@ -1,9 +1,7 @@
 \documentclass[10pt,mathserif]{beamer}
 
 \input{preamble.tex}
-\usepackage{graphicx,amsmath,amssymb}
-\usepackage{listings}
-\lstset{language=Python}
+\usepackage{graphicx,amsmath,amssymb,natbib}
 
 %% \input defs.tex
 
@@ -27,27 +25,16 @@
     \vskip 0.45cm
   }\begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/hard_a_fun}
-  \caption{\label{fig:hard_a_fun} }
 \end{figure}
 
 }
 \footlineon
-
-\AtBeginSection
-{
-	\begin{frame}<beamer>
-		\frametitle{Outline}
-		\tableofcontents[currentsection,currentsubsection]
-	\end{frame}
-}
-
 %% begin presentation
 
 \title{\large \bfseries Generative Adversarial Networks}
 
 \author{Kris Sankaran\\[3ex]
-Mila}
+Nepal Winter School in AI}
 
 \date{\today}
 
@@ -65,55 +52,89 @@ Mila}
  \begin{itemize}
   \item Understand basic adversarial setup
   \item Mathematical perspectives to help navigate sea of proposed variants
-  \item Get a flavor of real-world applications that benefit
+  \item Get a flavor of some real-world applications
  \end{itemize}
 \end{frame}
 
 \begin{frame}
+  \frametitle{First thing that comes to mind?}
 \begin{itemize}
 \item GANs are popular ways to generate images
 \end{itemize}
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.7\paperwidth]{figure/gan_example}
-  \caption{Example GAN samples. \label{fig:gan_example} }
+  \caption{Probably the most famous GAN samples of all
+    time. \citep{radford2015unsupervised} \label{fig:gan_example} }
 \end{figure}
 \end{frame}
 
 \begin{frame}
+  \frametitle{Or maybe this?}
 \begin{itemize}
-\item It's better to think of them as learning how to sample from probability
-  densities $p\left(x\right)$
-\item For $32 \times 32$ images, $p\left(x\right)$ is a distribution in
-  1024-dimensional space
-\item What's exciting is that they are \textit{implicit} probability models
+\item GANs are popular ways to generate images
 \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/gan_density}
-  \caption{\label{fig:gan_density} }
+  \includegraphics[width=0.3\paperwidth]{figure/gan_portrait.jpg}
+  \caption{Probably the most expensive GAN sample of all
+    time. \label{fig:gan_portrait} }
 \end{figure}
 \end{frame}
 
 \begin{frame}
+  \frametitle{GANs as Sampling Algorithms}
+  \begin{itemize}
+  \item Ignore the hype
+  \item It's better to think of GANs as learning how to sample from probability
+    densities $p\left(x\right)$
+    \begin{itemize}
+    \item For $32 \times 32$ images, $p\left(x\right)$ is a distribution in
+      1024-dimensional space
+    \end{itemize}
+  \item What's exciting is that they are \textit{implicit} probability models
+    \begin{itemize}
+    \item Distribution defined implicitly by sampling mechanism
+    \end{itemize} 
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\paperwidth]{figure/gan_density}
+    \caption{We may not be able to write simple formulas for complicated
+      densities, but we may be able to write computer programs that sample from
+      them.\label{fig:gan_density} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Images and Probability}
 \begin{itemize}
-\item Interpolations are just sampling along lines in a probability density
+\item It's common in the GANs literature to show interpolations between
+  generated images
 \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.35\paperwidth]{figure/gans_interpolations}
-  \caption{\label{fig:gan_interpolations} }
+  \includegraphics[width=0.35\paperwidth]{figure/gan_image_interpolations}
+  \caption{Example interpolations between LSUN images in
+    \citep{radford2015unsupervised}. This was a convincing result at the time,
+    because it showed that the samples weren't simply memorized training
+    data. \label{fig:gan_interpolations} }
 \end{figure}
 \end{frame}
 
 \begin{frame}
+  \frametitle{Images and Probability}
 \begin{itemize}
-  \item Interpolations are just sampling along lines in a probability density
+  \item Geometrically, these interpolated images are points along a curve in
+    image space
 \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/gan_interpolations_density}
-  \caption{\label{fig:gan_interpolations_density} }
+  \includegraphics[width=0.3\paperwidth]{figure/gan_interpolations}
+  \caption{The green points would each be an image, and the red line represents
+    a sequence of gradually evolving samples, which should look like real
+    images, if they live in a region of high probability.
+    \label{fig:gan_interpolations_density} }
 \end{figure}
 \end{frame}
 
@@ -128,8 +149,11 @@ Mila}
  \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/sample_transformation}
-  \caption{\label{fig:sample_transformation} }
+  \includegraphics[width=0.52\paperwidth]{figure/sample_transformation}
+  \caption{By passing samples from a probability distribution through a
+    function, you get another probability distribution. $y$-values where the
+    function is flatter will get more of the original mass, resulting in peaks
+    in the transformed distribution. \label{fig:sample_transformation} }
 \end{figure}
 \end{frame}
 
@@ -224,41 +248,41 @@ Mila}
 
 \begin{frame}
   \frametitle{Wasserstein Objective}
- \begin{itemize}
- \item Wasserstein distance between data $X$ and generated $\tilde{X}$
-   distributions is defined by
-   \begin{align*}
-     d\left(\P_X, \P_\tilde{X}\right) &= \max_{\|f\|_{L} \leq 1} \Esubarg{X}{f\left(x\right)} - \Esubarg{\tilde{X}}{f\left(\tilde{x}\right)}
-   \end{align*}
-   where $\|f\|_{L} \leq 1$ is the set of functions whose slopes are always less
-   than 1.
- \end{itemize}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.7\paperwidth]{figure/wasserstein_tests}
-  \caption{You can interpret the objective as computing differences in means
-    after passing samples through a variety of (not too wild) test
-    functions.\label{fig:wasserstein_tests} }
-\end{figure}
+  \begin{itemize}
+  \item Wasserstein distance between data $X$ and generated $\tilde{X}$
+    distributions is defined by
+    \begin{align*}
+      d\left(\P_X, \P_\tilde{X}\right) &= \max_{\|f\|_{L} \leq 1} \Esubarg{X}{f\left(x\right)} - \Esubarg{\tilde{X}}{f\left(\tilde{x}\right)}
+    \end{align*}
+    where $\|f\|_{L} \leq 1$ is the set of functions whose slopes are always less
+    than 1.
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/wasserstein_tests}
+    \caption{You can interpret the objective as computing differences in means
+      after passing samples through a variety of (not too wild) test
+      functions.\label{fig:wasserstein_tests} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Wasserstein Training}
- \begin{itemize}
- \item In terms of the transformed noise $G\left(z\right)$, this looks like
-   \begin{align*}
-     d\left(\P_{X}, \P_{\tilde{X}}\right) &= \max_{\|f\| \leq 1} \Esubarg{X}{f\left(x\right)} - \Esubarg{Z}{f\left(G\left(z\right))}
-   \end{align*}
- \item Finding the optimal $f$ for any particular choice of $G$ is complicated...
- \item Alternatively do gradient updates
-\begin{itemize}
-\item Critic $f$ inches towards its maximizing value of $d\left(\P_{X},
-  \P_{\tilde{X}}\right)$.
-\item Generator $G$ descends towards smaller wasserstein distances
-\item Constraint $\|f\|_{L} \leq 1$ maintained either by clipping or
-  regularization
+  \begin{itemize}
+  \item In terms of the transformed noise $G\left(z\right)$, this looks like
+    \begin{align*}
+      d\left(\P_{X}, \P_{\tilde{X}}\right) &= \max_{\|f\| \leq 1} \Esubarg{X}{f\left(x\right)} - \Esubarg{Z}{f\left(G\left(z\right)\right)}
+    \end{align*}
+  \item Finding the optimal $f$ for any particular choice of $G$ is complicated...
+  \item Alternatively do gradient updates
+  \begin{itemize}
+  \item Critic $f$ inches towards its maximizing value of $d\left(\P_{X},
+    \P_{\tilde{X}}\right)$.
+  \item Generator $G$ descends towards smaller wasserstein distances
+  \item Constraint $\|f\|_{L} \leq 1$ maintained either by clipping or
+    regularization
+  \end{itemize}
 \end{itemize}
- \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -305,8 +329,8 @@ Mila}
  \item For example, if you try estimating density ratios using Bernoulli loss,
    \begin{align*}
      &\Esubarg{p\left(x \vert y\right)p\left(y\right)}{y \log D_{\varphi}\left(x\right) + \left(1 - y\right)\log \left(1 - D_{\varphi}\left(x\right)\right)} \\
-     = & \pi \Esubarg{p\left(x \vert y = 1\right)}{\log D_{\varphi}\left(x\right)} + \left(1 - \pi\right)\Esubarg{p\left(x \vert y = 0\right)}{\log \left(1 - D_{\varphi}\left(x\right)\right)} \\
-     = & \pi \Esubarg{p^{\ast}\left(x\right)}{\log D_{\varphi}\left(x\right)} + \left(1 - \pi\right)\Esubarg{q_{\theta}\left(x\right)\right)}{\log \left(1 - D_{\varphi}\left(x\right)\right)}
+      = & \pi \Esubarg{p\left(x \vert y = 1\right)}{\log D_{\varphi}\left(x\right)} + \left(1 - \pi\right)\Esubarg{p\left(x \vert y = 0\right)}{\log \left(1 - D_{\varphi}\left(x\right)\right)} \\
+     = & \pi \Esubarg{p^{\ast}\left(x\right)}{\log D_{\varphi}\left(x\right)} + \left(1 - \pi\right)\Esubarg{q_{\theta}\left(x\right)}{\log \left(1 - D_{\varphi}\left(x\right)\right)}
    \end{align*}
   which is exactly the usual loss for GANs, if we set $\pi = \frac{1}{2}$.
  \end{itemize}
@@ -337,4 +361,5 @@ Mila}
   \end{itemize}
 \end{frame}
 
+\bibliography{refs}
 \end{document}

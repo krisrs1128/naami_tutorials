@@ -56,10 +56,12 @@
 
 \begin{frame}
   \frametitle{Learning Objectives}
- \item Trace historical development of Bayesian ML, from Variational Inference
-   to Bayesian Deep Learning
- \item Add some more models and algorithm to personal catalog of examples
- \item Understand underlying math and code for example algorithms
+  \begin{itemize}
+  \item Trace historical development of Bayesian ML, from Variational Inference
+    to Bayesian Deep Learning
+  \item Add some more models and algorithm to personal catalog of examples
+  \item Understand underlying math and code for example algorithms
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -158,7 +160,7 @@
     beta0 = torch.tensor(10.0)
 
     # sample f from the beta prior
-    p = pyro.sample("heads_prob", dist.Beta(alpha0, beta0))
+    p = pyro.sample("heads_\prob", dist.Beta(alpha0, beta0))
   \end{python}
   \begin{figure}[ht]
     \centering
@@ -379,7 +381,7 @@ Since KL is always $\geq 0$, can maximize this expression by setting it to zero
     \end{align*}
     in closed form (not to mention tedious)
     \begin{itemize}
-    \item How could we have (say) $p\left(x \vert z\right) &= \Gsn\left(x \vert
+    \item How could we have (say) $p\left(x \vert z\right) = \Gsn\left(x \vert
       f_{\theta}\left(z\right), \exp{g_{\theta}\left(x\right)}\right)$ for some
       complicated $f, g$?
     \end{itemize} 
@@ -391,7 +393,7 @@ Since KL is always $\geq 0$, can maximize this expression by setting it to zero
 \begin{frame}
   \frametitle{Inference Networks}
   \begin{itemize}
-  \item New approximating family: $q_{\varphi}\left(z \vert x\right) &= \Gsn\left(z \vert
+  \item New approximating family: $q_{\varphi}\left(z \vert x\right) = \Gsn\left(z \vert
     \mu_{\varphi}\left(x\right), \sigma^{2}_{\varphi}\left(x\right) I\right)$
   \item Let $\mu_{\varphi}$ and $\sigma^{2}_{\varphi}$ be arbitrary nonlinear
     functions
