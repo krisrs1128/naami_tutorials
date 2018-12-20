@@ -2,10 +2,6 @@
 
 \input{preamble.tex}
 \usepackage{graphicx,amsmath,amssymb}
-\usepackage{listings}
-\lstset{language=Python}
-
-%% \input defs.tex
 
 %% formatting
 \setbeamertemplate{navigation symbols}{}
@@ -17,32 +13,13 @@
 	\end{center}
 }
 
-\newcommand\footlineon{
-  \setbeamertemplate{footline} {
-    \begin{beamercolorbox}[ht=2.5ex,dp=1.125ex,leftskip=.8cm,rightskip=.6cm]{structure}
-      \footnotesize \insertsection
-      \hfill
-      {\insertframenumber}
-    \end{beamercolorbox}
-    \vskip 0.45cm
-  }\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.7\paperwidth]{figure/hard_a_fun}
-  \caption{\label{fig:hard_a_fun} }
-\end{figure}
-
-}
-\footlineon
-
-\AtBeginSection
-{
-	\begin{frame}<beamer>
-		\frametitle{Outline}
-		\tableofcontents[currentsection,currentsubsection]
-	\end{frame}
-}
-
-%% begin presentation
+\AtBeginSection[] 
+{ 
+	\begin{frame}<beamer> 
+		\frametitle{Outline} 
+		\tableofcontents[currentsection,currentsubsection] 
+	\end{frame} 
+} 
 
 \title{\large \bfseries Metalearning}
 
@@ -114,7 +91,7 @@ Mila}
   \item Bottom layers learn generic visual features
   \end{itemize}
   \begin{figure}
-    \includegraphics[width=0.6\paperwidth]{figure/transfer_annotated}
+    \includegraphics[width=0.4\paperwidth]{figure/transfer_annotated}
   \end{figure}
 \end{frame}
 
@@ -137,7 +114,7 @@ Mila}
 \begin{frame}
   \begin{itemize}\itemsep=12pt
   \item The same underlying features seem useful across a lot of tasks...
-  \item Transfer learning is nice, but lots of hand-tuning
+  \item Transfer learning is nice, but requires lots of hand-tuning
   \item Can we learn models that automatically adapt in scarce data settings?
   \end{itemize}
 \end{frame}
@@ -158,13 +135,13 @@ Mila}
     \item Metalearner maps new datasets to new (hopefully adapted) algorithm
     \item Usual training / testing is like
       \begin{itemize}
-        \item $D_{train} = \left(x_i, y_i\right)_{i = 1}^{n}$
-        \item $D_{test} = \left(x_i, y_i\right)_{i = 1}^{n^\prime}$
+        \item $D_{\text{train}} = \left(x_i, y_i\right)_{i = 1}^{n}$
+        \item $D_{\text{test}} = \left(x_i, y_i\right)_{i = 1}^{n^\prime}$
       \end{itemize}
     \item New training / testing is like
       \begin{itemize}
-      \item $D_{metatrain} = \left\{D_{train}^{n}, D_{test}^{n}\right\}_{n = 1}^{N}$
-      \item $D_{metatest} = \left\{D_{train}^{n}, D_{test}^{n}\right\}_{n = 1}^{N^\prime}$
+      \item $D_{\text{metatrain}} = \left\{D_{\text{train}}^{n}, D_{\text{test}}^{n}\right\}_{n = 1}^{N}$
+      \item $D_{\text{metatest}} = \left\{D_{\text{train}}^{n}, D_{\text{test}}^{n}\right\}_{n = 1}^{N^\prime}$
       \end{itemize}
     \item You don't have to fine-tune to each training / testing episode!
   \end{itemize}
@@ -179,7 +156,7 @@ Mila}
   \end{itemize}
   \begin{figure}[ht]
     \centering
-   %% \includegraphics[width=0.8\paperwidth]{figure/metalearning_setup_boxes}
+    \includegraphics[width=0.3\paperwidth]{figure/metalearning_setup_boxes}
     \caption{\label{fig:metalearning_setup_boxes}}
   \end{figure}
 \end{frame}
@@ -192,7 +169,7 @@ Mila}
 \end{itemize}
  \begin{figure}[ht]
    \centering
-   %% \includegraphics[width=0.8\paperwidth]{figure/metalearning_setup_curves}
+   \includegraphics[width=0.45\paperwidth]{figure/metalearning_setup_curves}
    \caption{\label{fig:metalearning_setup_curves} }
  \end{figure}
 \end{frame}
@@ -234,7 +211,7 @@ Mila}
   \end{itemize} 
   \begin{figure}[ht]
     \centering
-  %% \includegraphics{figure/nneighbor_1}
+    \includegraphics[width=0.40\paperwidth]{figure/nneighbor_1}
     \caption{The original data, just two classes. \label{fig:nneighbor_1} }
   \end{figure}
 \end{frame}
@@ -247,7 +224,7 @@ Mila}
  \end{itemize} 
 \begin{figure}[ht]
   \centering
-  %% \includegraphics{figure/nneighbor_2}
+  \includegraphics[width=0.40\paperwidth]{figure/nneighbor_2}
   \caption{Can draw the decision boundary between two classes. \label{fig:nneighbor_2} }
 \end{figure}
 \end{frame}
@@ -260,7 +237,7 @@ Mila}
  \end{itemize} 
 \begin{figure}[ht]
   \centering
-  %% \includegraphics{figure/nneighbor_3}
+  \includegraphics[width=0.40\paperwidth]{figure/nneighbor_3}
   \caption{What if we see a third class? \label{fig:nneighbor_3} }
 \end{figure}
 \end{frame}
@@ -273,7 +250,7 @@ Mila}
   \end{itemize} 
   \begin{figure}[ht]
     \centering
-    %% \includegraphics{figure/nneighbor_4}
+    \includegraphics[width=0.40\paperwidth]{figure/nneighbor_4}
     \caption{Just introduce new decision boundaries. \label{fig:nneighbor_4} }
   \end{figure}
 \end{frame}
@@ -309,7 +286,7 @@ Mila}
  \end{align} 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/hard_a_fun}
+  \includegraphics[width=0.65\paperwidth]{figure/hard_a_fun}
   \caption{Nearest neighbors bases its prediction entirely on the nearest
     neighbor. \label{fig:hard_a_fun} }
 \end{figure}
@@ -327,7 +304,7 @@ Mila}
  \end{align} 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/soft_a_fun}
+  \includegraphics[width=0.65\paperwidth]{figure/soft_a_fun}
   \caption{We can smooth this out by allowing contributions that decay with
     distance. \label{fig:soft_a_fun} }
 \end{figure}
@@ -351,10 +328,10 @@ Mila}
  \end{itemize} 
 \begin{figure}[ht]
   \centering
-  \includegraphics[\width=0.7\paperwidth]{figure/nn_full_process}
-  \caption{\label{fig:nn_full_process} }
+  \includegraphics[width=0.7\paperwidth]{figure/nn_full_process}
+  \caption{The overall process, from datasets, to shared embedding, to learned
+    classifiers. \label{fig:nn_full_process} }
 \end{figure}
-
 \end{frame}
 
 \begin{frame}
@@ -367,7 +344,7 @@ Mila}
  \end{itemize} 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/prototypes_1}
+  \includegraphics[width=0.35\paperwidth]{figure/prototypes_1}
   \caption{The original two class dataset.\label{fig:prototypes_1} }
 \end{figure}
 \end{frame}
@@ -379,7 +356,7 @@ Mila}
  \end{itemize} 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/prototypes_2}
+  \includegraphics[width=0.35\paperwidth]{figure/prototypes_2}
   \caption{Define prototypes for each class.\label{fig:prototypes_2} }
 \end{figure}
 \end{frame}
@@ -392,7 +369,7 @@ Mila}
  \end{itemize} 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/prototypes_3}
+  \includegraphics[width=0.35\paperwidth]{figure/prototypes_3}
   \caption{Predictions are made according to distance to the prototypes.\label{fig:prototypes_3} }
 \end{figure}
 \end{frame}
@@ -406,7 +383,7 @@ Mila}
  \end{itemize} 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/prototypes_4}
+  \includegraphics[width=0.35\paperwidth]{figure/prototypes_4}
   \caption{We can introduce a new class.\label{fig:prototypes_4} }
 \end{figure}
 \end{frame}
@@ -419,7 +396,7 @@ Mila}
  \end{itemize} 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/prototypes_5}
+  \includegraphics[width=0.35\paperwidth]{figure/prototypes_5}
   \caption{The new datapoint becomes a prototype, and we make classifications
     according to distance to prototypes, as before.\label{fig:prototypes_5} }
 \end{figure}
@@ -435,16 +412,16 @@ Mila}
  \end{itemize} 
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/prototypes_6}
-  \caption{The new datapoint becomes a prototype, and we make classifications
-    according to distance to prototypes, as before.\label{fig:prototypes_6} }
+  \includegraphics[width=0.35\paperwidth]{figure/prototypes_5}
+  \caption{To share across tasks, we learn prototypes after embedding all points
+    according to some shared embedding function \label{fig:prototypes_5}.}
 \end{figure}
 \end{frame}
 
 \section{Perturbation Based}
 
 \begin{frame}
-  \frametitle{MAML}
+  \frametitle{Model Agnostic Meta-Learning}
  \begin{itemize}
  \item Imagine that the model parameters will be similar across tasks
  \item Learn a global parameter and adapt it on a task-by-task basis
@@ -452,7 +429,7 @@ Mila}
  \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/maml_global}
+  \includegraphics[width=0.4\paperwidth]{figure/maml_global}
   \caption{On new tasks, adapt the global parameter.\label{fig:maml_global} }
 \end{figure}
 \end{frame}
@@ -466,7 +443,7 @@ Mila}
  \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/maml_learning_1}
+  \includegraphics[width=0.6\paperwidth]{figure/maml_learning_1}
   \caption{Each task has it's own loss landscape over
     $\Theta$. \label{fig:maml_learning_1} }
 \end{figure}
@@ -481,7 +458,7 @@ Mila}
    \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/maml_learning_2}
+  \includegraphics[width=0.6\paperwidth]{figure/maml_learning_0}
   \caption{We start with some guess at a global
     $\theta$. \label{fig:maml_learning_2} }
 \end{figure}
@@ -496,7 +473,7 @@ Mila}
    \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/maml_learning_3}
+  \includegraphics[width=0.6\paperwidth]{figure/maml_learning_2}
   \caption{We find task-specific $\theta_i$'s by taking a step from this global
     $\theta$. \label{fig:maml_learning_3} }
 \end{figure}
@@ -511,7 +488,7 @@ Mila}
  \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/maml_learning_4}
+  \includegraphics[width=0.6\paperwidth]{figure/maml_learning_3}
   \caption{We update the global $\theta$ according to the averarge direction across all the tasks.
     \label{fig:maml_learning_4} }
 \end{figure}
@@ -526,8 +503,9 @@ Mila}
  \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/maml_paper}
-  \caption{In case you don't believe it's this geometrical, check against the actual paper
+  \includegraphics[width=0.5\paperwidth]{figure/maml_paper}
+  \caption{In case you are interested in hte details, check against the original
+    paper
     \label{fig:maml_paper} }
 \end{figure}
 \end{frame}

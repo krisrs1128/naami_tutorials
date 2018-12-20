@@ -19,18 +19,6 @@
 	\end{center}
 }
 
-\newcommand\footlineon{
-  \setbeamertemplate{footline} {
-    \begin{beamercolorbox}[ht=2.5ex,dp=1.125ex,leftskip=.8cm,rightskip=.6cm]{structure}
-      \footnotesize \insertsection
-      \hfill
-      {\insertframenumber}
-    \end{beamercolorbox}
-    \vskip 0.45cm
-  }
-}
-\footlineon
-
 \AtBeginSection[]
 {
 	\begin{frame}<beamer>
@@ -140,16 +128,17 @@ Mila}
 
 \begin{frame}
   \frametitle{Distillation}
+  \begin{itemize}
   \item Intuition: Large models do well because they have better search
     strategies, but learned decision boundaries can be approximated by simpler
     model classes
   \item Strategy: Train a complicated teacher model, and ``distill'' it into a
     simpler student model
   \item (Besides interpretability, often useful for model compression)
-\end{itemize}
-\begin{figure}[ht]
+  \end{itemize}
+  \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/distillation_overview}
+  \includegraphics[width=0.45\paperwidth]{figure/distillation_overview}
   \caption{Distilling a complex model to a simple model class often works better
     than attempting to directly learn within the simple model
     class. \label{fig:distillation_overview} }
@@ -252,7 +241,8 @@ Mila}
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.7\paperwidth]{figure/classical_influence}
-    \caption{\label{fig:classical_influence} }
+    \caption{The difference between fits when you include vs. remove a point is
+      called that point's influence.\label{fig:classical_influence} }
 \end{figure}
 \end{frame}
 
@@ -283,7 +273,7 @@ Mila}
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.45\paperwidth]{figure/influential}
-  \caption{Example influential observations from \citep{}\label{fig:influential}
+  \caption{Example influential observations from \citep{koh2017understanding}\label{fig:influential}
   }
 \end{figure}
 \end{frame}
@@ -323,7 +313,9 @@ Mila}
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.6\paperwidth]{figure/cav_space}
-    \caption{\label{fig:label} }
+    \caption{The CAV vector is defined as the direction that separates samples
+      representative of a concept (like stripes) and unrelated random samples.
+      \label{fig:cav_space} }
   \end{figure}
 \end{frame}
 
@@ -340,7 +332,9 @@ Mila}
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.6\paperwidth]{figure/cav_derivs}
-  \caption{\label{fig:cav_derivs} }
+  \caption{The CAV score for a class is the amount the logit for that class
+    changes in response to perturbing its examples in the CAV
+    direction. \label{fig:cav_derivs} }
 \end{figure}
 \end{frame}
 
@@ -350,8 +344,7 @@ Mila}
   \item Find examples within a class most and least similar to specified concept
     \begin{figure}[ht]
       \centering
-      \includegraphics[width=0.7\paperwidth]{figure/cav_app1}
-      \caption{\label{fig:cav_app1} }
+      \includegraphics[width=0.7\paperwidth]{figure/cav_app3}
     \end{figure}
   \end{itemize}  
 \end{frame}
@@ -363,7 +356,6 @@ Mila}
     \begin{figure}[ht]
       \centering
       \includegraphics[width=0.7\paperwidth]{figure/cav_app2}
-      \caption{\label{fig:cav_app2} }
     \end{figure}
   \end{itemize}  
 \end{frame}
@@ -374,8 +366,7 @@ Mila}
   \item Measuring consistency with codified medical practice
     \begin{figure}[ht]
       \centering
-      \includegraphics[width=0.7\paperwidth]{figure/cav_app3}
-      \caption{\label{fig:cav_app3} }
+      \includegraphics[width=0.7\paperwidth]{figure/cav_app1}
     \end{figure}
   \end{itemize}  
 \end{frame}

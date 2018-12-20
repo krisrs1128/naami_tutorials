@@ -3,8 +3,6 @@
 \input{preamble.tex}
 \usepackage{graphicx,amsmath,amssymb,natbib}
 
-%% \input defs.tex
-
 %% formatting
 \setbeamertemplate{navigation symbols}{}
 \usecolortheme[rgb={0.13,0.28,0.59}]{structure}
@@ -28,7 +26,6 @@
 \end{figure}
 
 }
-\footlineon
 %% begin presentation
 
 \title{\large \bfseries Generative Adversarial Networks}
@@ -170,45 +167,46 @@ Nepal Winter School in AI}
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.7\paperwidth]{figure/discriminator_transformation}
-  \caption{\label{fig:discriminator_transformation} }
+  \caption{The discriminator guides the generator towards learning a good
+    transformation, attempting to tell the difference between the true data
+    (green) and generated (blue)
+    distributions. \label{fig:discriminator_transformation} }
 \end{figure}
 \end{frame}
 
 \begin{frame}
 \frametitle{Objective Function}
  \begin{itemize}
-   \item How should $D$ guide these updates?
+   \item How should $D$ guide updates to $G$?
    \item Objective function
      \begin{align*}
        \min_{G}\max_{D} V\left(D, G\right) = \Esubarg{p_{\text{data}}}{D\left(x\right)} + \Esubarg{p\left(z\right)}{\log\left(1 - D\left(G\left(z\right)\right)\right)}
      \end{align*}
    \item Alternate gradient steps, first update $D$, then $G$, then $D$, ...
 \begin{itemize}
-\item $D$ is encouraged to be large on $x$ and small on $G\left(z\right)$, so
-  that the objective gets large
-\item $G$ is encouraged to make $D$ assign values near 1 to samples $G\left(z\right)$, so that the objective gets small
+\item $D$ tries to be large on $x$ and small on $G\left(z\right)$
+\item $G$ is encouraged to make $D$ assign values near 1 to samples
+  $G\left(z\right)$, so that the objective gets small
 \end{itemize}
  \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/gan_objectives}
-  \caption{The green line is $\log\left(x\right)$ and the purple is $\log\left(1
-    - x\right)$, on the range $\left[0, 1\right]$ of possible
-    probabilities. \label{fig:gan_objectives} }
+  \includegraphics[width=0.17\paperwidth]{figure/gan_objectives}
+  \caption{The blue, red, and orange lines are $\log x$, $\log\left(1 -
+    x\right)$ and $-\log x$, respectively. This last function is often used
+    instead of $\log \left(1 - x\right)$. \label{fig:gan_objectives} }
 \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{GAN Lab}
- \begin{itemize}
-   \url{https://poloclub.github.io/ganlab/}
- \end{itemize}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.7\paperwidth]{figure/ganlab}
-  \caption{A visualization of the whole process, on a few different toy
-    datasets. \label{fig:ganlab} }
-\end{figure}
+  \url{https://poloclub.github.io/ganlab/}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/ganlab}
+    \caption{A visualization of the whole process, on a few different toy
+      datasets. \label{fig:ganlab} }
+  \end{figure}
 \end{frame}
 
 \section{Perspectives}
@@ -218,48 +216,48 @@ Nepal Winter School in AI}
   \frametitle{Training difficulties}
  \begin{itemize}
  \item GANs have a bad reputation for being finnicky to train
- \item If the discriminator is ``too strong,'' it might not communicate useful
-   information
+ \item If the discriminator $D$ is ``too strong,'' it might not communicate
+   useful information
  \end{itemize}
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.7\paperwidth]{figure/alternative_critic}
-  \caption{We would like a critic that tells the generator when it's getting
+  \caption{We would like a critic $W$ that tells the generator when it's getting
     closer, even when it's obviously different from the
     target. \label{fig:alternative_critic} }
 \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Wasserstein GAN}
+  \frametitle{Wasserstein Distance}
  \begin{itemize}
  \item Formalize this idea using distances $d\left(\P_1, \P_2\right)$ between
    probability distributions
- \item Distances between Gaussians $\Gsn\left(\mu_1, 1\right)$ and
-   $\Gsn\left(\mu_2, 1\right)$.
-\begin{itemize}
-  \item KL-divergence: $1 + \frac{1}{2} \left(\mu_2 - \mu_1\right)^2$
-  \item Wasserstein distance:
+ \item KL-divergence compares densities \textit{vertically}
+ \item Wasserstein compares densities \textit{horizontally}
+ \item Wasserstein distance tells us something even when they are far away!
 \end{itemize}
-\item Wasserstein distance tells us something even when they are far away!
-\item Effect is even more pronounced in very-high dimensions
- \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/alternative_critic}
+  \caption{We would like a critic $W$ that tells the generator when it's getting
+    closer, even when it's obviously different from the
+    target. \label{fig:alternative_critic} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Wasserstein Objective}
-  \begin{itemize}
-  \item Wasserstein distance between data $X$ and generated $\tilde{X}$
-    distributions is defined by
-    \begin{align*}
-      d\left(\P_X, \P_\tilde{X}\right) &= \max_{\|f\|_{L} \leq 1} \Esubarg{X}{f\left(x\right)} - \Esubarg{\tilde{X}}{f\left(\tilde{x}\right)}
-    \end{align*}
-    where $\|f\|_{L} \leq 1$ is the set of functions whose slopes are always less
-    than 1.
-  \end{itemize}
+  Wasserstein distance between data $X$ and generated $\tilde{X}$
+  distributions is defined by
+  \begin{align*}
+    d\left(\P_X, \P_{\tilde{X}}\right) &= \max_{\|f\|_{L} \leq 1} \Esubarg{X}{f\left(x\right)} - \Esubarg{\tilde{X}}{f\left(\tilde{x}\right)}
+  \end{align*}
+  where $\|f\|_{L} \leq 1$ is the set of functions whose slopes are always less
+  than 1.
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\paperwidth]{figure/wasserstein_tests}
+    \includegraphics[width=0.2\paperwidth]{figure/wasserstein_tests}
     \caption{You can interpret the objective as computing differences in means
       after passing samples through a variety of (not too wild) test
       functions.\label{fig:wasserstein_tests} }
@@ -274,7 +272,7 @@ Nepal Winter School in AI}
       d\left(\P_{X}, \P_{\tilde{X}}\right) &= \max_{\|f\| \leq 1} \Esubarg{X}{f\left(x\right)} - \Esubarg{Z}{f\left(G\left(z\right)\right)}
     \end{align*}
   \item Finding the optimal $f$ for any particular choice of $G$ is complicated...
-  \item Alternatively do gradient updates
+  \item As an alternative, do gradient updates
   \begin{itemize}
   \item Critic $f$ inches towards its maximizing value of $d\left(\P_{X},
     \P_{\tilde{X}}\right)$.
@@ -341,14 +339,35 @@ Nepal Winter School in AI}
 
 \begin{frame}
   \frametitle{Applications: Image-to-Image translation}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\paperwidth]{figure/image_to_image}
+  \caption{Adding on a GAN objective when learning to map one class of images to
+    another results in realistic looking translated
+    images. \label{fig:image_to_image} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Applications: Inpainting}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.45\paperwidth]{figure/inpainting}
+  \caption{Similarly, when applied to inpainting, the GAN loss leads to much
+    less blurry images than the traditional $\ell^{2}$
+    loss. \label{fig:inpainting} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Applications: Super-Resolution}
+  \begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.9\paperwidth]{figure/srgan}
+  \caption{It's interesting to note that some of the details that appear in the
+    GAN super-resolved image were not present in the original high-resolution
+    version.}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
