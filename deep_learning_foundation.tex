@@ -1,7 +1,8 @@
 \documentclass[10pt,mathserif]{beamer}
 
 \usepackage{graphicx,amsmath,amssymb,tikz,psfrag}
-\usepackage{pythonhighlight, subcaption}
+\usepackage{pythonhighlight, subcaption, natbib}
+
 
 \input{preamble}
 
@@ -324,8 +325,9 @@
   \begin{itemize}
   \item Derivative of composition $\rightarrow$ multiplication of derivatives
     \begin{align*}
-      D\left(f^{K} \circ f^{K - 1} \dots \circ f^{1}\right)\left(x\right) &= \left[\prod_{k = 2}^{K} D f^{k}\left(f^{k - 1}\left(x\right)\right)\right]D f^1\left(x\right)
+      D\left(f^{K} \circ f^{K - 1} \dots \circ f^{1}\right)\left(x\right) &= \left[\prod_{k = 2}^{K} D f^{k}\left(h_{k - 1}\right)\right]D f^1\left(x\right)
     \end{align*}
+    where $h_k = f^{k}\left(h_{k - 1}\right)$ is output of previous level (and $h_0 = x$)
   \end{itemize}
   \begin{figure}[ht]
     \centering
@@ -482,7 +484,7 @@
 \begin{frame}
   \frametitle{Mixing \& Stacking Logistic Regressions}
   \begin{itemize}
-    \item Simple combinations of simple functions can quickly become complex
+    \item Simple combinations of simple functions quickly become complex
     \item These complex compositions could capture meaningful features
   \end{itemize}
   \begin{figure}
@@ -510,12 +512,30 @@
 \begin{frame}
   \frametitle{Mixing \& Stacking Logistic Regressions}
   \begin{itemize}
-  \item Simple combinations of simple functions can quickly become complex
-  \item These complex compositions could capture meaningful features
+  \item New notation: Representation at layer $k$,
+    \begin{align*}
+      h_{k} = f^k\left(h_{k - 1}; W_k\right) \stackrel{\text{defined}}{=} \sigma\left(W_k h_{k - 1}\right)
+    \end{align*}
   \end{itemize}
   \begin{figure}
     \centering
     \includegraphics[width=0.4\paperwidth]{figure/mixture_logistic_k_stacked}
+    \caption{Mixing more sigmoids, we can represent even more complicated
+      functions. \label{fig:mixture_logistic_k_block} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mixing \& Stacking Logistic Regressions}
+  \begin{itemize}
+  \item New notation: Representation at layer $k$,
+    \begin{align*}
+      h_{k} = f^k\left(h_{k - 1}; W_k\right) \stackrel{\text{defined}}{=} \sigma\left(W_k h_{k - 1}\right)
+    \end{align*}
+  \end{itemize}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.4\paperwidth]{figure/mixture_logistic_k_stacked_loss}
     \caption{Mixing more sigmoids, we can represent even more complicated
       functions. \label{fig:mixture_logistic_k_block} }
   \end{figure}
@@ -584,14 +604,7 @@
   \begin{itemize}
   \item For each iteration of SGD, we need to estimate the gradient of the loss
     with respect to the parameters
-  \item Representation at layer $k$,
-    \begin{align*}
-    h_{k} = f^k\left(h_{k - 1}\right) \stackrel{\text{defined}}{=} \sigma\left(W_k h_{k - 1}\right)
-    \end{align*}
-    \begin{itemize}
-    \item Convention that $h_0 \stackrel{\text{defined}}{=} x_i$
-    \end{itemize}
-  \item When you change $W_k$ a little, it changes all the upstream $h_k, h_{k +
+  \item When you perturb $W_k$ a little, it changes all the upstream $h_k, h_{k +
     1}, \dots, h_{K}$ up to the prediction, which uses that final representation
   \item There is a lot of composition going on here... could become much more
     complicated than logistic regression
@@ -602,38 +615,86 @@
 \begin{frame}
   \frametitle{Base Case}
   \begin{itemize}
-  \item Loss using final $K^{th}$ layer representation,
+  \item Loss using final $K^{th}$ layer representation (a single number $h_k$,
+    giving probability coin toss is $1$)
     \begin{align*}
-    \ell\left(y_i, h_K\right) &= \ell\left(y_i, f^{k}\left(h_{K - 1}\right)\right) \\
-    &= \ell\left(y_i, \sigma\left(W_{K}h_{k - 1}\right)\right)
+      \ell\left(y_i, h_K\right) &= y_i \log h_{K} + \left(1 - y_i\right)\log\left(1 - h_{K}\right)
     \end{align*}
-  \item How does the loss change when you perturb $W_{k}$ or $h_{k - 1}$ a little?
-  \item Derivative of loss with respect to final layer weights
+  \item How does the loss change when we perturb $h_{K}$ slightly?
     \begin{align*}
-      D\left(\ell \circ f^{K}\left(h_{k - 1}\right)\right) &=
-      D\left(\ell\circ \sigma\left(W_k h_{k - 1}\right)\right)
+      D \ell\left(h_{K}\right) &= \frac{y_i}{h_K} - \frac{1 - y_i}{1 - h_K}
     \end{align*}
-  \item Can compute derivatives using chain rule, just like in logistic
-    regression
   \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\paperwidth]{figure/backprop_last_layer}
+  \caption{We are considering the derivative of the lost with respect to changes
+    in the last layer. \label{fig:backprop_last_layer} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Inductive Hypothesis + Step}
   \begin{itemize}
   \item Hypothesis: Suppose we know how to compute derivatives for all $f_{K},
-    f_{K - 1}, \dots, f_{k + 1}$ with respect to their inputs
-  \item Step: Then derivative of $\ell$ with respect to input $h_k - 1$
+    f_{K - 1}, \dots, f_{k + 2}$ with respect to their input $h$'s
+  \item Step: Then derivative of $\ell$ with respect to upstream $h_k$
     \begin{align*}
-      D\left(\ell \circ f^{K} \circ \dots f^{k + 1} \circ f^{k}\right) &= D\ell\left(h^{K}\right)
-      Df^{K}\left(h_{K - 1}\right) \dots Df^{k + 1}\left(h_{k}\right) Df^{k}\left(h_{k - 1}\right)
+      D\left(\ell \circ f^{K}\circ \cdots \circ f^{k + 1}\right)\left(h_{k}\right) &=
+      D\ell\left(h_{K}\right) Df^{K}\left(h_{k - 1}\right)\cdots Df^{k + 1}\left(h_{k}\right)
     \end{align*}
-  \item Since $Df^{k}\left(h_{k - 1}\right) = D\left(\sigma\left(W_{k}h_{k
-    -1}\right)\right)$ is straightforwards, induction is complete
-    %% \begin{align*}
-    %%   D_{W_k}}\left(\ell \circ f^{k}\left(h_k - 1\right)\right)
-    %% \end{align*}
+  \item All but the last term known by hypothesis
   \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\paperwidth]{figure/backprop_inductive_step}
+  \caption{Assuming we know how to take derivatives of all layers, we can take
+    derivatives with respect to the $k^{th}$
+    layer. \label{fig:backprop_inductive_step} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Inductive Hypothesis + Step}
+  \begin{itemize}
+  \item Last term can be found by two-term chain rule, since it is a composition
+    of linear and sigmoid transformation: $D\left(\sigma\left(W^{k +
+      1}h_{k}\right)\right)$
+  \item Therefore, we compute any $D\ell\left(h_k\right)$
+    \begin{itemize}
+    \item Abuse of notation: $\ell$ is not directly a function of $h_k$.
+      Interpret this as change in $\ell$ when you perturb upstream $h_k$
+    \end{itemize}
+  \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\paperwidth]{figure/backprop_inductive_step}
+  \caption{Assuming we know how to take derivatives of all layers, we can take
+    derivatives with respect to the $k^{th}$
+    layer. \label{fig:backprop_inductive_step} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Backpropagation: Updating $W_k$'s}
+  \begin{itemize}
+  \item Know how loss changes when intermediate layers $h_k$ are perturbed
+  \item But for SGD, we need derivatives with respect to $W_k$'s
+  \item Again abusing notation, use known derivatives w.r.t. inputs
+    \begin{align*}
+      D\ell\left(W_k\right) &= D \left(\ell \circ f^{k + 1}\right)\left(W_k\right) \\
+        &= D\ell\left(h_{k + 1}\right)Df_{k + 1}\left(W_k\right)
+    \end{align*}
+  \item Derivatives of $f_{k + 1}$ with respect to weights is just like logistic
+    regression
+  \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.35\paperwidth]{figure/backprop_inductive_w}
+  \caption{To get derivatives with respect to weights, multiply by one more edge
+    in the computational flow graph. \label{fig:backprop_inductive_w} }
+\end{figure}
+
 \end{frame}
 
 \begin{frame}
@@ -644,64 +705,66 @@
     output with respect to input
   \item Has let people experiment widely in literature,
     \begin{itemize}
-    \item Convolution layers
-    \item Attention mechanisms
-    \item LSTM cells
+    \item Convolution layers \citep{lecun1995convolutional}
+    \item Attention mechanisms \citep{olah2016attention}
+    \item LSTM cells \citep{schmidhuber1997long}
+    \item Residual layers \citep{he2016deep}
     \item ...
     \end{itemize}
+  \item And all sorts of mixing and matching between these
   \end{itemize}
 \end{frame}
 
-\section{Types of Layers}
+%% \section{Types of Layers}
 
-\begin{frame}
-  \frametitle{Fully Connected}
-\begin{figure}
-  \centering
-  \includegraphics[width=0.7\paperwidth]{figures/fully_connected_vis}
-  \caption{All the outputs from one layer can affect all the inputs to the next
-    one. \label{fig:fully_connected}}
-\end{figure}
-\end{frame}
+%% \begin{frame}
+%%   \frametitle{Fully Connected}
+%% \begin{figure}
+%%   \centering
+%%   \includegraphics[width=0.7\paperwidth]{figures/fully_connected_vis}
+%%   \caption{All the outputs from one layer can affect all the inputs to the next
+%%     one. \label{fig:fully_connected}}
+%% \end{figure}
+%% \end{frame}
 
-\begin{frame}
-  \frametitle{Fully Connected (Math)}
-\end{frame}
+%% \begin{frame}
+%%   \frametitle{Fully Connected (Math)}
+%% \end{frame}
 
-\begin{frame}
-  \frametitle{Convolution + Pooling}
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.7\paperwidth]{figures/convolutional_vis}
-    \caption{Convolution compares small patches against prespecified
-      ``filters.'' Since it uses the same filters for all patches, the number of
-      parameters is greatly reduced.
-      \label{fig:convolutional_vis}}
-  \end{figure}
-\end{frame}
+%% \begin{frame}
+%%   \frametitle{Convolution + Pooling}
+%%   \begin{figure}
+%%     \centering
+%%     \includegraphics[width=0.7\paperwidth]{figures/convolutional_vis}
+%%     \caption{Convolution compares small patches against prespecified
+%%       ``filters.'' Since it uses the same filters for all patches, the number of
+%%       parameters is greatly reduced.
+%%       \label{fig:convolutional_vis}}
+%%   \end{figure}
+%% \end{frame}
 
-\begin{frame}
-  \frametitle{Residual Layer}
-  \begin{figure}
-      \centering
-      \includegraphics[width=0.7\paperwidth]{figure/resnet_vis}
-      \caption{Residual Networks use layers to incrementally
-        add complexity, by directly copying the previous values and only
-        learning minor modifications on top of that. \label{fig:resnet_vis} }
-  \end{figure}
-\end{frame}
+%% \begin{frame}
+%%   \frametitle{Residual Layer}
+%%   \begin{figure}
+%%       \centering
+%%       \includegraphics[width=0.7\paperwidth]{figure/resnet_vis}
+%%       \caption{Residual Networks use layers to incrementally
+%%         add complexity, by directly copying the previous values and only
+%%         learning minor modifications on top of that. \label{fig:resnet_vis} }
+%%   \end{figure}
+%% \end{frame}
 
-\begin{frame}
-  \frametitle{Residual Layer (Math)}
-\end{frame}
+%% \begin{frame}
+%%   \frametitle{Residual Layer (Math)}
+%% \end{frame}
 
-\begin{frame}
-  \frametitle{Attention Mechanisms}
-\end{frame}
+%% \begin{frame}
+%%   \frametitle{Attention Mechanisms}
+%% \end{frame}
 
-\begin{frame}
-  \frametitle{Gated Recurrent Units}
-\end{frame}
+%% \begin{frame}
+%%   \frametitle{Gated Recurrent Units}
+%% \end{frame}
 
 \section{Debugging Deep Learning}
 
@@ -718,15 +781,33 @@
     \end{itemize}
     the model may or may not train properly
   \end{itemize}
+\begin{figure}[ht]
+  \centering
+    \begin{subfigure}{.2\paperwidth}
+      \centering
+      \includegraphics[width=0.17\paperwidth]{figure/learning_rate_effect}
+    \end{subfigure}
+    \begin{subfigure}{.2\paperwidth}
+      \centering
+      \includegraphics[width=0.17\paperwidth]{figure/weight_initialization}
+    \end{subfigure}
+    \begin{subfigure}{.2\paperwidth}
+      \centering
+      \includegraphics[width=0.17\paperwidth]{figure/architecture_choice}
+    \end{subfigure}
+  \caption{Three types of hyperparameters that can affect training: Learning
+    rates, weight initialization, and architecture
+    design. \label{fig:hyperparameters} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Training Analysis}
   \begin{figure}[ht]
     \centering
-    %% \includegraphics[width=0.7\paperwidth]{figure/}
+    \includegraphics[width=0.7\paperwidth]{figure/bias_variance}
     \caption{Typical strategy is to try to first overfit the model, then
-      regularize to ensure validation performance. \label{fig:learning_curves} }
+      regularize to ensure validation performance. \label{fig:bias_variance} }
   \end{figure}
 \end{frame}
 
@@ -741,16 +822,43 @@
   \item Save your model at checkpoints! Helps both debugging and restarting
     training
   \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \begin{subfigure}{.5\paperwidth}
+      \centering
+      \includegraphics[width=0.4\paperwidth]{figure/activation_evolution}
+    \end{subfigure}
+    \begin{subfigure}{.5\paperwidth}
+      \centering
+      \includegraphics[width=0.4\paperwidth]{figure/backprop_histogram}
+    \end{subfigure}
+    \caption{Detective work to understand failures in training, from
+      \citep{glorot2010understanding}.\label{fig:detective_work} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Final Remarks}
-
+  \frametitle{Philosophy for Learning Deep Learning}
+  \begin{itemize}
+  \item Don't ignore history!
+    \begin{itemize}
+    \item No need to keep up with every retweeted paper
+    \item There were many creative people long before deep learning
+    \end{itemize}
+  \item Whenever you encounter a new algorithm or formula,
+    \begin{itemize}
+    \item Sketch a toy example (one-dimensional, binary instead of multiclass,
+      discrete instead of continuous, ...)
+    \item Draw picture of a toy example
+    \item Try to plug in simple values (0, 1, $\pm \infty$ are good choices)
+    \end{itemize}
+  \item Genius is overrated
+    \begin{itemize}
+    \item First of all, there's stackoverflow
+    \item No amount of natural talent can make up for dedicated effort
+    \end{itemize}
+  \end{itemize}
 \end{frame}
 
-  \begin{figure}
-    \centering
-    \includegraphics[width=0.7\paperwidth]{figure/}
-    \caption{\label{fig:coin_flipping_data} }
-  \end{figure}
+\bibliography{refs}
 \end{document}
