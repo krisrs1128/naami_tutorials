@@ -37,7 +37,8 @@ plot_probs <- function(x) {
     geom_hline(yintercept = 0) +
     scale_x_continuous("x[1]", expand = c(0, 0)) +
     scale_y_continuous("x[2]", expand = c(0, 0)) +
-    scale_fill_viridis()
+    scale_fill_viridis() +
+    theme(legend.position="none")
 }
 
 for (i in seq_len(10)) {

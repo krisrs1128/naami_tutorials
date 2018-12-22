@@ -1,12 +1,9 @@
-
 \documentclass[10pt,mathserif]{beamer}
 
 \usepackage{graphicx,amsmath,amssymb,tikz,psfrag}
 \usepackage{pythonhighlight, subcaption}
 
 \input{preamble}
-
-%% formatting
 
 \mode<presentation>
 {
@@ -33,7 +30,7 @@
 
 \title{\large \bfseries Deep Learning Foundations}
 
-\author{Kris Sankaran\\[3ex] Mila}
+\author{Kris Sankaran\\[3ex] Nepal Winter School in AI}
 
 \date{\today}
 
@@ -61,10 +58,10 @@
   \item Imagine $n$ flips of a coin with probability $\pi$ of coming up heads.
   \item Loglikelihood function (independent bernoulli trials)
     \begin{align*}
-      \log p\left(x \vert \pi \right) &= \log \left[\prod_{i = 1}^{n} \pi^{\indic{x_i = 1}}\left(1 - \pi\right)^{x_i = 0}\right] \\
-      &= \sum_{i = 1}^{n} \indic{x_i = 1}\log \pi + \indic{x_i = 0}\log\left(1 - \pi\right)
+      \log p\left(y \vert \pi \right) &= \log \left[\prod_{i = 1}^{n} \pi^{\indic{y_i = 1}}\left(1 - \pi\right)^{y_i = 0}\right] \\
+      &= \sum_{i = 1}^{n} \indic{y_i = 1}\log \pi + \indic{y_i = 0}\log\left(1 - \pi\right)
     \end{align*}
-    where we use the shorthand $x = \left(x_1, \dots, x_n\right)$.
+    where we use the shorthand $y = \left(y_1, \dots, y_n\right)$.
   \end{itemize}
   \begin{figure}[ht]
     \centering
@@ -80,8 +77,8 @@
   \item Imagine $n$ flips of a coin with probability $\pi$ of coming up heads.
   \item Loglikelihood function (independent bernoulli trials)
     \begin{align*}
-      \log p\left(x \vert \pi \right) &= \log \left[\prod_{i = 1}^{n} \pi^{\indic{x_i = 1}}\left(1 - \pi\right)^{x_i = 0}\right] \\
-      &= \sum_{i = 1}^{n} \indic{x_i = 1}\log \pi + \indic{x_i = 0}\log\left(1 - \pi\right)
+      \log p\left(y \vert \pi \right) &= \log \left[\prod_{i = 1}^{n} \pi^{\indic{y_i = 1}}\left(1 - \pi\right)^{y_i = 0}\right] \\
+      &= \sum_{i = 1}^{n} \indic{y_i = 1}\log \pi + \indic{y_i = 0}\log\left(1 - \pi\right)
     \end{align*}
     where we use the shorthand $y = \left(y_1, \dots, y_n\right)$.
   \end{itemize} 
@@ -204,53 +201,53 @@
   \begin{itemize}
   \item Consider the collection of functions (one for each $\theta$)
     \begin{align*}
-      \pi_{\theta}\left(x\right) &= \frac{1}{1 + \exp{-\theta^{T}x}}
+      \pi_{\theta}\left(x\right) &= \frac{1}{1 + \exp{-\theta^{T}x}} \stackrel{\text{defined}}{=}\sigma\left(\theta^{T}x\right)
     \end{align*}
   \end{itemize}
   \begin{figure}
-    \begin{subfigure}{.1\textwidth}
+    \begin{subfigure}{.17\paperwidth}
       \centering
-      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_1}
+      \includegraphics[width=0.17\paperwidth]{figure/sigmoid_plot_1}
     \end{subfigure}
-    \begin{subfigure}{.1\textwidth}
+    \begin{subfigure}{.17\paperwidth}
       \centering
-      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_2}
+      \includegraphics[width=0.17\paperwidth]{figure/sigmoid_plot_2}
     \end{subfigure}
-    \begin{subfigure}{.1\textwidth}
+    \begin{subfigure}{.17\paperwidth}
       \centering
-      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_3}
+      \includegraphics[width=0.17\paperwidth]{figure/sigmoid_plot_3}
     \end{subfigure}
-    \begin{subfigure}{.1\textwidth}
+    \begin{subfigure}{.17\paperwidth}
       \centering
-      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_4}
+      \includegraphics[width=0.17\paperwidth]{figure/sigmoid_plot_4}
     \end{subfigure}
-    \begin{subfigure}{.1\textwidth}
+    \begin{subfigure}{.17\paperwidth}
       \centering
-      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_5}
+      \includegraphics[width=0.17\paperwidth]{figure/sigmoid_plot_5}
     \end{subfigure}
-    \begin{subfigure}{.1\textwidth}
+    \begin{subfigure}{.17\paperwidth}
       \centering
-      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_6}
+      \includegraphics[width=0.17\paperwidth]{figure/sigmoid_plot_6}
     \end{subfigure}
-    \begin{subfigure}{.1\textwidth}
+    \begin{subfigure}{.17\paperwidth}
       \centering
-      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_7}
+      \includegraphics[width=0.17\paperwidth]{figure/sigmoid_plot_7}
     \end{subfigure}
-    \begin{subfigure}{.1\textwidth}
+    \begin{subfigure}{.17\paperwidth}
       \centering
-      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_8}
+      \includegraphics[width=0.17\paperwidth]{figure/sigmoid_plot_8}
     \end{subfigure}
-    \begin{subfigure}{.1\textwidth}
+    \begin{subfigure}{.17\paperwidth}
       \centering
-      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_9}
+      \includegraphics[width=0.17\paperwidth]{figure/sigmoid_plot_9}
     \end{subfigure}
-    \begin{subfigure}{.1\textwidth}
+    \begin{subfigure}{.17\paperwidth}
       \centering
-      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_10}
+      \includegraphics[width=0.17\paperwidth]{figure/sigmoid_plot_10}
     \end{subfigure}
     \caption{Example sigmoid functions $\pi_{\theta}$ for random draws of
       $\theta$, when we assume $x$ has an intercept term ($x = \left(1,
-      \dots\right)$).
+      \dots\right)$). Notice that there are no nonlinear boundaries...
       \label{fig:logistic_scatter_nonlinear} }
   \end{figure}
 \end{frame}
@@ -259,50 +256,121 @@
   \frametitle{Logistic Regression}
   \begin{itemize}
   \item Logistic Regression $\rightarrow$ Finding good $\theta$'s for this
-    likelihood
-  \item Digression: When was logistic regression invented?
+    likelihood (i.e., the ones that maximize it)
+    \begin{align*}
+      \log p_{\theta}\left(y \vert x\right) &= \sum_{i = 1}^{n} \indic{y_i = 1}\log \pi_{\theta}\left(x\right) + \indic{y_i = 0}\log\left(1 - \pi_{\theta}\left(x\right)\right)
+    \end{align*}
+  \item These are the directions like those in the previous figure that do a
+    good job separating heads from tails
   \end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Logistic Regression}
-  \begin{itemize}
-  \item Logistic Regression $\rightarrow$ Finding good $\theta$'s for this
-    likelihood
-  \item Digression: When was logistic regression invented?
-  \end{itemize}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.4\paperwidth]{figure/logistic_paper}
-    \caption{The inventor is still alive! \label{fig:logistic_paper} }
-  \end{figure}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Logistic Regression}
-  \begin{itemize}
-  \item Logistic Regression $\rightarrow$ Finding good $\theta$'s for this
-    likelihood
-  \item Digression: When was logistic regression invented?
-  \end{itemize}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.7\paperwidth]{figure/least_squares}
-    \caption{First public demonstration of least squares (Legendre,
-      1805). \label{fig:least_squares} }
-  \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Optimization}
+  \begin{itemize}
+  \item Need to find some $\theta$'s that maximize $\log p_{\theta}\left(y \vert s\right)$
+  \item Use gradient descent on $-\log p_{\theta}\left(y \vert x\right)$
+  \item How to get the gradients?
+  \item Approach 1: Courageously differentiate,
+    \begin{align*}
+      &\frac{\partial}{\partial \theta}\log p_{\theta}\left(y \vert x\right) \\
+      = &\frac{\partial}{\partial \theta} \left[\sum_{i = 1}^{n} y_i \log \sigma\left(\theta^{T}x_{i}\right) + \left(1 - y_i\right)\log\left(1 - \sigma\left(\theta^{T}x_i\right)\right)\right] \\
+      = &\frac{\partial}{\partial \theta}\left[\sum_{i = 1}^{n}
+        y_i \log\left(\frac{1}{1 + \exp{-\theta^{T}x_i}}\right) + 
+          \left(1 - y_i\right)\log\left(\frac{\exp{-\theta^{T}x_i}}{1 + \exp{-\theta^{T}x_i}}\right) \right]
+    \end{align*}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Optimization}
+  \begin{itemize}
+  \item Approach 2: Chain rule magic!
+    \begin{align*}
+      \log p_{\theta}\left(y_i \vert x_i\right)  &= y_i \log\left(\theta^T x_i\right) + \left(1 - y_i\right) \log\left(1 - \sigma\left(\theta^T x_i\right)\right) \\
+      &= \ell\left(\sigma\left(\theta^T x_{i}\right)\right)
+    \end{align*}
+  \item This is the composition of three relatively simple functions
+  \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/logistic_comp_graph}
+  \caption{The loss function is a series of compositions of relatively simple
+    functions. This is an example of a computational flow diagram, which is
+    often used in the deep learning literature.
+    \label{fig:logistic_comp_graph} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Review: The Chain Rule}
+  \begin{itemize}
+  \item Derivative of composition $\rightarrow$ multiplication of derivatives
+    \begin{align*}
+      D\left(f \circ g\right)\left(x\right) &= D f\left(g\left(x\right)\right)Dg\left(x\right)
+    \end{align*}
+  \end{itemize}
+ \begin{figure}[ht]
+   \centering
+   \includegraphics[width=0.75\paperwidth]{figure/chain_rule_2}
+   \caption{The chain rule tells us how a small change in $x$ affects the
+     downstream output of a composition of functions, in terms of the changes it
+     causes within each intermediate function. \label{fig:chain_rule_2} }
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Review: The Chain Rule}
+  \begin{itemize}
+  \item Derivative of composition $\rightarrow$ multiplication of derivatives
+    \begin{align*}
+      D\left(f^{K} \circ f^{K - 1} \dots \circ f^{1}\right)\left(x\right) &= \left[\prod_{k = 2}^{K} D f^{k}\left(f^{k - 1}\left(x\right)\right)\right]D f^1\left(x\right)
+    \end{align*}
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\paperwidth]{figure/chain_rule_k}
+    \caption{The chain rule tells us how a small change in $x$ affects the
+      downstream output of a composition of functions, in terms of the changes it
+      causes within each intermediate function. \label{fig:chain_rule_k} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Chain Rule for Logistic Regression}
+  \begin{itemize}
+  \item We can now find the derivative of the logistic regression loss much more
+    elegantly
+  \item Remember that it has these intermediate functions
+    \begin{enumerate}
+    \item $\ell\left(\sigma\right) = y_i\log\sigma + \left(1 - y_i\right)\log\left(1 - \sigma\right)$
+    \item $\sigma\left(z\right) = \frac{1}{1 + \exp{-z}}$
+    \item $\theta^{T}x_i$
+    \end{enumerate}
+  \item Their derivatives are (check this!)
+    \begin{enumerate}
+    \item $\frac{\partial}{\partial \sigma}\ell\left(\sigma\right) = \frac{y_i}{\sigma} - \frac{1 - y_i}{1 - \sigma}$
+    \item $\frac{\partial}{\partial z}\sigma\left(z\right) = -\sigma\left(z\right)\left(1 - \sigma\left(z\right)\right)$
+    \item $\nabla_{\theta} \theta^{T} x_i = x_i$
+    \end{enumerate}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Chain Rule for Logistic Regression}
+  \begin{itemize}
+  \item Multiply the derivatives and substitute input from the flow diagram
+  \item Gives the (negative) gradient,
+    \begin{align*}
+      &\left(\frac{y_i}{\sigma\left(\theta^{T}x_i\right)} - \frac{1 - y_i}{1 - \sigma\left(\theta^{T}x_i\right)}\right)\sigma\left(\theta^{T}x_i\right)\left(1 - \sigma\left(\theta^{T}x_i\right)\right)x_i \\
+      = &\left[y_i\left(1 - \sigma\left(\theta^{T} x_i\right)\right) - \left(1 - y_i\right)\sigma\left(\theta^T x_i\right)\right]x_i \\
+      = &\left(y_i - \pi_{\theta}\left(x_i\right)\right) x_i
+    \end{align*}
+    recalling that by definition $\pi_{\theta}\left(x_i\right) =
+    \sigma\left(\theta^T x_i\right)$
+  \item Nice interpretation: change $\theta$ a lot when $y_i$ is far from the
+    prediction probability $\pi_{\theta}\left(x_i\right)$
+  \end{itemize} 
 \end{frame}
 
 \section{Representation Learning}
@@ -310,24 +378,37 @@
 \begin{frame}
   \frametitle{Finding Meaningful Features}
  \begin{itemize}
- \item What if our $x_i$'s are unstructured?
- \item Logistic regression only succeeds when raw input coordinates are
-   meaningful
+ \item Want to estimate $p\left(y_i = \text{yak} \vert x_i\right)$
+ \item Could use logistic regression if the input $x_i$ were meaningful
  \end{itemize} 
  \begin{figure}[ht]
    \centering
-   \includegraphics[width=0.7\paperwidth]{figure/image_features}
+   \includegraphics[width=0.7\paperwidth]{figure/image_features_ideal}
    \caption{It would be nice if our images came with qualitative annotation
-     about what was in them. \label{fig:image_features} }
+     about what was in them. \label{fig:image_features_ideal} }
  \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Finding Meaningful Features}
  \begin{itemize}
- \item What if our $x_i$'s are unstructured?
- \item Logistic regression only succeeds when raw input coordinates are
-   meaningful
+ \item Want to estimate $p\left(y_i = \text{yak} \vert x_i\right)$
+ \item If our $x_i$'s are unstructured, this becomes much more difficult
+ \item Logistic regression will fail
+ \end{itemize} 
+ \begin{figure}[ht]
+   \centering
+   \includegraphics[width=0.7\paperwidth]{figure/image_features_reality}
+   \caption{In reality, we can't manually provide all this
+     annotation. \label{fig:image_features_reality} }
+ \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Finding Meaningful Features}
+ \begin{itemize}
+ \item If our $x_i$'s are unstructured, this becomes much more difficult
+ \item Logistic regression will fail
  \end{itemize} 
  \begin{figure}[ht]
    \centering
@@ -339,32 +420,120 @@
 
 \begin{frame}
   \frametitle{Our Goal}
+  \begin{itemize}
+  \item Try to automatically learn meaningful features
+  \item Start with simple features at low layers
+  \item Increase feature complexity in a compositional way
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\paperwidth]{figure/zf_layer1}
+    \caption{Early layers might create features corresponding to edges of
+      different orientations. \label{fig:zf_layer1} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Stacking Logistic Regressions}
+  \frametitle{Our Goal}
   \begin{itemize}
-  \item Idea: Let logistic regression learn the features that help it classify
-    well
-  \item To do this, allow nonlinear transformations leading to final
-    classification layer
-  \item Successive layers learn more complex feature representations
+  \item Try to automatically learn meaningful features
+  \item Start with simple features at low layers
+  \item Increase feature complexity in a compositional way
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/zf_layer2}
+    \caption{Features increase in complexity as you get deeper in the
+      network. \label{fig:zf_layer2} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Our Goal}
+  \begin{itemize}
+  \item Try to automatically learn meaningful features
+  \item Start with simple features at low layers
+  \item Increase feature complexity in a compositional way
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\paperwidth]{figure/zf_layer4}
+    \caption{Eventually we will have meaningful high-level features.
+      \label{fig:zf_layer4} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Our Goal}
+  \begin{itemize}
+  \item Try to automatically learn meaningful features
+  \item Start with simple features at low layers
+  \item Increase feature complexity in a compositional way
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\paperwidth]{figure/high_layer_text}
+    \caption{Similar kinds of complex features can emerge in text applications
+      too.
+      \label{fig:layer_text} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mixing \& Stacking Logistic Regressions}
+  \begin{itemize}
+    \item Simple combinations of simple functions can quickly become complex
+    \item These complex compositions could capture meaningful features
   \end{itemize}
   \begin{figure}
-      \centering
-      \includegraphics[width=0.7\paperwidth]{figure/stacked_logistic}
-      \caption{The basic idea of deep learning is to stack many logistic
-        regression layers. \label{fig:stacked_logistic} }
-\end{figure}
+    \centering
+    \includegraphics[width=0.55\paperwidth]{figure/mixture_logistic_2}
+    \caption{Simply mixing two logistic regressions, we can represent
+      nonmonotonic functions. \label{fig:mixture_logistic_2} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Aside: Can't Stack Linear Regressions}
+  \frametitle{Mixing \& Stacking Logistic Regressions}
   \begin{itemize}
-  \item Multiple linear layers $\rightarrow$ function still linear
-  \item Wouldn't be any richer than ordinary linear regression
-  \end{itemize} 
+  \item Simple combinations of simple functions can quickly become complex
+  \item These complex compositions could capture meaningful features
+  \end{itemize}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.55\paperwidth]{figure/mixture_logistic_k}
+    \caption{Mixing more sigmoids, we can represent even more complicated
+      functions. \label{fig:mixture_logistic_k} }
+  \end{figure}
+\end{frame}
 
+\begin{frame}
+  \frametitle{Mixing \& Stacking Logistic Regressions}
+  \begin{itemize}
+  \item Simple combinations of simple functions can quickly become complex
+  \item These complex compositions could capture meaningful features
+  \end{itemize}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.4\paperwidth]{figure/mixture_logistic_k_stacked}
+    \caption{Mixing more sigmoids, we can represent even more complicated
+      functions. \label{fig:mixture_logistic_k_block} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mixing \& Stacking Logistic Regressions}
+  \begin{itemize}
+  \item Simple combinations of simple functions can quickly become complex
+  \item These complex compositions could capture meaningful features
+  \end{itemize}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/deep_learning_basic}
+    \caption{The basic idea of deep learning is to compose nonlinearities in a
+      way that encourages discovery of complex intermediate representations.
+      \label{fig:deep_learning_basic} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -372,37 +541,92 @@
   \begin{itemize}
   \item For nonlinearity, we used sigmoid
   \item Many types of nonlinearities can be used instead
+  \item The basic idea of mixing together simple functions remains the same
   \item Most common these days are Rectified Lienar Unites (ReLUs)
     \begin{itemize}
     \item They are easier to optimize (alleviate vanishing gradient problem)
     \end{itemize}
   \end{itemize} 
+\begin{figure}[ht]
+  \centering
+    \begin{subfigure}{0.16\paperwidth}
+      \centering
+      \includegraphics[width=0.16\paperwidth]{figure/activation_examples_1}
+    \end{subfigure}
+    \begin{subfigure}{.16\paperwidth}
+      \centering
+      \includegraphics[width=0.16\paperwidth]{figure/activation_examples_2}
+    \end{subfigure}
+  \caption{\label{fig:activations} Some example nonlinearities from
+    \url{https://en.wikipedia.org/wiki/Activation_function}. }
+\end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Optimization: Stochastic Gradient Descent}
   \begin{itemize}
-  \item Optimize parameters by moving in a direction expected to decrease
-    overall loss
-  \item SGD: Expected direction of overall gradient, after looking at small
-    batch of data
+  \item Optimize by moving in a direction expected to decrease loss
+  \item SGD: Estimated direction of gradient, after looking at small batch of
+    data
   \item These days, other methods used too -- Adam, AdaGrad, AdaDelta, ...
+  \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\paperwidth]{figure/sgd_example}
+  \caption{Each optimization step modifies model parameters to make the fitted
+    function closer ot the true (local) minimizer of the loss.
+    \label{fig:sgd_example} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Inductive View of Backpropagation}
+  \begin{itemize}
+  \item For each iteration of SGD, we need to estimate the gradient of the loss
+    with respect to the parameters
+  \item Representation at layer $k$,
+    \begin{align*}
+    h_{k} = f^k\left(h_{k - 1}\right) \stackrel{\text{defined}}{=} \sigma\left(W_k h_{k - 1}\right)
+    \end{align*}
+    \begin{itemize}
+    \item Convention that $h_0 \stackrel{\text{defined}}{=} x_i$
+    \end{itemize}
+  \item When you change $W_k$ a little, it changes all the upstream $h_k, h_{k +
+    1}, \dots, h_{K}$ up to the prediction, which uses that final representation
+  \item Chain rule can be used again to simplify computation
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Dynamic Programming view of Backpropagation}
+  \frametitle{Base Case}
   \begin{itemize}
-  \item For each iteration of SGD, we need to estimate the gradient of the loss
-    with respect to the parameters
-  \item Cost can be reduced by noticing computation of derivatives for lower
-    layers can make use of gradients from higher layers
+  \item Loss using final $K^{th}$ layer representation,
+    \begin{align*}
+    \ell\left(y_i, h_K\right) &= \ell\left(y_i, f^{k}\left(h_{K - 1}\right)\right) \\
+    &= \ell\left(y_i, \sigma\left(W_{K}h_{k - 1}\right)\right)
+    \end{align*}
+  \item How does the loss change when you perturb $W_{k}$ a little?
+  \item Derivative of loss with respect to final layer weights
+    \begin{align*}
+      D_{W_K}\left(\ell \circ f^{K}\left(h_{k - 1}\right)\right) &=
+      D_{W_{k}}\left(\ell\circ \sigma\left(W_k h_{k - 1}\right)\right)
+    \end{align*}
+  \item This is just like logistic regression!!
   \end{itemize}
-  \begin{figure}
-    \centering
-    %% \includegraphics[width=0.7\paperwidth]{figures/backprop_diagram}
-    \caption{\label{fig:backprop_diagram} }
-  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Inductive Hypothesis}
+  \begin{itemize}
+  \item Loss using final ($K^{th}$) layer representation,
+    \begin{align*}
+    \ell\left(y_i, \sigma\left(W_{K + 1} h_{K}\right)
+    \end{align*}
+  \item First consider derivative of loss with respect to final layer weights
+    %% \begin{align*}
+    %%   D_{W_k}}\left(\ell \circ f^{k}\left(h_k - 1\right)\right)
+    %% \end{align*}
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -517,9 +741,9 @@
   
 \end{frame}
 
-  %% \begin{figure}
-  %%   \centering
-  %%   \includegraphics[width=0.7\paperwidth]{figure/}
-  %%   \caption{\label{fig:coin_flipping_data} }
-  %% \end{figure}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/}
+    \caption{\label{fig:coin_flipping_data} }
+  \end{figure}
 \end{document}
