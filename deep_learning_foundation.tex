@@ -18,13 +18,13 @@
 	\end{center}
 }
 
-\AtBeginSection[] 
-{ 
-	\begin{frame}<beamer> 
-		\frametitle{Outline} 
-		\tableofcontents[currentsection,currentsubsection] 
-	\end{frame} 
-} 
+\AtBeginSection[]
+{
+	\begin{frame}<beamer>
+		\frametitle{Outline}
+		\tableofcontents[currentsection,currentsubsection]
+	\end{frame}
+}
 
 %% begin presentation
 
@@ -81,7 +81,7 @@
       &= \sum_{i = 1}^{n} \indic{y_i = 1}\log \pi + \indic{y_i = 0}\log\left(1 - \pi\right)
     \end{align*}
     where we use the shorthand $y = \left(y_1, \dots, y_n\right)$.
-  \end{itemize} 
+  \end{itemize}
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.3\paperwidth]{figure/loglikelihood_bernoulli_10}
@@ -100,7 +100,7 @@
       &= \sum_{i = 1}^{n} \indic{y_i = 1}\log \pi + \indic{y_i = 0}\log\left(1 - \pi\right)
     \end{align*}
     where we use the shorthand $y = \left(y_1, \dots, y_n\right)$.
-  \end{itemize} 
+  \end{itemize}
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.3\paperwidth]{figure/loglikelihood_bernoulli_100}
@@ -119,7 +119,7 @@
 %%       -\Esubarg{p}{\log p\left(x\right)} &= \sum_{i = 1}^{n} \Esubarg{p}{\indic{x_i = 1}}\log\pi + \Esubarg{p}{x_i = 0}\left(1 - \pi\right) \\
 %%       &= n \left[\pi\log\pi + \left(1 - \pi\right)\log\left(1 - \pi\right)\right]
 %%     \end{align*}
-%%   \end{itemize} 
+%%   \end{itemize}
 %% \end{frame}
 
 \begin{frame}
@@ -276,7 +276,7 @@
       &\frac{\partial}{\partial \theta}\log p_{\theta}\left(y \vert x\right) \\
       = &\frac{\partial}{\partial \theta} \left[\sum_{i = 1}^{n} y_i \log \sigma\left(\theta^{T}x_{i}\right) + \left(1 - y_i\right)\log\left(1 - \sigma\left(\theta^{T}x_i\right)\right)\right] \\
       = &\frac{\partial}{\partial \theta}\left[\sum_{i = 1}^{n}
-        y_i \log\left(\frac{1}{1 + \exp{-\theta^{T}x_i}}\right) + 
+        y_i \log\left(\frac{1}{1 + \exp{-\theta^{T}x_i}}\right) +
           \left(1 - y_i\right)\log\left(\frac{\exp{-\theta^{T}x_i}}{1 + \exp{-\theta^{T}x_i}}\right) \right]
     \end{align*}
   \end{itemize}
@@ -370,7 +370,7 @@
     \sigma\left(\theta^T x_i\right)$
   \item Nice interpretation: change $\theta$ a lot when $y_i$ is far from the
     prediction probability $\pi_{\theta}\left(x_i\right)$
-  \end{itemize} 
+  \end{itemize}
 \end{frame}
 
 \section{Representation Learning}
@@ -380,7 +380,7 @@
  \begin{itemize}
  \item Want to estimate $p\left(y_i = \text{yak} \vert x_i\right)$
  \item Could use logistic regression if the input $x_i$ were meaningful
- \end{itemize} 
+ \end{itemize}
  \begin{figure}[ht]
    \centering
    \includegraphics[width=0.7\paperwidth]{figure/image_features_ideal}
@@ -395,7 +395,7 @@
  \item Want to estimate $p\left(y_i = \text{yak} \vert x_i\right)$
  \item If our $x_i$'s are unstructured, this becomes much more difficult
  \item Logistic regression will fail
- \end{itemize} 
+ \end{itemize}
  \begin{figure}[ht]
    \centering
    \includegraphics[width=0.7\paperwidth]{figure/image_features_reality}
@@ -409,7 +409,7 @@
  \begin{itemize}
  \item If our $x_i$'s are unstructured, this becomes much more difficult
  \item Logistic regression will fail
- \end{itemize} 
+ \end{itemize}
  \begin{figure}[ht]
    \centering
    \includegraphics[width=0.7\paperwidth]{figure/language_features}
@@ -546,7 +546,7 @@
     \begin{itemize}
     \item They are easier to optimize (alleviate vanishing gradient problem)
     \end{itemize}
-  \end{itemize} 
+  \end{itemize}
 \begin{figure}[ht]
   \centering
     \begin{subfigure}{0.16\paperwidth}
@@ -593,7 +593,9 @@
     \end{itemize}
   \item When you change $W_k$ a little, it changes all the upstream $h_k, h_{k +
     1}, \dots, h_{K}$ up to the prediction, which uses that final representation
-  \item Chain rule can be used again to simplify computation
+  \item There is a lot of composition going on here... could become much more
+    complicated than logistic regression
+  \item Chain rule saves the day again!
   \end{itemize}
 \end{frame}
 
@@ -605,24 +607,29 @@
     \ell\left(y_i, h_K\right) &= \ell\left(y_i, f^{k}\left(h_{K - 1}\right)\right) \\
     &= \ell\left(y_i, \sigma\left(W_{K}h_{k - 1}\right)\right)
     \end{align*}
-  \item How does the loss change when you perturb $W_{k}$ a little?
+  \item How does the loss change when you perturb $W_{k}$ or $h_{k - 1}$ a little?
   \item Derivative of loss with respect to final layer weights
     \begin{align*}
-      D_{W_K}\left(\ell \circ f^{K}\left(h_{k - 1}\right)\right) &=
-      D_{W_{k}}\left(\ell\circ \sigma\left(W_k h_{k - 1}\right)\right)
+      D\left(\ell \circ f^{K}\left(h_{k - 1}\right)\right) &=
+      D\left(\ell\circ \sigma\left(W_k h_{k - 1}\right)\right)
     \end{align*}
-  \item This is just like logistic regression!!
+  \item Can compute derivatives using chain rule, just like in logistic
+    regression
   \end{itemize}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Inductive Hypothesis}
+  \frametitle{Inductive Hypothesis + Step}
   \begin{itemize}
-  \item Loss using final ($K^{th}$) layer representation,
+  \item Hypothesis: Suppose we know how to compute derivatives for all $f_{K},
+    f_{K - 1}, \dots, f_{k + 1}$ with respect to their inputs
+  \item Step: Then derivative of $\ell$ with respect to input $h_k - 1$
     \begin{align*}
-    \ell\left(y_i, \sigma\left(W_{K + 1} h_{K}\right)
+      D\left(\ell \circ f^{K} \circ \dots f^{k + 1} \circ f^{k}\right) &= D\ell\left(h^{K}\right)
+      Df^{K}\left(h_{K - 1}\right) \dots Df^{k + 1}\left(h_{k}\right) Df^{k}\left(h_{k - 1}\right)
     \end{align*}
-  \item First consider derivative of loss with respect to final layer weights
+  \item Since $Df^{k}\left(h_{k - 1}\right) = D\left(\sigma\left(W_{k}h_{k
+    -1}\right)\right)$ is straightforwards, induction is complete
     %% \begin{align*}
     %%   D_{W_k}}\left(\ell \circ f^{k}\left(h_k - 1\right)\right)
     %% \end{align*}
@@ -642,7 +649,7 @@
     \item LSTM cells
     \item ...
     \end{itemize}
-  \end{itemize} 
+  \end{itemize}
 \end{frame}
 
 \section{Types of Layers}
@@ -678,7 +685,7 @@
   \begin{figure}
       \centering
       \includegraphics[width=0.7\paperwidth]{figure/resnet_vis}
-      \caption{Residual Networks use layers to incrementally 
+      \caption{Residual Networks use layers to incrementally
         add complexity, by directly copying the previous values and only
         learning minor modifications on top of that. \label{fig:resnet_vis} }
   \end{figure}
@@ -738,7 +745,7 @@
 
 \begin{frame}
   \frametitle{Final Remarks}
-  
+
 \end{frame}
 
   \begin{figure}
