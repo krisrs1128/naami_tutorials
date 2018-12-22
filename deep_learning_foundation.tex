@@ -2,7 +2,7 @@
 \documentclass[10pt,mathserif]{beamer}
 
 \usepackage{graphicx,amsmath,amssymb,tikz,psfrag}
-\usepackage{pythonhighlight}
+\usepackage{pythonhighlight, subcaption}
 
 \input{preamble}
 
@@ -21,18 +21,6 @@
 	\end{center}
 }
 
-\newcommand\footlineon{
-  \setbeamertemplate{footline} {
-    \begin{beamercolorbox}[ht=2.5ex,dp=1.125ex,leftskip=.8cm,rightskip=.6cm]{structure}
-      \footnotesize \insertsection
-      \hfill
-      {\insertframenumber}
-    \end{beamercolorbox}
-    \vskip 0.45cm
-  }
-}
-\footlineon
-
 \AtBeginSection[] 
 { 
 	\begin{frame}<beamer> 
@@ -43,7 +31,7 @@
 
 %% begin presentation
 
-\title{\large \bfseries Bayesian Deep Learning}
+\title{\large \bfseries Deep Learning Foundations}
 
 \author{Kris Sankaran\\[3ex] Mila}
 
@@ -70,49 +58,200 @@
 \begin{frame}
   \frametitle{Flipping Coins}
   \begin{itemize}
-  \item Likelihood function
-  \item Entropy function
+  \item Imagine $n$ flips of a coin with probability $\pi$ of coming up heads.
+  \item Loglikelihood function (independent bernoulli trials)
+    \begin{align*}
+      \log p\left(x \vert \pi \right) &= \log \left[\prod_{i = 1}^{n} \pi^{\indic{x_i = 1}}\left(1 - \pi\right)^{x_i = 0}\right] \\
+      &= \sum_{i = 1}^{n} \indic{x_i = 1}\log \pi + \indic{x_i = 0}\log\left(1 - \pi\right)
+    \end{align*}
+    where we use the shorthand $x = \left(x_1, \dots, x_n\right)$.
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\paperwidth]{figure/loglikelihood_bernoulli}
+    \caption{Logliklihoods over $\pi$ when we see one head and one tail. Seems
+      most likely that $\pi \approx 0.5$. \label{fig:loglikelihood_bernoulli} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Flipping Coins}
+  \begin{itemize}
+  \item Imagine $n$ flips of a coin with probability $\pi$ of coming up heads.
+  \item Loglikelihood function (independent bernoulli trials)
+    \begin{align*}
+      \log p\left(x \vert \pi \right) &= \log \left[\prod_{i = 1}^{n} \pi^{\indic{x_i = 1}}\left(1 - \pi\right)^{x_i = 0}\right] \\
+      &= \sum_{i = 1}^{n} \indic{x_i = 1}\log \pi + \indic{x_i = 0}\log\left(1 - \pi\right)
+    \end{align*}
+    where we use the shorthand $y = \left(y_1, \dots, y_n\right)$.
   \end{itemize} 
-\end{frame}
-
-\begin{frame}
-  \frametitle{Using Data}
-  \begin{itemize}
-  \item What if the probability depended on input data?
-  \end{itemize}
-  \begin{figure}
+  \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\paperwidth]{figure/}
-    \caption{Example of a classification problem, with a linear separation
-      boundary. \label{fig:logistic_scatter} }
+    \includegraphics[width=0.3\paperwidth]{figure/loglikelihood_bernoulli_10}
+    \caption{Logliklihoods over $\pi$ when we see 3 heads and 7 tails. Seems
+      most likely that $\pi \approx 0.3$. \label{fig:loglikelihood_bernoulli_10} }
   \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Using Data}
+  \frametitle{Flipping Coins}
+  \begin{itemize}
+  \item Imagine $n$ flips of a coin with probability $\pi$ of coming up heads.
+  \item Loglikelihood function (independent bernoulli trials)
+    \begin{align*}
+      \log p\left(y \vert \pi \right) &= \log \left[\prod_{i = 1}^{n} \pi^{\indic{y_i = 1}}\left(1 - \pi\right)^{y_i = 0}\right] \\
+      &= \sum_{i = 1}^{n} \indic{y_i = 1}\log \pi + \indic{y_i = 0}\log\left(1 - \pi\right)
+    \end{align*}
+    where we use the shorthand $y = \left(y_1, \dots, y_n\right)$.
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\paperwidth]{figure/loglikelihood_bernoulli_100}
+    \caption{Logliklihoods over $\pi$ when we see 30 heads and 70 tails. Again seems
+      most likely that $\pi \approx 0.3$, but everything is scaled by $10
+      \times$. \label{fig:loglikelihood_bernoulli_100} }
+  \end{figure}
+\end{frame}
+
+%% \begin{frame}
+%%   \frametitle{Flipping Coins}
+%%   \begin{itemize}
+%%   \item Imagine $n$ flips of a coin with probability $\pi$ of coming up heads.
+%%   \item Entropy function
+%%     \begin{align*}
+%%       -\Esubarg{p}{\log p\left(x\right)} &= \sum_{i = 1}^{n} \Esubarg{p}{\indic{x_i = 1}}\log\pi + \Esubarg{p}{x_i = 0}\left(1 - \pi\right) \\
+%%       &= n \left[\pi\log\pi + \left(1 - \pi\right)\log\left(1 - \pi\right)\right]
+%%     \end{align*}
+%%   \end{itemize} 
+%% \end{frame}
+
+\begin{frame}
+  \frametitle{Using Input Data}
   \begin{itemize}
   \item What if the probability depended on input data?
+  \item Depending on some input $x_i$, we flip coin with probability
+    $\pi\left(x_i\right)$ of heads
   \end{itemize}
   \begin{figure}
     \centering
-    \includegraphics[width=0.7\paperwidth]{figure/}
+    \includegraphics[width=0.3\paperwidth]{figure/logistic_scatter}
+    \caption{Example of a classification problem when $x_i$ are two dimensional,
+      heads are green, and tails are purple. \label{fig:logistic_scatter} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Using Input Data}
+  \begin{itemize}
+  \item What if the probability depended on input data?
+  \item Depending on some input $x_i$, we flip coin with probability
+    $\pi\left(x_i\right)$ of heads
+  \end{itemize}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.3\paperwidth]{figure/logistic_scatter_plane}
+    \caption{Example of a classification problem when $x_i$ are two dimensional,
+      heads are green, and tails are purple. \label{fig:logistic_scatter} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Using Input Data}
+  \begin{itemize}
+  \item What if the probability depended on input data?
+  \item Depending on some input $x_i$, we flip coin with probability
+    $\pi\left(x_i\right)$ of heads
+  \end{itemize}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.3\paperwidth]{figure/logistic_scatter_nonlinear_points}
     \caption{Example with a nonlinear
-      boundary. \label{fig:logistic_nonlinear_scatter} }
+      boundary. \label{fig:logistic_nonlinear_scatter_points} }
   \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Updated Likelihood and Entropy}
+  \frametitle{Using Input Data}
   \begin{itemize}
-  \item Likelihood
-  \item Entropy
+  \item What if the probability depended on input data?
+  \item Depending on some input $x_i$, we flip coin with probability
+    $\pi\left(x_i\right)$ of heads
   \end{itemize}
   \begin{figure}
     \centering
-    %% \includegraphics[width=0.7\paperwidth]{figure/}
-    \caption{Updated likelihood and cross entropy functions if we want to
-      incorporate $x$ information
-      \label{fig:logistic_nonlinear_scatter} }
+    \includegraphics[width=0.3\paperwidth]{figure/logistic_scatter_nonlinear}
+    \caption{Example with a nonlinear
+      boundary. \label{fig:logistic_nonlinear_scatter_points} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Using Input Data}
+  \begin{itemize}
+  \item What if the probability depended on input data?
+  \item Depending on some input $x_i$, we flip coin with probability
+    $\pi\left(x_i\right)$ of heads
+  \item Can adapt previous loglikelihood
+    \begin{align*}
+      \log p\left(y \vert x\right) &= \sum_{i = 1}^{n} \indic{y_i = 1}\log \pi\left(x\right) + \indic{y_i = 0}\log\left(1 - \pi\left(x\right)\right)
+    \end{align*}
+  \item Need to learn $\pi\left(x\right)$, just like we learned $\pi$ before
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sigmoid Function}
+  \begin{itemize}
+  \item Consider the collection of functions (one for each $\theta$)
+    \begin{align*}
+      \pi_{\theta}\left(x\right) &= \frac{1}{1 + \exp{-\theta^{T}x}}
+    \end{align*}
+  \end{itemize}
+  \begin{figure}
+    \begin{subfigure}{.1\textwidth}
+      \centering
+      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_1}
+    \end{subfigure}
+    \begin{subfigure}{.1\textwidth}
+      \centering
+      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_2}
+    \end{subfigure}
+    \begin{subfigure}{.1\textwidth}
+      \centering
+      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_3}
+    \end{subfigure}
+    \begin{subfigure}{.1\textwidth}
+      \centering
+      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_4}
+    \end{subfigure}
+    \begin{subfigure}{.1\textwidth}
+      \centering
+      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_5}
+    \end{subfigure}
+    \begin{subfigure}{.1\textwidth}
+      \centering
+      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_6}
+    \end{subfigure}
+    \begin{subfigure}{.1\textwidth}
+      \centering
+      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_7}
+    \end{subfigure}
+    \begin{subfigure}{.1\textwidth}
+      \centering
+      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_8}
+    \end{subfigure}
+    \begin{subfigure}{.1\textwidth}
+      \centering
+      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_9}
+    \end{subfigure}
+    \begin{subfigure}{.1\textwidth}
+      \centering
+      \includegraphics[width=0.1\paperwidth]{figure/sigmoid_plot_10}
+    \end{subfigure}
+    \caption{Example sigmoid functions $\pi_{\theta}$ for random draws of
+      $\theta$, when we assume $x$ has an intercept term ($x = \left(1,
+      \dots\right)$).
+      \label{fig:logistic_scatter_nonlinear} }
   \end{figure}
 \end{frame}
 
@@ -306,13 +445,13 @@
     \caption{Convolution compares small patches against prespecified
       ``filters.'' Since it uses the same filters for all patches, the number of
       parameters is greatly reduced.
-       \label{fig:convolutional_vis}}
+      \label{fig:convolutional_vis}}
   \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Residual Layer}
-  \begin{figure}[
+  \begin{figure}
       \centering
       \includegraphics[width=0.7\paperwidth]{figure/resnet_vis}
       \caption{Residual Networks use layers to incrementally 
