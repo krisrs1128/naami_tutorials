@@ -1,3 +1,14 @@
 *.png
 *.csv
+*.gif
 data/
+*.aux
+*.bbl
+*.jpg
+*.blg
+*.log
+*.nav
+*.out
+*.pdf
+*.snm
+*.toc
