@@ -79,7 +79,7 @@
     \end{align*}
   \item The nonlinearity is applied elementwise
   \item It's common to explicitly include a bias term $b_{k}$ inside the
-    nonlinearity
+    nonlinearity: $\sigma\left(W_k h_{k - 1} + b_k\right)$
   \end{itemize}
 \end{frame}
 
@@ -131,9 +131,9 @@
 \begin{frame}
   \frametitle{The Probability of Sums}
   \begin{itemize}
-    \item What is the probability of landing at a prespecified position after
+    \item Probability of landing at a prespecified position after
       two drops?
-    \item Have to consider any of the intermediate positions it could have
+    \item Consider any of the intermediate positions it could have
       landed at
     \item Sum over all the paths that lead to the same destination
   \end{itemize}
@@ -151,7 +151,7 @@
     \item This can be expressed concisely
       \begin{align*}
         \Parg{X + Y = u} &= \sum_{k = -\infty}^{\infty} f\left(k\right)f\left(u - k\right) \\
-        &\stackrel{\text{defined}}{=} \left(f \\ast f\right)\left(u\right)
+        &\stackrel{\text{defined}}{=} f * f \left(u\right)
       \end{align*}
     \item Notice that the upside-down tree is reflected and translated
       \begin{itemize}
@@ -172,7 +172,7 @@
     \item We didn't need to drop in the same way the second time
       \begin{align*}
         \Parg{X + Y = u} &= \sum_{k = -\infty}^{\infty} f\left(k\right)g\left(u - k\right) \\
-        &\stackrel{\text{defined}}{=} \left(f \\ast g\right)\left(u\right)
+        &\stackrel{\text{defined}}{=} f * g\left(u\right)
       \end{align*}
   \end{itemize}
   \begin{figure}[ht]
@@ -214,7 +214,7 @@
     \begin{itemize}
     \item Typically called ``filters''
     \item These will be learned from data
-    \end{itemize}  
+    \end{itemize}
   \end{itemize}
 \end{frame}
 
@@ -271,25 +271,47 @@
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.6\paperwidth]{figure/conv_connectivity}
-    \caption{A convolution layer creates a local connectivity pattern between
-      layers (contrast with fully connected
-      layers). \label{fig:conv_connectivity} }
+    \caption{After stacking the image into a long vector, A convolution layer
+      creates a local connectivity pattern between layers (contrast with fully
+      connected layers). \label{fig:conv_connectivity} }
   \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Atrous Convolution}
+  \frametitle{Max Pooling}
+  \begin{itemize}
+  \item Doing some sort of downsampling can help in various applications
+  \item Most common: Take only largest value from a small patch
+    \begin{itemize}
+    \item Other options are possible, e.g., averaging
+    \end{itemize}
+  \end{itemize}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figures/max_pooling}
+    \caption{Max pooling reduces the size of a feature map by taking only the
+      largest value within patch.
+      \label{fig:max_pooling}}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Max Pooling}
-  \begin{figure}
+  \frametitle{Some variants}
+  \begin{itemize}
+  \item Different types of convolution are useful in different subfields of deep
+    learning
+    \begin{itemize}
+    \item Dynamic Convolutions \citep{kalchbrenner2014convolutions}
+    \item Atrous convolution \citep{chen2018deeplab}
+    \item Deconvolution \citep{ronneberger2015u}
+    \item Causal convolution \citep{van2016wavenet}
+    \end{itemize}
+  \item Not just computer vision!
+  \end{itemize}
+  \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\paperwidth]{figures/convolutional_vis}
-    \caption{Convolution compares small patches against prespecified
-      ``filters.'' Since it uses the same filters for all patches, the number of
-      parameters is greatly reduced.
-      \label{fig:convolutional_vis}}
+    \includegraphics[width=0.8\paperwidth]{figure/conv_collage}
+    \caption{\label{fig:conv_collage} }
   \end{figure}
 \end{frame}
 
