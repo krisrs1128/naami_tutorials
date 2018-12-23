@@ -291,12 +291,14 @@ Nepal Winter School in AI}
     \item Hidden Markov Models
     \item Latent Dirichlet Allocation
     \end{itemize}
-    \item In general, mechanism is
-      \begin{align*}
-        \theta &\sim p_{\eta}\left(\theta\right) &\text{(prior on parameters)} \\
-        z_{i} &\sim p_{\varphi}\left(z_{i}\right) &\text{(prior on latents)} \\
-        x_{i} \vert z_{i}, \theta &\sim p_{\theta}\left(x_{i} \vert z_{i} \right) &\text{(likelihood)}
-      \end{align*}
+  \item Latent variables $z_i$ transform simple distributions (Gaussians) into
+    complex ones (mixture of Gaussians)
+  \item In general, mechanism is
+    \begin{align*}
+      \theta &\sim p_{\eta}\left(\theta\right) &\text{(prior on parameters)} \\
+      z_{i} &\sim p_{\varphi}\left(z_{i}\right) &\text{(prior on latents)} \\
+      x_{i} \vert z_{i}, \theta &\sim p_{\theta}\left(x_{i} \vert z_{i} \right) &\text{(likelihood)}
+    \end{align*}
   \end{itemize}
   \begin{figure}[ht]
     \centering
@@ -307,7 +309,7 @@ Nepal Winter School in AI}
   \end{figure}
 \end{frame}
 
-\begin{frame}[]
+\begin{frame}
   \frametitle{Mixture of Gaussians: Complete Data Likelihood}
   If we know the mixture assignments $z_i$ for each sample, we could write out
   the likelihood very explicitly.
@@ -336,9 +338,6 @@ Nepal Winter School in AI}
   \item It's counterintuitive, but one problem-solving strategy is to
     deliberately introduce complexity
   \item Complexity $\rightarrow$ more degrees of freedom
-  \item To keep the derivation clear, we're going to drop any parameters
-    $\theta, \eta, \varphi$ from the notation, but in practice need to do
-    bookeeping
   \end{itemize}
 \end{frame}
 
@@ -350,18 +349,18 @@ Nepal Winter School in AI}
   \item Use age-old the ``multiply and divide by 1'' trick
   \end{itemize}
   \begin{align*}
-    \log p\left(x\right) &= \Esubarg{q}{\log p\left(x\right)} \\
-    &= \Esubarg{q}{\log \frac{p\left(x, z\right)}{p\left(z \vert x\right)}} \\
-    &= \Esubarg{q}{\log \frac{p\left(x, z\right)}{q\left(z \vert x\right)} \frac{q\left(z \vert x\right)}{p\left(z \vert x\right)}} \\
-    &= \Esubarg{q}{\log p\left(x \vert z\right)} - D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z\right)\right) + D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z \vert x\right)\right)
+    \log p_{\theta}\left(x\right) &= \Esubarg{q}{\log p_{\theta}\left(x\right)} \\
+    &= \Esubarg{q}{\log \frac{p_{\theta}\left(x, z\right)}{p_{\theta}\left(z \vert x\right)}} \\
+    &= \Esubarg{q}{\log \frac{p_{\theta}\left(x, z\right)}{q\left(z \vert x\right)} \frac{q\left(z \vert x\right)}{p_{\theta}\left(z \vert x\right)}} \\
+    &= \Esubarg{q}{\log p_{\theta}\left(x \vert z\right)} - D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z\right)\right) + D_{KL}\left(q\left(z \vert x\right) \vert \vert p_{\theta}\left(z \vert x\right)\right)
   \end{align*}
 \end{frame}
 
 \begin{frame}
   \frametitle{Studying the bound}
   \begin{align*}
-    \log p\left(x\right) &= \textcolor{purple}{\Esubarg{q}{\log p\left(x \vert z\right)}} - \textcolor{blue}{D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z\right)\right)} + \textcolor{orange}{D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z \vert x\right)\right)} \\
-     &\geq \textcolor{purple}{\Esubarg{q}{\log p\left(x \vert z\right)}} - \textcolor{blue}{D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z\right)\right)}
+    \log p_{\theta}\left(x\right) &= \textcolor{purple}{\Esubarg{q}{\log p_{\theta}\left(x \vert z\right)}} - \textcolor{blue}{D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z\right)\right)} + \textcolor{orange}{D_{KL}\left(q\left(z \vert x\right) \vert \vert p_{\theta}\left(z \vert x\right)\right)} \\
+     &\geq \textcolor{purple}{\Esubarg{q}{\log p_{\theta}\left(x \vert z\right)}} - \textcolor{blue}{D_{KL}\left(q\left(z \vert x\right) \vert \vert p_{\theta}\left(z\right)\right)}
   \end{align*}
   \begin{itemize}
   \item \textcolor{purple}{Reconstruction error}: How plausible is the observed
@@ -376,6 +375,23 @@ Nepal Winter School in AI}
     \item $D_{KL} \geq 0$ for any pair of probabilities
     \item Hard to compute, so just drop and turn into an inequality
     \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Variational Expectation Maximization (EM)}
+  \begin{itemize}
+  \item We now have a strategy for optimizing $\theta$'s
+  \item Alternately update $\theta$ and $q\left(z \vert x\right)$ to maximize
+    the ELBO
+    \begin{itemize}
+    \item E-Step: Find a distribution $q\left(z \vert x\right)$ over
+      configurations $z$ that is most plausible with the current guess at
+      $\theta$
+    \item M-Step: Find a set of parameters $\theta$ that is most plausible with
+      the current distribution over configurations $z$
+    \end{itemize}
+  \item Hope is that this also increases $p_{\theta}\left(x\right)$
   \end{itemize}
 \end{frame}
 
@@ -541,7 +557,9 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
   \centering
   \includegraphics[width=0.6\paperwidth]{figure/vae_forwards}
   \caption{A flexible generative mechanism will let us map latent $z_i$'s into
-    complex distributions in the $x_i$ space. \label{fig:vae_forwards} }
+    complex distributions in the $x_i$ space. This process is sometimes called
+    ``decoding,'' because it takes an unobserved $z$ and transforms it into some
+    $x$ living in the observation space. \label{fig:vae_forwards} }
 \end{figure}
 
 \end{frame}
@@ -557,10 +575,12 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
     functions
     \begin{figure}
         \centering
-        \includegraphics[width=0.55\paperwidth]{figure/vae_inference}
+        \includegraphics[width=0.45\paperwidth]{figure/vae_inference}
         \caption{Each $x_i$ is associated with it's own distribution in the
           $z_i$ space. The parameters of this distribution are determined by the
-          inference network. \label{fig:vae_inference} }
+          inference network. This process is sometimes called ``encoding,''
+          because it encodes an observed $x$ into a latent
+          $z$. \label{fig:vae_inference} }
     \end{figure}
   \end{itemize}
 \end{frame}
@@ -570,7 +590,9 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
 \begin{itemize}
 \item Instead of optimizing one coordinate at a time, optimize all at once
   through $\varphi$
-\item Can also optimize $\theta$ in the likelihood
+\item Simulatneously optimize parameters $\theta$
+\item Essentially variational EM, but where $q$ is a parameterized function of
+  the $x_{i}$
 \end{itemize}
 \end{frame}
 
@@ -582,7 +604,6 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
     \nabla_{\varphi} \Esubarg{q}{\log p_{\theta}\left(x \vert z\right)}
   \end{align*}
   is complicated, because
-
   \begin{align*}
     \nabla_{\varphi} \Esubarg{q}{\log p_{\theta}\left(x \vert z\right)} &= \int \log p_{\theta}\left(x \vert z\right)
     \nabla_{\varphi}q_{\varphi}\left(z \vert x\right)dz
@@ -621,6 +642,14 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
     \eps &\sim \Gsn\left(0, I\right) \\
     z \vert x, \eps &\equiv \mu_{\varphi}\left(x\right) + \sigma_{\varphi}^{2}\left(x\right) \odot \eps
   \end{align*}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.25\paperwidth]{figure/reparameterization_geometry}
+  \caption{Instead of working with multiple gaussian densities (purple and red
+    gaussians), we work with one and transform it with different linear
+    transformations. \label{fig:reparameterization_geometry} }
+\end{figure}
+
 \end{frame}
 
 \begin{frame}
@@ -646,26 +675,10 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
   \frametitle{Latent Space \& Generation}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.6\paperwidth]{figure/vae_latent}
-  \caption{\label{fig:vae_latent} }
-\end{figure}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Latent Space \& Generation}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.6\paperwidth]{figure/vae_conditional}
-  \caption{\label{fig:vae_conditional} }
-\end{figure}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Probabilistic Tumor Segmentation}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.6\paperwidth]{figure/vae_unet}
-  \caption{\label{fig:vae_unet} }
+  \includegraphics[width=0.8\paperwidth]{figure/vae_latent}
+  \caption{The latent space (center) clearly distinguishes between different
+    MNIST classes. From a given point in the latent space, we can generate many
+    different images. \label{fig:vae_latent} }
 \end{figure}
 \end{frame}
 
@@ -674,15 +687,62 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.6\paperwidth]{figure/vae_molecule}
+  \caption{We can learn a latent space over molecules, and then sample molecules
+    from different parts of the space. This gives a simple way of comparing
+    molecular structures, which are otherwise complicated objects to try to
+    compare. Image taken from \citep{jin2018junction}}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Probabilistic Tumor Segmentation}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\paperwidth]{figure/vae_unet}
+  \caption{A probabilistic model over tumor segmentations allows doctors to view
+    several plausible views associated with a single X-ray
+    image. Example taken from
+    \citep{kohl2018probabilistic}. \label{fig:vae_unet} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conditional Sample}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\paperwidth]{figure/vae_conditional}
+  \caption{Since the VAE is a probabilistic model, we can condition on partial
+    information. Here, a segmentation is conditioned on only partially observed
+    input images. \label{fig:vae_conditional} }
 \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{One-Shot Generalization}
-\begin{figure}[ht]
+  \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.6\paperwidth]{figure/vae_omniglot}
+  \includegraphics[width=0.5\paperwidth]{figure/vae_omniglot}
+  \caption{Given only a few observations from one class, we can start to
+    generate images that look like it, after encoding it properly.}
 \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Conclusion}
+  \begin{itemize}
+  \item Latent variables are useful devices for introducing complexity
+  \item To fit latent variable models, need to simultaneously optimize
+    \begin{itemize}
+    \item Configuration $z$'s consistent with observed data
+    \item Global parameters $\theta$ generating data
+    \end{itemize}
+  \item Variational Autoencoders approximate full mean-field inference using an
+    inference network with shared parameters
+    \begin{itemize}
+    \item Allows application to settings where forwards model is not amenable to
+      analytical formulas
+    \end{itemize}
+  \end{itemize} 
 \end{frame}
 
 \end{document}
