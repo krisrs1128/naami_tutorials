@@ -390,7 +390,7 @@ Nepal Winter School in AI}
   \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.5\paperwidth]{figure/variational_idea_1}
+  \includegraphics[width=0.45\paperwidth]{figure/variational_idea_1}
   \caption{The hope is to find a density $q^{\ast} \in \mathcal{Q}$ that's
     relatively close to the true posterior. \label{fig:variational_idea_1} }
 \end{figure}
@@ -533,25 +533,34 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
     in closed form (not to mention tedious)
     \begin{itemize}
     \item How could we have (say) $p\left(x \vert z\right) = \Gsn\left(x \vert
-      f_{\theta}\left(z\right), \exp{g_{\theta}\left(x\right)}\right)$ for some
-      complicated $f, g$?
+      \mu_{\theta}\left(z\right), \sigma^{2}_{\theta}\left(x\right)\right)$ for some
+      complicated $\mu_{\theta}, \sigma^{2}_{\theta}$?
     \end{itemize}
-  \item Idea: Restrict family $\mathcal{Q}$ (hopefully not too much), and make
-    optimization more automatic
   \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\paperwidth]{figure/vae_forwards}
+  \caption{A flexible generative mechanism will let us map latent $z_i$'s into
+    complex distributions in the $x_i$ space. \label{fig:vae_forwards} }
+\end{figure}
+
 \end{frame}
 
 \begin{frame}
   \frametitle{Inference Networks}
   \begin{itemize}
+  \item Idea: Restrict family $\mathcal{Q}$ (hopefully not too much), and make
+    optimization more automatic
   \item New approximating family: $q_{\varphi}\left(z \vert x\right) = \Gsn\left(z \vert
     \mu_{\varphi}\left(x\right), \sigma^{2}_{\varphi}\left(x\right) I\right)$
   \item Let $\mu_{\varphi}$ and $\sigma^{2}_{\varphi}$ be arbitrary nonlinear
     functions
     \begin{figure}
         \centering
-        \includegraphics[width=0.7\paperwidth]{figure/vae_inference}
-        \caption{\label{fig:vae_inference} }
+        \includegraphics[width=0.55\paperwidth]{figure/vae_inference}
+        \caption{Each $x_i$ is associated with it's own distribution in the
+          $z_i$ space. The parameters of this distribution are determined by the
+          inference network. \label{fig:vae_inference} }
     \end{figure}
   \end{itemize}
 \end{frame}
