@@ -1,0 +1,319 @@
+\documentclass[10pt,mathserif]{beamer}
+
+\usepackage{graphicx,amsmath,amssymb,tikz,psfrag}
+\usepackage{pythonhighlight, subcaption, natbib}
+
+
+\input{preamble}
+
+\mode<presentation>
+{
+\usetheme{default}
+}
+\setbeamertemplate{navigation symbols}{}
+\usecolortheme[rgb={0.13,0.28,0.59}]{structure}
+\setbeamertemplate{itemize subitem}{--}
+\setbeamertemplate{frametitle} {
+	\begin{center}
+	  {\large\bf \insertframetitle}
+	\end{center}
+}
+
+\AtBeginSection[]
+{
+	\begin{frame}<beamer>
+		\frametitle{Outline}
+		\tableofcontents[currentsection,currentsubsection]
+	\end{frame}
+}
+
+%% begin presentation
+
+\title{\large \bfseries Useful Layers for Deep Learning}
+
+\author{Kris Sankaran\\[3ex] Nepal Winter School in AI}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section{Fully Connected Layers}
+
+\begin{frame}
+  \frametitle{Fully Connected Layers}
+  \begin{itemize}
+  \item From previous lecture, think of this as mixture of of logistic
+    regressions
+  \end{itemize}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.55\paperwidth]{figure/mixture_logistic_k}
+    \caption{Mixing more sigmoids, we can represent even more complicated
+      functions. \label{fig:mixture_logistic_k} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Nomenclature}
+  \begin{itemize}
+  \item Reason for the name: Every output layer coordinate can see every input
+    layer coordinate
+  \item Nice shorthand: ``layer coordinate'' $\rightarrow$ neuron
+  \item The two layers are \textit{fully connected}
+  \end{itemize}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figures/fully_connected_vis}
+  \caption{All the outputs from one layer can affect all the inputs to the next
+    one. \label{fig:fully_connected}}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Fully Connected (Math)}
+  \begin{itemize}
+  \item This has concise mathematical notation
+    \begin{align*}
+      \sigma\left(W_{k}h_{k - 1}\right)
+    \end{align*}
+  \item The nonlinearity is applied elementwise
+  \item It's common to explicitly include a bias term $b_{k}$ inside the
+    nonlinearity
+  \end{itemize}
+\end{frame}
+
+\section{Convolution in 1D}
+
+\begin{frame}
+  \frametitle{The Probability of Sums}
+  \begin{itemize}
+  \item First a digression on 1D sequences
+  \item Material largely taken from Chris Olah's (incredible!) blog
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Probability of Sums}
+  \begin{itemize}
+  \item Drop a ball and see where it lands
+    \begin{itemize}
+    \item Drop it slightly to the right (for reasons that will be clear later)
+    \end{itemize}
+  \item For simplicity, suppose it lands on some grid
+  \item Consider the probabilities of different outcomes
+  \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\paperwidth]{figure/drop_once}
+  \caption{Branch widths correspond to the probabilities of landing in different
+    positions. \label{fig:drop_once} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Probability of Sums}
+  \begin{itemize}
+    \item Drop it again, starting from the place it fell last time
+    \item Each branch gives a path from original to final position
+    \item Branch probability $\rightarrow$ product of original probabilities
+    \item E.g., go right by 2 steps then left by 1 is $f\left(2\right)f\left(-1\right)$
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/drop_twice_probs}
+    \caption{Can compute probabilities of landing in different positions, after
+      two drops.
+       \label{fig:drop_twice_probs}}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Probability of Sums}
+  \begin{itemize}
+    \item What is the probability of landing at a prespecified position after
+      two drops?
+    \item Have to consider any of the intermediate positions it could have
+      landed at
+    \item Sum over all the paths that lead to the same destination
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/convolution_branches}
+    \caption{Each branch starts at the initial dropping position and ends at
+      $u$. \label{fig:convolution_branches} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Mathematical Formula}
+  \begin{itemize}
+    \item This can be expressed concisely
+      \begin{align*}
+        \Parg{X + Y = u} &= \sum_{k = -\infty}^{\infty} f\left(k\right)f\left(u - k\right) \\
+        &\stackrel{\text{defined}}{=} \left(f \\ast f\right)\left(u\right)
+      \end{align*}
+    \item Notice that the upside-down tree is reflected and translated
+      \begin{itemize}
+      \item Exactly the transformation $f\left(x\right) \rightarrow f\left(u - x\right)$
+      \end{itemize}
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/convolution_branches_annotated}
+    \caption{Each branch starts at the initial dropping position and ends at
+      $u$. \label{fig:convolution_branches} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Varying functions}
+  \begin{itemize}
+    \item We didn't need to drop in the same way the second time
+      \begin{align*}
+        \Parg{X + Y = u} &= \sum_{k = -\infty}^{\infty} f\left(k\right)g\left(u - k\right) \\
+        &\stackrel{\text{defined}}{=} \left(f \\ast g\right)\left(u\right)
+      \end{align*}
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/convolution_vary_funs}
+    \caption{Suppose we first dropped from very high, and then afterwards from
+      very low, so that it can't move very far from its second position.
+       \label{fig:convolution_vary_funs} }
+  \end{figure}
+\end{frame}
+
+\section{Convolution in Computer Vision}
+
+\begin{frame}
+  \frametitle{Convolution and Computer Vision}
+  \begin{itemize}
+  \item Convolutions have been very successful in computer vision
+  \item Many reasons,
+    \begin{itemize}
+    \item Weight sharing / local connectivity means far fewer parameters
+    \item Can be computed very fast, especially on GPUs
+    \item Related to biological vision
+    \end{itemize}
+  \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\paperwidth]{figure/computer_vision_typical}
+  \caption{A typical computer vision architecture. Note the convolution
+    layers. \label{fig:label} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Image Convolution}
+  \begin{itemize}
+  \item Our previous discussion applies for dropping a ball onto a 2D surface
+  \item Think of an image as a function over a grid
+  \item The function for the second drop designed to have small support
+    \begin{itemize}
+    \item Typically called ``filters''
+    \item These will be learned from data
+    \end{itemize}  
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Example Computation}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/convolution_example}
+    \caption{An example convolution with a single filter, as described in
+      \citep. \label{fig:convolution_examples} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Blurring}
+  \begin{itemize}
+    \item You can learn many types of image processing operations using
+      prespecified filters
+    \item Neural networks \textit{learn} filters that are ideal for given
+      classification tasks
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width]{figure/blurring_example}
+    \caption{Blurring can be implemented by convolving with a small
+      plateau. \label{fig:blurring_example} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Edge Detection}
+  \begin{itemize}
+    \item You can learn many types of image processing operations using
+      prespecified filters
+    \item Neural networks \textit{learn} filters that are ideal for given
+      classification tasks
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width]{figure/edge_detection_example}
+    \caption{Edges can be found by convolving with a small
+      zigzag. \label{fig:edges_example} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Local Connectivity}
+  \begin{itemize}
+  \item Convolutions have small support
+  \item Connections between layers are sparse
+  \item More biologically plausible than having all neurons connected with one
+    another
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/conv_connectivity}
+    \caption{A convolution layer creates a local connectivity pattern between
+      layers (contrast with fully connected
+      layers). \label{fig:conv_connectivity} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Atrous Convolution}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Max Pooling}
+  \begin{figure}
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figures/convolutional_vis}
+    \caption{Convolution compares small patches against prespecified
+      ``filters.'' Since it uses the same filters for all patches, the number of
+      parameters is greatly reduced.
+      \label{fig:convolutional_vis}}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Residual Layer}
+  \begin{figure}
+      \centering
+      \includegraphics[width=0.7\paperwidth]{figure/resnet_vis}
+      \caption{Residual Networks use layers to incrementally
+        add complexity, by directly copying the previous values and only
+        learning minor modifications on top of that. \label{fig:resnet_vis} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Residual Layer (Math)}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Attention Mechanisms}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Gated Recurrent Units}
+\end{frame}
+
+\end{document}
