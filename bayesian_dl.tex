@@ -660,8 +660,8 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
   \begin{align*}
     \nabla_{\varphi} \Esubarg{q_{\varphi}}{\log p_{\theta}\left(x \vert z\right)} &=
     \nabla_{\varphi} \Esubarg{p\left(\eps\right)}{\log p_{\theta}\left(x \vert g_{\varphi}\left(\eps\right)\right)} \\
-    &= \Esubarg{p\left(\eps\right)}{\nabla \log p_{\theta}\left(x \vert g_{\varphi}\left(\eps\right)\right)} \\
-      &\approx \sum_{i} \nabla \log_{\theta}p_{\theta}\left(x \vert g_{\varphi}\left(\eps_{i}\right)\right)
+    &= \Esubarg{p\left(\eps\right)}{\nabla_{\varphi} \log p_{\theta}\left(x \vert g_{\varphi}\left(\eps\right)\right)} \\
+      &\approx \sum_{i} \nabla_{\varphi} \log_{\theta}p_{\theta}\left(x \vert g_{\varphi}\left(\eps_{i}\right)\right)
   \end{align*}
   after sampling lots of $\eps_{i} \sim p\left(\eps\right)$.
   \item We can optimize the ELBO!
@@ -723,7 +723,8 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
   \centering
   \includegraphics[width=0.5\paperwidth]{figure/vae_omniglot}
   \caption{Given only a few observations from one class, we can start to
-    generate images that look like it, after encoding it properly.}
+    generate images that look like it, after encoding it properly. Example taken
+    from \citep{rezende2016one}.}
 \end{figure}
 \end{frame}
 
