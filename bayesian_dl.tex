@@ -1,8 +1,7 @@
 \documentclass[10pt,mathserif]{beamer}
 
 \usepackage{graphicx,amsmath,amssymb,tikz,psfrag}
-\usepackage{pythonhighlight, xcolor}
-
+\usepackage{xcolor, subfigure, natbib}
 \input{preamble}
 
 %% formatting
@@ -314,9 +313,16 @@ Nepal Winter School in AI}
   If we know the mixture assignments $z_i$ for each sample, we could write out
   the likelihood very explicitly.
   \begin{align*}
-\log p\left(x, z\right) &= \log \left[\prod_{i = 1}^{n} \prod_{k = 1}^{K} \left(p_{k}\Gsn\left(x_i \vert \mu_k, \Sigma_k\right)^{\indic{z_i = k}}\right)\right] \\
-&= \sum_{i = 1}^{n} \sum_{k = 1}^{K} \indic{z_i = k} \left[\log p_{k} + \log \Gsn\left(x_i \vert \mu_k, \Sigma_k\right)\right] \\
-&= \sum_{i = 1}^{n} \sum_{k = 1}^{K} \indic{z_i = k} \left[\log p_{k} -\frac{D}{2}\log\left(2\pi\right) - \frac{1}{2}\log \left|\Sigma_k\right| -  \\ &\qquad\frac{1}{2} \left(x_i - \mu_k\right)^{T}\Sigma^{-1}_{k} \left(x_i - \mu_k)\right]
+    &\log p\left(x, z\right) \\
+    = &\log \left[\prod_{i = 1}^{n} \prod_{k = 1}^{K}
+  \left(\pi_{k}\Gsn\left(x_i \vert \mu_k, \Sigma_k\right)^{\indic{z_i =
+      k}}\right)\right] \\
+= &\sum_{i = 1}^{n} \sum_{k = 1}^{K} \indic{z_i = k} \left[\log \pi_{k} + \log
+  \Gsn\left(x_i \vert \mu_k, \Sigma_k\right)\right] \\
+= &\sum_{i = 1}^{n} \sum_{k = 1}^{K} \indic{z_i = k} \left[\log \pi_{k}
+  -\frac{D}{2}\log\left(2\pi\right) - \frac{1}{2}\log \left|\Sigma_k\right| -
+  \frac{1}{2} \left(x_i - \mu_k\right)^{T}\Sigma^{-1}_{k} \left(x_i -
+  \mu_k\right)\right]
   \end{align*}
 \end{frame}
 
@@ -422,7 +428,7 @@ Nepal Winter School in AI}
   \centering
   \includegraphics[width=0.5\paperwidth]{figure/variational_idea_2}
   \caption{Some families might be much easier to optimize over than others.
-    \label{fig:variational_idea_1} }
+    \label{fig:variational_idea_2} }
 \end{figure}
 \end{frame}
 
@@ -473,12 +479,11 @@ Nepal Winter School in AI}
   \end{align*}
   (notice that we drop conditioning on $x_i$, this is actually more general than
   before)
-\begin{figure}[ht]
-  \centering
-  \begin{subfigure}
+\begin{figure}
+  \begin{subfigure}{0.2\paperwidth}
     \includegraphics[width=0.2\paperwidth]{figure/variational_multidimensional_q}
   \end{subfigure}
-  \begin{subfigure}
+  \begin{subfigure}{0.2\paperwidth}
     \includegraphics[width=0.2\paperwidth]{figure/variational_univariate_q}
   \end{subfigure}
   \caption{Instead of trying to model the joint relationships across all the
@@ -495,19 +500,20 @@ Nepal Winter School in AI}
   \end{align*}
   (notice that we drop conditioning on $x_i$, this is actually more general than
   before)
-\begin{figure}[ht]
-  \centering
-  \begin{subfigure}
-    \includegraphics[width=0.2\paperwidth]{figure/variational_multidimensional_q}
-  \end{subfigure}
-  \begin{subfigure}
-    \includegraphics[width=0.2\paperwidth]{figure/variational_product_q}
-  \end{subfigure}
-  \caption{A consequence of using the product is that we can't model complex correlations between coordinates (everything has to be axis-aligned).
-    \label{fig:variational_product_q}}
-\end{figure}
+  \begin{figure}[ht]
+    \centering
+    \begin{subfigure}{0.2\paperwidth}
+      \includegraphics[width=0.2\paperwidth]{figure/variational_multidimensional_q}
+    \end{subfigure}
+    \begin{subfigure}{0.2\paperwidth}
+      \includegraphics[width=0.2\paperwidth]{figure/variational_product_q}
+    \end{subfigure}
+    \caption{A consequence of using the product is that we can't model complex
+      correlations between coordinates (everything has to be axis-aligned).
+      \label{fig:variational_product_q}}
+  \end{figure}
 \end{frame}
-
+ 
 \begin{frame}
   \frametitle{Optimization}
   \begin{itemize}
