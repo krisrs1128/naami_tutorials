@@ -1,7 +1,7 @@
 \documentclass[10pt,mathserif]{beamer}
 
 \usepackage{graphicx,amsmath,amssymb,tikz,psfrag}
-\usepackage{pythonhighlight}
+\usepackage{pythonhighlight, xcolor}
 
 \input{preamble}
 
@@ -20,31 +20,20 @@
 	\end{center}
 }
 
-\newcommand\footlineon{
-  \setbeamertemplate{footline} {
-    \begin{beamercolorbox}[ht=2.5ex,dp=1.125ex,leftskip=.8cm,rightskip=.6cm]{structure}
-      \footnotesize \insertsection
-      \hfill
-      {\insertframenumber}
-    \end{beamercolorbox}
-    \vskip 0.45cm
-  }
+\AtBeginSection[]
+{
+	\begin{frame}<beamer>
+		\frametitle{Outline}
+		\tableofcontents[currentsection,currentsubsection]
+	\end{frame}
 }
-\footlineon
-
-\AtBeginSection[] 
-{ 
-	\begin{frame}<beamer> 
-		\frametitle{Outline} 
-		\tableofcontents[currentsection,currentsubsection] 
-	\end{frame} 
-} 
 
 %% begin presentation
 
 \title{\large \bfseries Bayesian Deep Learning}
 
-\author{Kris Sankaran\\[3ex] Mila}
+\author{Kris Sankaran\\[3ex]
+Nepal Winter School in AI}
 
 \date{\today}
 
@@ -73,8 +62,8 @@
   \item Tension: The ``two cultures''... prediction or inference?
   \end{itemize}
   \begin{figure}
-    \subfigure{\includegraphics[width=5cm]{figure/lecun}}
-    \subfigure{\includegraphics[width=5cm]{figure/gelfand}}
+    \subfigure{\includegraphics[width=0.4\paperwidth]{figure/lecun}}
+    \subfigure{\includegraphics[width=0.4\paperwidth]{figure/gelfand}}
   \end{figure}
 \end{frame}
 
@@ -89,11 +78,12 @@
     \item It would be nice if everything were automatic, or at least modular
     \end{itemize}
   \item Bayesian deep learning: modular feature learning with uncertainty
-  \end{itemize} 
+  \end{itemize}
   \begin{figure}
-    \subfigure{\includegraphics[width=3cm]{figure/clock}}
-    \subfigure{\includegraphics[width=5cm]{figure/beeswarm}}
-    \subfigure{\includegraphics[width=5cm]{figure/robot}}
+    \subfigure{\includegraphics[width=0.2\paperwidth]{figure/clock}}
+    \subfigure{\includegraphics[width=0.3\paperwidth]{figure/beeswarm}}
+    \subfigure{\includegraphics[width=0.15\paperwidth]{figure/robot.jpg}}
+  \caption{We would like our modeling to be fast, probabilistic, and automatic.}
   \end{figure}
 \end{frame}
 
@@ -101,20 +91,49 @@
   \frametitle{Machine Learning checklist}
   Questions to ask every algorithm you meet.
  \begin{itemize}
- \item What is the model class?
- \item What is the evaluation criterion?
- \item What is the search strategy?
- \end{itemize} 
+ \item What is the \textcolor{blue}{model class}?
+ \item What is the \textcolor{green}{evaluation criterion}?
+ \item What is the \textcolor{red}{search strategy}?
+ \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.7\paperwidth]{figure/ml_overview}
+  \caption{Each point in $\mathcal{F}$ represents a different function, which we
+    evaluate using $\mathcal{L}$. We have to search through $\mathcal{F}$,
+    represented by the red dashed line. \label{fig:ml_overview} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Machine Learning checklist}
-  In a Bayesian context, should also ask,
-  \begin{itemize}
-  \item What is the generative mechanism? 
-  \item What is the inference criterion?
-  \item What is the algorithm?
-  \end{itemize}
+  \frametitle{In Bayesian Deep Learning}
+  Questions to ask every algorithm you meet.
+ \begin{itemize}
+ \item What is the \textcolor{blue}{model class}?
+   \begin{itemize}
+   \item Gaussian process?
+   \item Mixture of multinomials?
+   \item Gaussian with neural network $\mu_{\theta}$?
+   \end{itemize}
+ \item What is the \textcolor{green}{evaluation criterion}?
+   \begin{itemize}
+   \item Evidence
+   \item Evidence Lower Bound
+   \item Hold-out Log Likelihood
+   \end{itemize}
+ \item What is the \textcolor{red}{search strategy}?
+   \begin{itemize}
+   \item Variational Inference
+   \item MCMC
+   \item Expectation Propagation
+   \end{itemize}
+ \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.3\paperwidth]{figure/ml_overview}
+  \caption{Each point in $\mathcal{F}$ represents a different function, which we
+    evaluate using $\mathcal{L}$. We have to search through $\mathcal{F}$,
+    represented by the red dashed line. \label{fig:ml_overview} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
@@ -126,7 +145,7 @@
     \end{align*}
   \item Adapt your belief about $\theta$ after seeing $x$
   \item Specify likelihood $p\left(x \vert \theta\right)$ and prior $p\left(\theta\right)$
-  \end{itemize} 
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -139,11 +158,13 @@
     \item Likelihood: $x \vert p \sim \Bin\left(n, p\right)$
     \end{itemize}
   \item Posterior is still a beta
-  \end{itemize} 
+  \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.6\paperwidth]{figure/betabinomial}
-  \caption{\label{fig:betabinomial} }
+  \includegraphics[width=0.6\paperwidth]{figure/betabinomial_video.png}
+  \caption{After seeing more and more coin flips, the posterior becomes more
+    sure that the underlying probability is around 0.2. \label{fig:betabinomial}
+  }
 \end{figure}
 \end{frame}
 
@@ -153,19 +174,12 @@
   \item We can avoid doing any math by using the \texttt{pyro} package
   \item This is good practice for when it's impossible to do that math
   \item Hinges on the notion of a guide function
-  \end{itemize} 
-  \begin{python}
-    # define the hyperparameters that control the beta prior
-    alpha0 = torch.tensor(10.0)
-    beta0 = torch.tensor(10.0)
-
-    # sample f from the beta prior
-    p = pyro.sample("heads_\prob", dist.Beta(alpha0, beta0))
-  \end{python}
+  \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[options]{figure/pyro_model}
-    \caption{\label{fig:pyro_model} }
+    \includegraphics[width=0.7\paperwidth]{figure/pyro_model}
+    \caption{Example implementation of beta-binomial model in a probabilistic
+      programming language. \label{fig:pyro_model} }
   \end{figure}
 \end{frame}
 
@@ -175,39 +189,122 @@
   \item We can avoid doing any math by using the \texttt{pyro} package
   \item This is good practice for when it's impossible to do that math
   \item Hinges on the notion of a guide function
-  \end{itemize} 
+  \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[options]{figure/pyro_inference}
-    \caption{\label{fig:pyro_model} }
+    \includegraphics[width=0.7\paperwidth]{figure/pyro_inference}
+    \caption{Example implementation of beta-binomial inference in a
+      probabilistic programming language. \label{fig:pyro_inference} }
 \end{figure}
 \end{frame}
 
 \section{Latent Variable Models}
 \label{sec:latent_variable_models}
-
 \begin{frame}
   \frametitle{Mixture Models}
   \begin{itemize}
   \item Sometimes, critical parts of data generating mechanisms are unobserved
     \item Need posterior inference over both mixture parameters $\mu_k,
       \Sigma_k$ as well as assignments $z_i$
-  \end{itemize}  
+  \end{itemize}
   \begin{align*}
     \mu_{k} &\sim \Gsn\left(0, \Sigma_{0}\right) \\
-    z_i &\sim \Cat\left(z_i \vert p\right) \\
+    z_i &\sim \Cat\left(z_i \vert \pi\right) \\
     x_i \vert z_i = k &\sim \Gsn\left(x_i \vert \mu_{k}, \Sigma_k\right)
   \end{align*}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.35\paperwidth]{figure/gmm_1}
+  \caption{We've drawn three gaussian densities from the overall prior, and mark
+    an \texttt{X} at the first sample, along with its (in reality unobserved)
+    class membership $z_i$. \label{fig:gmm_1} }
+\end{figure}
+\end{frame}
+
+\label{sec:latent_variable_models}
+\begin{frame}
+  \frametitle{Mixture Models}
+  \begin{itemize}
+  \item Sometimes, critical parts of data generating mechanisms are unobserved
+    \item Need posterior inference over both mixture parameters $\mu_k,
+      \Sigma_k$ as well as assignments $z_i$
+  \end{itemize}
+  \begin{align*}
+    \mu_{k} &\sim \Gsn\left(0, \Sigma_{0}\right) \\
+    z_i &\sim \Cat\left(z_i \vert \pi\right) \\
+    x_i \vert z_i = k &\sim \Gsn\left(x_i \vert \mu_{k}, \Sigma_k\right)
+  \end{align*}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.35\paperwidth]{figure/gmm_2}
+  \caption{Draw another point from the same cluster.
+    \label{fig:gmm_2} }
+\end{figure}
+\end{frame}
+
+\label{sec:latent_variable_models}
+\begin{frame}
+  \frametitle{Mixture Models}
+  \begin{itemize}
+  \item Sometimes, critical parts of data generating mechanisms are unobserved
+    \item Need posterior inference over both mixture parameters $\mu_k,
+      \Sigma_k$ as well as assignments $z_i$
+  \end{itemize}
+  \begin{align*}
+    \mu_{k} &\sim \Gsn\left(0, \Sigma_{0}\right) \\
+    z_i &\sim \Cat\left(z_i \vert \pi\right) \\
+    x_i \vert z_i = k &\sim \Gsn\left(x_i \vert \mu_{k}, \Sigma_k\right)
+  \end{align*}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.4\paperwidth]{figure/gmm_3}
+  \caption{First point from a new cluster. \label{fig:gmm_3}}
+\end{figure}
+\end{frame}
+
+\label{sec:latent_variable_models}
+\begin{frame}
+  \frametitle{Mixture Models}
+  \begin{itemize}
+  \item Sometimes, critical parts of data generating mechanisms are unobserved
+    \item Need posterior inference over both mixture parameters $\mu_k,
+      \Sigma_k$ as well as assignments $z_i$
+  \end{itemize}
+  \begin{align*}
+    \mu_{k} &\sim \Gsn\left(0, \Sigma_{0}\right) \\
+    z_i &\sim \Cat\left(z_i \vert \pi\right) \\
+    x_i \vert z_i = k &\sim \Gsn\left(x_i \vert \mu_{k}, \Sigma_k\right)
+  \end{align*}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.4\paperwidth]{figure/gmm_4}
+  \caption{Continue in this way until you have all $n$ points. \label{fig:gmm_4}}
+\end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Other Examples}
-  Many widely-used models depend on being able to work with latent variables,
   \begin{itemize}
-  \item Exponential Family PCA
-  \item Hidden Markov Models
-  \item Latent Dirichlet Allocation
-  \end{itemize} 
+  \item Many widely-used models depend on being able to work with latent variables,
+    \begin{itemize}
+    \item Exponential Family PCA
+    \item Hidden Markov Models
+    \item Latent Dirichlet Allocation
+    \end{itemize}
+    \item In general, mechanism is
+      \begin{align*}
+        \theta &\sim p_{\eta}\left(\theta\right) &\text{(prior on parameters)} \\
+        z_{i} &\sim p_{\varphi}\left(z_{i}\right) &\text{(prior on latents)} \\
+        x_{i} \vert z_{i}, \theta &\sim p_{\theta}\left(x_{i} \vert z_{i} \right) &\text{(likelihood)}
+      \end{align*}
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.2\paperwidth]{figure/mohamed_latent_variable}
+    \caption{General form of a latent variable model, as given in
+      \citep{mohamed2011generalised}. Replace our $z_i$'s with
+      $v_n$'s. \label{fig:mohamed_latent_variable} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}[]
@@ -224,21 +321,25 @@
 \begin{frame}
   \frametitle{Marginalizing $z$}
   \begin{itemize}
-  \item Can't use the previous derivation if we don't know the specific
-    configuration of $z$
+  \item How can we fit $\theta$ if we don't know the particular configuration of
+    $z$?
   \item Way too many configurations to actual do this sum
-  \end{itemize} 
+  \end{itemize}
   \begin{align*}
-    \log p\left(x\right) &= \log \sum_{z} p\left(x, z\right)
-  \end{align*} 
+    \log p_{\theta}\left(x\right) &= \log \sum_{z} p_{\theta}\left(x, z\right)
+  \end{align*}
 \end{frame}
 
 \begin{frame}
   \frametitle{Evidence Lower Bound}
   \begin{itemize}
-  \item It's counterintuitive, but one problem-solving strategy is to deliberately introduce complexity
+  \item It's counterintuitive, but one problem-solving strategy is to
+    deliberately introduce complexity
   \item Complexity $\rightarrow$ more degrees of freedom
-  \end{itemize} 
+  \item To keep the derivation clear, we're going to drop any parameters
+    $\theta, \eta, \varphi$ from the notation, but in practice need to do
+    bookeeping
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -246,7 +347,8 @@
   \begin{itemize}
   \item Consider some $q\left(z \vert x\right) \in \mathcal{Q}$, some large
     family of tractable densities
-  \end{itemize} 
+  \item Use age-old the ``multiply and divide by 1'' trick
+  \end{itemize}
   \begin{align*}
     \log p\left(x\right) &= \Esubarg{q}{\log p\left(x\right)} \\
     &= \Esubarg{q}{\log \frac{p\left(x, z\right)}{p\left(z \vert x\right)}} \\
@@ -258,15 +360,17 @@
 \begin{frame}
   \frametitle{Studying the bound}
   \begin{align*}
-    \log p\left(x\right) &= \Esubarg{q}{\log p\left(x \vert z\right)} - D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z\right)\right) + D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z \vert x\right)\right) \\
-     &\geq \Esubarg{q}{\log p\left(x \vert z\right)} - D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z\right)\right)
+    \log p\left(x\right) &= \textcolor{purple}{\Esubarg{q}{\log p\left(x \vert z\right)}} - \textcolor{blue}{D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z\right)\right)} + \textcolor{orange}{D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z \vert x\right)\right)} \\
+     &\geq \textcolor{purple}{\Esubarg{q}{\log p\left(x \vert z\right)}} - \textcolor{blue}{D_{KL}\left(q\left(z \vert x\right) \vert \vert p\left(z\right)\right)}
   \end{align*}
   \begin{itemize}
-  \item Reconstruction error: How plausible is the observed $x$, averaging over
-    assignments $z$, and considering the current likelihood estimate?
-  \item Approximation complexity: How far is the approximating $q\left(z \vert
-    x\right)$ from the posterior?
-  \item How different is the posterior approximation $p\left(z \vert x\right)$
+  \item \textcolor{purple}{Reconstruction error}: How plausible is the observed
+    $x$, averaging over assignments $z$, and considering the current likelihood
+    estimate?
+  \item \textcolor{blue}{Approximation complexity}: How far is the approximating
+    $q\left(z \vert x\right)$ from the prior?
+  \item \textcolor{orange}{Approximation quality}: How different is the
+    posterior approximation $p\left(z \vert x\right)$
     from the actual posterior?
     \begin{itemize}
     \item $D_{KL} \geq 0$ for any pair of probabilities
@@ -283,7 +387,27 @@
   \begin{itemize}
   \item Transform integration problem into an optimization one
   \item Some families $\mathcal{Q}$ are easier to optimize over than others
-  \end{itemize} 
+  \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\paperwidth]{figure/variational_idea_1}
+  \caption{The hope is to find a density $q^{\ast} \in \mathcal{Q}$ that's
+    relatively close to the true posterior. \label{fig:variational_idea_1} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Variational Idea}
+  \begin{itemize}
+  \item Transform integration problem into an optimization one
+  \item Some families $\mathcal{Q}$ are easier to optimize over than others
+  \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\paperwidth]{figure/variational_idea_2}
+  \caption{Some families might be much easier to optimize over than others.
+    \label{fig:variational_idea_1} }
+\end{figure}
 \end{frame}
 
 \begin{frame}
@@ -292,7 +416,7 @@
   \begin{itemize}
   \item What densities $\mathcal{Q}$ can we actually work with?
   \item How are we going to measure the quality of an approximation?
-  \end{itemize} 
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -307,7 +431,7 @@
     \begin{itemize}
     \item ELBO, $f$-divergences, Wasserstein distance, ...
     \end{itemize}
-  \end{itemize} 
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -322,7 +446,7 @@
     \begin{itemize}
     \item \textbf{ELBO}, $f$-divergences, Wasserstein distance, ...
     \end{itemize}
-  \end{itemize} 
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -330,26 +454,53 @@
   Consider a family where all the variables factor
   \begin{align*}
     q\left(z_1, \dots, z_n\right) = \prod_{i = 1}^{n} q_{i}\left(z_i\right)
-  \end{align*} 
-  (notice that we drop conditioning on $x_$, this is actually more general than
+  \end{align*}
+  (notice that we drop conditioning on $x_i$, this is actually more general than
   before)
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.7\paperwidth]{figure/mean_field_geometry}
-  \caption{\label{fig:mean_field_geometry} }
+  \begin{subfigure}
+    \includegraphics[width=0.2\paperwidth]{figure/variational_multidimensional_q}
+  \end{subfigure}
+  \begin{subfigure}
+    \includegraphics[width=0.2\paperwidth]{figure/variational_univariate_q}
+  \end{subfigure}
+  \caption{Instead of trying to model the joint relationships across all the
+    latent variables, we will concern ourselves with one coordinate at a
+    time. \label{fig:variational_multidimensional_q}}
 \end{figure}
 \end{frame}
 
+\begin{frame}
+  \frametitle{Mean-Field Approximation}
+  Consider a family where all the variables factor
+  \begin{align*}
+    q\left(z_1, \dots, z_n\right) = \prod_{i = 1}^{n} q_{i}\left(z_i\right)
+  \end{align*}
+  (notice that we drop conditioning on $x_i$, this is actually more general than
+  before)
+\begin{figure}[ht]
+  \centering
+  \begin{subfigure}
+    \includegraphics[width=0.2\paperwidth]{figure/variational_multidimensional_q}
+  \end{subfigure}
+  \begin{subfigure}
+    \includegraphics[width=0.2\paperwidth]{figure/variational_product_q}
+  \end{subfigure}
+  \caption{A consequence of using the product is that we can't model complex correlations between coordinates (everything has to be axis-aligned).
+    \label{fig:variational_product_q}}
+\end{figure}
+\end{frame}
 
 \begin{frame}
   \frametitle{Optimization}
   \begin{itemize}
   \item Fixing all but the $i^{th}$ coordinate's distribution, can find how to
     optimize ELBO directly
-  \end{itemize} 
+  \end{itemize}
   \begin{align*}
 q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\right)}}
-  \end{align*} 
+  \end{align*}
 \end{frame}
 
 %% Maybe put some examples of this update here
@@ -357,15 +508,15 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
 
 \begin{frame}
   The proof of this fact is only a few lines (not at all obvious though)
-\begin{align*}
-\log p\left(x\right) &\geq
-\Esubarg{q}{\log p\left(x \vert z\right)} - D_{KL}\left( q\left(z\right) \vert\vert p\left(z\right)\right) \\
-&= \Esubarg{q}{\log p\left(x, z\right)} - \Esubarg{q}{\log q\left(z\right)}\\
-&= \Esubarg{q_i}{\Esubarg{q_{-i \vert i}}{\log p\left(x, z_i, z_{-i})}} - \sum \Esubarg{q_j}{\log q_j\left(z_j\right)} \\
-&\stackrel{c}{=} -D_{KL}\left(q_{i}\left(z_i\right) \vert \vert \exp{\Esubarg{q_{-i}}{p\left(x, z_i, z_{-i}\right)}}\right)
-\end{align*}
-Since KL is always $\geq 0$, can maximize this expression by setting it to zero
-(set $q_i$ to right hand side distribution)
+  \begin{align*}
+    \log p\left(x\right) &\geq
+    \Esubarg{q}{\log p\left(x \vert z\right)} - D_{KL}\left( q\left(z\right) \vert\vert p\left(z\right)\right) \\
+    &= \Esubarg{q}{\log p\left(x, z\right)} - \Esubarg{q}{\log q\left(z\right)}\\
+    &= \Esubarg{q_i}{\Esubarg{q_{-i \vert i}}{\log p\left(x, z_i, z_{-i}\right)}} - \sum \Esubarg{q_j}{\log q_j\left(z_j\right)} \\
+    &\stackrel{c}{=} -D_{KL}\left(q_{i}\left(z_i\right) \vert \vert \exp{\Esubarg{q_{-i}}{p\left(x, z_i, z_{-i}\right)}}\right)
+  \end{align*}
+  Since KL is always $\geq 0$, can maximize this expression by setting it to zero
+  (set $q_i$ to right hand side distribution)
 \end{frame}
 
 \section{Variational Autoencoders}
@@ -384,7 +535,7 @@ Since KL is always $\geq 0$, can maximize this expression by setting it to zero
     \item How could we have (say) $p\left(x \vert z\right) = \Gsn\left(x \vert
       f_{\theta}\left(z\right), \exp{g_{\theta}\left(x\right)}\right)$ for some
       complicated $f, g$?
-    \end{itemize} 
+    \end{itemize}
   \item Idea: Restrict family $\mathcal{Q}$ (hopefully not too much), and make
     optimization more automatic
   \end{itemize}
@@ -397,12 +548,12 @@ Since KL is always $\geq 0$, can maximize this expression by setting it to zero
     \mu_{\varphi}\left(x\right), \sigma^{2}_{\varphi}\left(x\right) I\right)$
   \item Let $\mu_{\varphi}$ and $\sigma^{2}_{\varphi}$ be arbitrary nonlinear
     functions
-    \begin{figure}[
+    \begin{figure}
         \centering
         \includegraphics[width=0.7\paperwidth]{figure/vae_inference}
         \caption{\label{fig:vae_inference} }
     \end{figure}
-  \end{itemize} 
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -411,7 +562,7 @@ Since KL is always $\geq 0$, can maximize this expression by setting it to zero
 \item Instead of optimizing one coordinate at a time, optimize all at once
   through $\varphi$
 \item Can also optimize $\theta$ in the likelihood
-\end{itemize}  
+\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -455,7 +606,7 @@ Since KL is always $\geq 0$, can maximize this expression by setting it to zero
   Most common example, if you want to sample
   \begin{align*}
     z \vert x &\sim \Gsn\left(z \vert \mu_{\varphi}\left(x\right), \sigma_{\varphi}^{2}\left(x\right)\right)
-  \end{align*} 
+  \end{align*}
   instead use
   \begin{align*}
     \eps &\sim \Gsn\left(0, I\right) \\
@@ -472,7 +623,7 @@ Since KL is always $\geq 0$, can maximize this expression by setting it to zero
     \nabla_{\varphi} \Esubarg{q_{\varphi}}{\log p_{\theta}\left(x \vert z\right)} &=
     \nabla_{\varphi} \Esubarg{p\left(\eps\right)}{\log p_{\theta}\left(x \vert g_{\varphi}\left(\eps\right)\right)} \\
     &= \Esubarg{p\left(\eps\right)}{\nabla \log p_{\theta}\left(x \vert g_{\varphi}\left(\eps\right)\right)} \\
-      &\approx \sum_{i} \nalba \log_{\theta}p_{\theta}\left(x \vert g_{\varphi}\left(\eps_{i}\right)\right)
+      &\approx \sum_{i} \nabla \log_{\theta}p_{\theta}\left(x \vert g_{\varphi}\left(\eps_{i}\right)\right)
   \end{align*}
   after sampling lots of $\eps_{i} \sim p\left(\eps\right)$.
   \item We can optimize the ELBO!
@@ -483,16 +634,16 @@ Since KL is always $\geq 0$, can maximize this expression by setting it to zero
 \label{sec:applications}
 
 \begin{frame}
-  \frametitle{Latent Space & Generation}
+  \frametitle{Latent Space \& Generation}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.6\paperwidth]{figure/}
-  \caption{\label{fig:} }
+  \includegraphics[width=0.6\paperwidth]{figure/vae_latent}
+  \caption{\label{fig:vae_latent} }
 \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Latent Space & Generation}
+  \frametitle{Latent Space \& Generation}
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.6\paperwidth]{figure/vae_conditional}
@@ -510,11 +661,10 @@ Since KL is always $\geq 0$, can maximize this expression by setting it to zero
 \end{frame}
 
 \begin{frame}
-  \frametitle{Drug Design & Discovery}
+  \frametitle{Drug Design \& Discovery}
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.6\paperwidth]{figure/vae_molecule}
-  \caption{\label{fig:vae_molecule} }
 \end{figure}
 \end{frame}
 
@@ -523,7 +673,6 @@ Since KL is always $\geq 0$, can maximize this expression by setting it to zero
 \begin{figure}[ht]
   \centering
   \includegraphics[width=0.6\paperwidth]{figure/vae_omniglot}
-  \caption{\label{fig:vae_omniglot} }
 \end{figure}
 \end{frame}
 
