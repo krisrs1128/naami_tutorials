@@ -1,0 +1,160 @@
+\documentclass[10pt,mathserif]{beamer}
+
+\usepackage{graphicx,amsmath,amssymb,tikz,psfrag}
+\usepackage{pythonhighlight, subcaption, natbib}
+
+
+\input{preamble}
+
+\mode<presentation>
+{
+\usetheme{default}
+}
+\setbeamertemplate{navigation symbols}{}
+\usecolortheme[rgb={0.13,0.28,0.59}]{structure}
+\setbeamertemplate{itemize subitem}{--}
+\setbeamertemplate{frametitle} {
+	\begin{center}
+	  {\large\bf \insertframetitle}
+	\end{center}
+}
+
+\AtBeginSection[]
+{
+	\begin{frame}<beamer>
+		\frametitle{Outline}
+		\tableofcontents[currentsection,currentsubsection]
+	\end{frame}
+}
+
+%% begin presentation
+
+\title{\large \bfseries Humanitarian AI}
+
+\author{Kris Sankaran\\[3ex] Nepal Winter School in AI}
+
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\begin{frame}
+  \frametitle{Humanitarian AI}
+  \begin{itemize}
+  \item How can we ensure that AI benefits everyone?
+  \item ... and not just those with power, wealth, or lots of data
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Augmentation and Amplification}
+  \begin{itemize}
+  \item Augmentation: AI tools can make people more effective about reasoning
+    about problems
+    \begin{itemize}
+    \item Often gets lost amid the hype about cognitive machines
+    \item See Vannever Bush's or Mike Jordan's ``The AI Revolution hasn't Started Yet''
+    \end{itemize}
+  \item Amplification: ``what people get out of technology depends on what they
+    can do and want to do even without technology''
+    \begin{itemize}
+    \item Context and intent are crucial
+    \item See Kentaro Toyama's ``Geek Heresy''
+    \end{itemize}
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sensing and Acting}
+  \begin{itemize}
+  \item Sensing: How to make all this data accessible and comprehensible?
+  \item Acting: How to inform small and large decisions?
+  \end{itemize} 
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sensing: Traffic in Jakarta}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/}
+    \caption{Automatically parsing traffic camera images can help with traffic
+      management. \label{fig:label} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sensing: Conservation through Land Use Maps}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/}
+    \caption{Enhanced land use maps let conservation organizations manage
+      ecosystems. \label{fig:land_use} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Sensing: Humanitarian Open Street Map}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/}
+    \caption{Accurate maps help relief workers know what resources are available
+      where. \label{fig:hotsm} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Acting: White Fly Prediction}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/}
+    \caption{Quickly counting white flies on cassava plants helps agricultural
+      extension workers protect crops. \label{fig:whitefly} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Acting: Detecting Asphyxia}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/}
+    \caption{A smartphone app that detects asphyxiated cries can make sure
+      parents seek medical treatment.
+      \label{fig:asphyx} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Acting: Lead Paint Inspection}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/}
+    \caption{Data on historical inspection results can guide the best places to
+      send health inspectors in the future, since it's impossible to reach every
+      household all the time.
+      \label{fig:lead_paint} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Humanitarian AI}
+  \begin{itemize}
+    Our topics reflect the challenges of these types of problems,
+    \begin{itemize}
+    \item \textbf{Bayesian Deep Learning}: Probabilistically informed actions
+    \item \textbf{Metalearning}: Work with smaller sample sizes
+    \item \textbf{GANs}: Work in the absense of labels 
+    \item \textbf{Interpretability}: Make sense of decisions
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Humanitarian AI}
+  \begin{itemize}
+  \item How can we ensure that AI benefits everyone?
+  \item We need the development of AI research and applications to be
+    \textit{inclusive}.
+  \end{itemize} 
+\end{frame}
+
+\end{document}
