@@ -1,8 +1,7 @@
 \documentclass[10pt,mathserif]{beamer}
 
 \usepackage{graphicx,amsmath,amssymb,tikz,psfrag}
-\usepackage{pythonhighlight, subcaption, natbib}
-
+\usepackage{natbib}
 
 \input{preamble}
 
@@ -30,9 +29,7 @@
 %% begin presentation
 
 \title{\large \bfseries Useful Layers for Deep Learning}
-
 \author{Kris Sankaran\\[3ex] Nepal Winter School in AI}
-
 \date{\today}
 
 \begin{document}
@@ -64,20 +61,51 @@
   \end{itemize}
 \begin{figure}
   \centering
-  \includegraphics[width=0.7\paperwidth]{figures/fully_connected_vis}
-  \caption{All the outputs from one layer can affect all the inputs to the next
-    one. \label{fig:fully_connected}}
+  \includegraphics[width=0.3\paperwidth]{figure/fully_connected1}
+  \caption{Our earlier notation for a fully connected layer.}
+  %%   one. \label{fig:fully_connected}}
 \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Fully Connected (Math)}
+  \frametitle{Nomenclature}
+  \begin{itemize}
+  \item Reason for the name: Every output layer coordinate can see every input
+    layer coordinate
+  \item Nice shorthand: ``layer coordinate'' $\rightarrow$ neuron
+  \item The two layers are \textit{fully connected}
+  \end{itemize}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.3\paperwidth]{figure/fully_connected2}
+  \caption{Each output unit is connected to all of the previous layer's inputs.}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Nomenclature}
+  \begin{itemize}
+  \item Reason for the name: Every output layer coordinate can see every input
+    layer coordinate
+  \item Nice shorthand: ``layer coordinate'' $\rightarrow$ neuron
+  \item The two layers are \textit{fully connected}
+  \end{itemize}
+\begin{figure}
+  \centering
+  \includegraphics[width=0.3\paperwidth]{figure/fully_connected3}
+  \caption{All the outputs from one layer can affect all the inputs to the next
+    one. \label{fig:fully_connected3}}
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Fully Connected Layers: Formula}
   \begin{itemize}
   \item This has concise mathematical notation
     \begin{align*}
       \sigma\left(W_{k}h_{k - 1}\right)
     \end{align*}
-  \item The nonlinearity is applied elementwise
+  \item The nonlinearity $\sigma$ is applied elementwise
   \item It's common to explicitly include a bias term $b_{k}$ inside the
     nonlinearity: $\sigma\left(W_k h_{k - 1} + b_k\right)$
   \end{itemize}
@@ -90,6 +118,7 @@
   \begin{itemize}
   \item First a digression on 1D sequences
   \item Material largely taken from Chris Olah's (incredible!) blog
+    (\url{http://colah.github.io/})
   \end{itemize}
 \end{frame}
 
@@ -121,7 +150,7 @@
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\paperwidth]{figure/drop_twice_probs}
+    \includegraphics[width=0.6\paperwidth]{figure/drop_twice}
     \caption{Can compute probabilities of landing in different positions, after
       two drops.
        \label{fig:drop_twice_probs}}
@@ -139,7 +168,24 @@
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\paperwidth]{figure/convolution_branches}
+    \includegraphics[width=0.6\paperwidth]{figure/convolution_branches1}
+    \caption{Each branch starts at the initial dropping position and ends at
+      $u$. \label{fig:convolution_branches} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The Probability of Sums}
+  \begin{itemize}
+    \item Probability of landing at a prespecified position after
+      two drops?
+    \item Consider any of the intermediate positions it could have
+      landed at
+    \item Sum over all the paths that lead to the same destination
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.35\paperwidth]{figure/convolution_branches2}
     \caption{Each branch starts at the initial dropping position and ends at
       $u$. \label{fig:convolution_branches} }
   \end{figure}
@@ -160,7 +206,7 @@
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\paperwidth]{figure/convolution_branches_annotated}
+    \includegraphics[width=0.35\paperwidth]{figure/convolution_branches2_annotated}
     \caption{Each branch starts at the initial dropping position and ends at
       $u$. \label{fig:convolution_branches} }
   \end{figure}
@@ -177,7 +223,7 @@
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\paperwidth]{figure/convolution_vary_funs}
+    \includegraphics[width=0.5\paperwidth]{figure/convolution_vary_funs}
     \caption{Suppose we first dropped from very high, and then afterwards from
       very low, so that it can't move very far from its second position.
        \label{fig:convolution_vary_funs} }
@@ -216,15 +262,23 @@
     \item These will be learned from data
     \end{itemize}
   \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.32\paperwidth]{figure/convolution_image_function}
+    \caption{Think of an image as a function in 2D. Each pixel would be the
+      endpoint for a branch in the ``dropping ball'' example we've been working
+      with. \citep. \label{fig:convolution_image_fun} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Example Computation}
+  Check interactive example: \url{http://setosa.io/ev/image-kernels/}
   \begin{figure}[ht]
     \centering
     \includegraphics[width=0.6\paperwidth]{figure/convolution_example}
-    \caption{An example convolution with a single filter, as described in
-      \citep. \label{fig:convolution_examples} }
+    \caption{An example convolution with a single (sharpening) filter.
+      \label{fig:convolution_examples} }
   \end{figure}
 \end{frame}
 
@@ -238,7 +292,7 @@
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width]{figure/blurring_example}
+    \includegraphics[width=0.4\paperwidth]{figure/blurring_example}
     \caption{Blurring can be implemented by convolving with a small
       plateau. \label{fig:blurring_example} }
   \end{figure}
@@ -254,7 +308,7 @@
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width]{figure/edge_detection_example}
+    \includegraphics[width=0.4\paperwidth]{figure/edge_detection_example}
     \caption{Edges can be found by convolving with a small
       zigzag. \label{fig:edges_example} }
   \end{figure}
@@ -288,7 +342,7 @@
   \end{itemize}
   \begin{figure}
     \centering
-    \includegraphics[width=0.7\paperwidth]{figures/max_pooling}
+    \includegraphics[width=0.3\paperwidth]{figures/max_pooling}
     \caption{Max pooling reduces the size of a feature map by taking only the
       largest value within patch.
       \label{fig:max_pooling}}
@@ -301,41 +355,153 @@
   \item Different types of convolution are useful in different subfields of deep
     learning
     \begin{itemize}
+    \item Causal convolution \citep{van2016wavenet}
     \item Dynamic Convolutions \citep{kalchbrenner2014convolutions}
     \item Atrous convolution \citep{chen2018deeplab}
     \item Deconvolution \citep{ronneberger2015u}
-    \item Causal convolution \citep{van2016wavenet}
     \end{itemize}
   \item Not just computer vision!
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.8\paperwidth]{figure/conv_collage}
-    \caption{\label{fig:conv_collage} }
+    \includegraphics[width=0.5\paperwidth]{figure/conv_collage}
+    \caption{Examples of the four types of convolutions above. \label{fig:conv_collage} }
   \end{figure}
 \end{frame}
 
+\section{Residual Blocks}
+\label{sec:residual_layers}
+
 \begin{frame}
-  \frametitle{Residual Layer}
-  \begin{figure}
+  \frametitle{Residual Blocks}
+  \begin{itemize}
+  \item Deeper layers learn more meaningful representations
+  \item Empirically, can be much harder to train
+  \item What to do?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Learning Residuals}
+  \begin{itemize}
+  \item Introduce complexity on top of existing approximation
+  \item Try to transform the previous layer in an intelligent way
+  \item Has a feel of forwards stagewise fitting or boosting, and is inspiration
+    for deep ODEs
+  \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\paperwidth]{figure/truth_approx.png}
+  \caption{An example of the difference between the true and the
+    observed \label{fig:truth_approx} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Learning Residuals}
+  \begin{itemize}
+  \item Introduce complexity on top of existing approximation
+  \item Try to transform the previous layer in an intelligent way
+  \item Has a feel of forwards stagewise fitting or boosting, and is inspiration
+    for deep ODEs
+  \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.5\paperwidth]{figure/truth_approx_residual.png}
+  \caption{An example of the difference between the true and the
+    observed \label{fig:truth_approx} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Learning Residuals}
+  \begin{itemize}
+  \item Introduce complexity on top of existing approximation
+  \item Try to transform the previous layer in an intelligent way
+  \item Has a feel of forwards stagewise fitting or boosting, and is inspiration
+    for deep ODEs
+  \end{itemize}
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.6\paperwidth]{figure/truth_approx_residual_panel.png}
+  \caption{We will attempt to directly learn the residual (in red), rather than
+    trying to arbitrarily modify the current approximation.
+    \label{fig:truth_approx} }
+\end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{A First Attempt}
+  \begin{itemize}
+  \item Introduce a direct connection $h_{k - 1} \rightarrow h_k$
+    \begin{align*}
+      h_{k} &= f^{k}\left(h_{k - 1}, W_{k}\right) + h_{k - 1}
+    \end{align*}
+  \item Issues?
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{A First Attempt}
+  \begin{itemize}
+  \item Introduce a direct connection $h_{k - 1} \rightarrow h_k$
+    \begin{align*}
+      h_{k} &= f^{k}\left(h_{k - 1}, W_{k}\right) + h_{k - 1}
+    \end{align*}
+  \item Issues?
+    \begin{itemize}
+    \item Can't adapt different mixing weights on residual
+    \item Input and output dimensions might not agree
+    \end{itemize}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Improved Architecture}
+  \begin{itemize}
+  \item No longer a direct addition, but encourages focusing on residual
+    \begin{align*}
+      h_{k} &= W^{r}_{k,1}f^{k}\left(h_{k - 1}, W_{k}\right) + W^{r}_{k,2}h_{k - 1}
+    \end{align*}
+  \item If input and output dimensions match, don't need $W^{r}_{k,2}$
+    \begin{figure}[ht]
       \centering
-      \includegraphics[width=0.7\paperwidth]{figure/resnet_vis}
-      \caption{Residual Networks use layers to incrementally
-        add complexity, by directly copying the previous values and only
-        learning minor modifications on top of that. \label{fig:resnet_vis} }
+      \includegraphics[width=0.4\paperwidth]{figure/resnet_block}
+      \caption{Resnet building block, according to the improved
+        architecture.\label{fig:resnet_block} }
+    \end{figure}
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Applications}
+  \begin{itemize}
+  \item Facilitates training for very deep networks
+  \item Used successfully in several competitions
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.18\paperwidth]{figure/resnet_application}
+    \caption{The middle column escribes a naive approach to a very deep network,
+      which fails to train. The residual network (right) is better than the other
+      two. \label{fig:resnet_application} }
   \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Residual Layer (Math)}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Attention Mechanisms}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Gated Recurrent Units}
+  \frametitle{Conclusion}
+ \begin{itemize}
+ \item Modularity in backprop $\rightarrow$ design independent layers
+ \item Convolution and residual layers enjoy empirical success in range of
+   domains
+ \item Many types of layers that we haven't discussed
+   \begin{itemize}
+   \item Sequential data: LSTM Cells \citep{schmidhuber1997long}, Gatted
+     Recurrent Units \citep{chung2014empirical}
+   \item Attention mechanisms \citep{bahdanau2014neural}
+   \item Feature-wise Modulation \citep{perez2017film}
+   \end{itemize}
+ \end{itemize}
 \end{frame}
 
 \end{document}
