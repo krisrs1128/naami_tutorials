@@ -41,7 +41,7 @@ print(x.grad)
 # at [0, 1] this is [1/(2 * sqrt(2)) and 2/(2 * sqrt(2))]
 # check that this is correct
 
-# can even do crazy neural network stuff
+# can even do crazy relu stuff (y = sigma(W * x))
 def g(x):
     W = torch.randn((10, 10))
     return W.mm(x)
@@ -58,3 +58,6 @@ y = h(f(g(x)))
 
 y.backward()
 print(x.grad)
+
+# In theory, you could use these gradients to do neural network optimization by
+# yourself, without ever referencing the optim class in pytorch
