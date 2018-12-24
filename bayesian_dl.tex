@@ -203,8 +203,8 @@ Nepal Winter School in AI}
   \frametitle{Mixture Models}
   \begin{itemize}
   \item Sometimes, critical parts of data generating mechanisms are unobserved
-    \item Need posterior inference over both mixture parameters $\mu_k,
-      \Sigma_k$ as well as assignments $z_i$
+  \item Example: Need posterior inference over both mixture parameters $\mu_k,
+    \Sigma_k$ as well as assignments $z_i$
   \end{itemize}
   \begin{align*}
     \mu_{k} &\sim \Gsn\left(0, \Sigma_{0}\right) \\
@@ -225,7 +225,7 @@ Nepal Winter School in AI}
   \frametitle{Mixture Models}
   \begin{itemize}
   \item Sometimes, critical parts of data generating mechanisms are unobserved
-    \item Need posterior inference over both mixture parameters $\mu_k,
+    \item Example: Need posterior inference over both mixture parameters $\mu_k,
       \Sigma_k$ as well as assignments $z_i$
   \end{itemize}
   \begin{align*}
@@ -246,7 +246,7 @@ Nepal Winter School in AI}
   \frametitle{Mixture Models}
   \begin{itemize}
   \item Sometimes, critical parts of data generating mechanisms are unobserved
-    \item Need posterior inference over both mixture parameters $\mu_k,
+    \item Example: Need posterior inference over both mixture parameters $\mu_k,
       \Sigma_k$ as well as assignments $z_i$
   \end{itemize}
   \begin{align*}
@@ -266,7 +266,7 @@ Nepal Winter School in AI}
   \frametitle{Mixture Models}
   \begin{itemize}
   \item Sometimes, critical parts of data generating mechanisms are unobserved
-    \item Need posterior inference over both mixture parameters $\mu_k,
+    \item Example: Need posterior inference over both mixture parameters $\mu_k,
       \Sigma_k$ as well as assignments $z_i$
   \end{itemize}
   \begin{align*}
@@ -290,6 +290,7 @@ Nepal Winter School in AI}
     \item Hidden Markov Models
     \item Latent Dirichlet Allocation
     \end{itemize}
+  \item $z_i$'s can be discrete or continuous
   \item Latent variables $z_i$ transform simple distributions (Gaussians) into
     complex ones (mixture of Gaussians)
   \item In general, mechanism is
@@ -382,6 +383,46 @@ Nepal Winter School in AI}
     \item Hard to compute, so just drop and turn into an inequality
     \end{itemize}
   \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Discussion}
+  \begin{itemize}
+  \item Consider the collection of points below
+  \item 1D version of mixture of Gaussians
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/1d_mog_points}
+  \end{figure}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Discussion}
+  \begin{itemize}
+  \item $q\left(z_i \vert x_i\righT)$ gives assignment probabilities to each
+    point
+  \item Which has higher reconstruction error: $q^1$ or $q^2$?
+  \item Which has higher approximation complexity?
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/1d_mog_assignments}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Discussion}
+  \begin{itemize}
+  \item Suppose $q\left(z_i \vert x_i\righT)$
+  \item Which has higher reconstruction error: $q^1$ or $q^2$?
+  \item Which has higher approximation complexity?
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.7\paperwidth]{figure/1d_mog_overlaid}
+  \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -513,7 +554,7 @@ Nepal Winter School in AI}
       \label{fig:variational_product_q}}
   \end{figure}
 \end{frame}
- 
+
 \begin{frame}
   \frametitle{Optimization}
   \begin{itemize}
@@ -750,7 +791,7 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
     \item Allows application to settings where forwards model is not amenable to
       analytical formulas
     \end{itemize}
-  \end{itemize} 
+  \end{itemize}
 \end{frame}
 
 \end{document}
