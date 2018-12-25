@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+# Exercises using automatic differentiation
 
 import torch
 import numpy as np
