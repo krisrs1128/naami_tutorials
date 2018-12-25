@@ -297,8 +297,8 @@
   \centering
   \includegraphics[width=0.7\paperwidth]{figure/logistic_comp_graph}
   \caption{The loss function is a series of compositions of relatively simple
-    functions. This is an example of a computational flow diagram, which is
-    often used in the deep learning literature.
+    functions. This is an example of a flow graph, which is often used in the
+    deep learning literature.
     \label{fig:logistic_comp_graph} }
 \end{figure}
 \end{frame}
@@ -361,7 +361,7 @@
 \begin{frame}
   \frametitle{Chain Rule for Logistic Regression}
   \begin{itemize}
-  \item Multiply the derivatives and substitute input from the flow diagram
+  \item Multiply the derivatives and substitute input from the flow graph
   \item Gives the (negative) gradient,
     \begin{align*}
       &\left(\frac{y_i}{\sigma\left(\theta^{T}x_i\right)} - \frac{1 - y_i}{1 - \sigma\left(\theta^{T}x_i\right)}\right)\sigma\left(\theta^{T}x_i\right)\left(1 - \sigma\left(\theta^{T}x_i\right)\right)x_i \\
@@ -600,11 +600,11 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Inductive View of Backpropagation}
+  \frametitle{Backpropagation via Flow Graphs}
   \begin{itemize}
   \item For each iteration of SGD, we need to estimate the gradient of the loss
     with respect to the parameters
-  \item When you perturb $W_k$ a little, it changes all the upstream $h_k, h_{k +
+  \item When you perturb $W_k$ a little, it changes all the downstream $h_k, h_{k +
     1}, \dots, h_{K}$ up to the prediction, which uses that final representation
   \item There is a lot of composition going on here... could become much more
     complicated than logistic regression
@@ -613,89 +613,231 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Base Case}
+  \frametitle{Chain Rule Revisited}
   \begin{itemize}
-  \item Loss using final $K^{th}$ layer representation (a single number $h_k$,
-    giving probability coin toss is $1$)
+  \item Chain rule for vector-valued transformations $x \xrightarrow{g} h
+    \xrightarrow{y}$,
     \begin{align*}
-      \ell\left(y_i, h_K\right) &= y_i \log h_{K} + \left(1 - y_i\right)\log\left(1 - h_{K}\right)
-    \end{align*}
-  \item How does the loss change when we perturb $h_{K}$ slightly?
-    \begin{align*}
-      D \ell\left(h_{K}\right) &= \frac{y_i}{h_K} - \frac{1 - y_i}{1 - h_K}
+      D\left(f \circ g\right)\left(x\right) &= Df\left(h\right)Dg\left(x\right)
     \end{align*}
   \end{itemize}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.5\paperwidth]{figure/backprop_last_layer}
-  \caption{We are considering the derivative of the lost with respect to changes
-    in the last layer. \label{fig:backprop_last_layer} }
-\end{figure}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\paperwidth]{figure/chain_rule_matrices}
+    \caption{The first row shows the sequence of vector-valued transformations.
+      The $ij^{th}$ cell of the derivative matrices tells you how the $i^{th}$
+      output changes when you perturb the $j^{th}$ input
+      slightly. \label{fig:chain_rule_matrices} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Inductive Hypothesis + Step}
+  \frametitle{Flow Graphs}
   \begin{itemize}
-  \item Hypothesis: Suppose we know how to compute derivatives for all $f_{K},
-    f_{K - 1}, \dots, f_{k + 2}$ with respect to their input $h$'s
-  \item Step: Then derivative of $\ell$ with respect to upstream $h_k$
-    \begin{align*}
-      D\left(\ell \circ f^{K}\circ \cdots \circ f^{k + 1}\right)\left(h_{k}\right) &=
-      D\ell\left(h_{K}\right) Df^{K}\left(h_{k - 1}\right)\cdots Df^{k + 1}\left(h_{k}\right)
-    \end{align*}
-  \item All but the last term known by hypothesis
-  \end{itemize}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.5\paperwidth]{figure/backprop_inductive_step}
-  \caption{Assuming we know how to take derivatives of all layers, we can take
-    derivatives with respect to the $k^{th}$
-    layer. \label{fig:backprop_inductive_step} }
-\end{figure}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Inductive Hypothesis + Step}
-  \begin{itemize}
-  \item Last term can be found by two-term chain rule, since it is a composition
-    of linear and sigmoid transformation: $D\left(\sigma\left(W^{k +
-      1}h_{k}\right)\right)$
-  \item Therefore, we compute any $D\ell\left(h_k\right)$
+  \item A flow graph shows how different vectors are computed from one another
     \begin{itemize}
-    \item Abuse of notation: $\ell$ is not directly a function of $h_k$.
-      Interpret this as change in $\ell$ when you perturb upstream $h_k$
+    \item Nodes are vectors
+    \item Edges are specific operations on input, which yield the output
     \end{itemize}
+  \item Crucial: Operations along each edge should be easily differentiable with
+    respect to input
   \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.5\paperwidth]{figure/backprop_inductive_step}
-  \caption{Assuming we know how to take derivatives of all layers, we can take
-    derivatives with respect to the $k^{th}$
-    layer. \label{fig:backprop_inductive_step} }
+  \includegraphics[width=0.6\paperwidth]{figure/flow_graph}
+  \caption{The main idea of a flow graph. \label{fig:flow_graph} }
 \end{figure}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Backpropagation: Updating $W_k$'s}
+  \frametitle{Chain Rule on Graphs}
   \begin{itemize}
-  \item Know how loss changes when intermediate layers $h_k$ are perturbed
-  \item But for SGD, we need derivatives with respect to $W_k$'s
-  \item Again abusing notation, use known derivatives w.r.t. inputs
+  \item When differentiating function $f_i$ with respect to upstream $h_k$, the
+    chain rule implies
     \begin{align*}
-      D\ell\left(W_k\right) &= D \left(\ell \circ f^{k + 1}\right)\left(W_k\right) \\
-        &= D\ell\left(h_{k + 1}\right)Df_{k + 1}\left(W_k\right)
+      Df_{i}\left(h_k\right) &= \sum_{j \in C\left(i\right)}
+      Df_{i}\left(h_{j}\right)Dh_{j}\left(h_{i}\right)
     \end{align*}
-  \item Derivatives of $f_{k + 1}$ with respect to weights is just like logistic
-    regression
   \end{itemize}
-\begin{figure}[ht]
-  \centering
-  \includegraphics[width=0.35\paperwidth]{figure/backprop_inductive_w}
-  \caption{To get derivatives with respect to weights, multiply by one more edge
-    in the computational flow graph. \label{fig:backprop_inductive_w} }
-\end{figure}
-
 \end{frame}
+
+\begin{frame}
+  \frametitle{Argument for Formula}
+  \begin{itemize}
+  \item This may look unfamiliar, but it's really the earlier matrix product in
+    disguise
+  \item Consider the case where we conceptually split the intermediary $h$ into
+    $h^{1}$ and $h^{2}$
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/fg_intuition1}
+    \caption{If we are splitting $h$, we can split all the derivatives in the
+      matrix product. \label{fig:fg_intuition1} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Argument for Formula}
+  \begin{itemize}
+  \item This may look unfamiliar, but it's really the earlier matrix product in
+    disguise
+  \item Consider the case where we conceptually split the intermediary $h$ into
+    $h^{1}$ and $h^{2}$
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/fg_intuition1}
+    \caption{If we are splitting $h$, we can split all the derivatives in the
+      matrix product. \label{fig:fg_intuition1} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Argument for Formula}
+  \begin{itemize}
+  \item This may look unfamiliar, but it's really the earlier matrix product in
+    disguise
+  \item Consider the case where we conceptually split the intermediary $h$ into
+    $h^{1}$ and $h^{2}$
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/fg_intuition1}
+    \caption{This matrix multiplication can then be written as a sum, which is
+      exactly the same as the earlier formula.
+      \label{fig:fg_intuition1} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Organized Gradient Computation}
+  \begin{itemize}
+    \begin{align*}
+      Df_{i}\left(h_k\right) &= \sum_{j \in C\left(i\right)}
+      Df_{i}\left(h_{j}\right)Dh_{j}\left(h_{i}\right)
+    \end{align*}
+  \item This gives a natural way of organizing gradient computation
+  \item Start with output nodes and flow back towards inputs
+  \item Remember each edge w.r.t input is straightforwards
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\paperwidth]{figure/organized_comp1}
+    \caption{The \label{fig:organized_comp1} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Consequence: Backpropagation}
+  \begin{itemize}
+  \item The flow graph for a standard deep neural net is straightforwards
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/layer_flow_graph}
+    \caption{The flow of computation within a single layer. \label{fig:layer_flow_graph} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Consequence: Backpropagation}
+  \begin{itemize}
+  \item The $W_{k}$'s are input nodes in this flow graph
+  \item We have to propagate all the way backwards, but at least have an
+    organized way of getting gradients
+  \end{itemize} 
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/composed_flow_graph}
+    \caption{We can compose these units to build the overall flow
+      graph. \label{fig:composed_flow_graph} }
+  \end{figure}
+\end{frame}
+
+%% \begin{frame}
+%%   \frametitle{Base Case}
+%%   \begin{itemize}
+%%   \item Loss using final $K^{th}$ layer representation (a single number $h_k$,
+%%     giving probability coin toss is $1$)
+%%     \begin{align*}
+%%       \ell\left(y_i, h_K\right) &= y_i \log h_{K} + \left(1 - y_i\right)\log\left(1 - h_{K}\right)
+%%     \end{align*}
+%%   \item How does the loss change when we perturb $h_{K}$ slightly?
+%%     \begin{align*}
+%%       D \ell\left(h_{K}\right) &= \frac{y_i}{h_K} - \frac{1 - y_i}{1 - h_K}
+%%     \end{align*}
+%%   \end{itemize}
+%% \begin{figure}[ht]
+%%   \centering
+%%   \includegraphics[width=0.5\paperwidth]{figure/backprop_last_layer}
+%%   \caption{We are considering the derivative of the lost with respect to changes
+%%     in the last layer. \label{fig:backprop_last_layer} }
+%% \end{figure}
+%% \end{frame}
+
+%% \begin{frame}
+%%   \frametitle{Inductive Hypothesis + Step}
+%%   \begin{itemize}
+%%   \item Hypothesis: Suppose we know how to compute derivatives for all $f_{K},
+%%     f_{K - 1}, \dots, f_{k + 2}$ with respect to their input $h$'s
+%%   \item Step: Then derivative of $\ell$ with respect to upstream $h_k$
+%%     \begin{align*}
+%%       D\left(\ell \circ f^{K}\circ \cdots \circ f^{k + 1}\right)\left(h_{k}\right) &=
+%%       D\ell\left(h_{K}\right) Df^{K}\left(h_{k - 1}\right)\cdots Df^{k + 1}\left(h_{k}\right)
+%%     \end{align*}
+%%   \item All but the last term known by hypothesis
+%%   \end{itemize}
+%% \begin{figure}[ht]
+%%   \centering
+%%   \includegraphics[width=0.5\paperwidth]{figure/backprop_inductive_step}
+%%   \caption{Assuming we know how to take derivatives of all layers, we can take
+%%     derivatives with respect to the $k^{th}$
+%%     layer. \label{fig:backprop_inductive_step} }
+%% \end{figure}
+%% \end{frame}
+
+%% \begin{frame}
+%%   \frametitle{Inductive Hypothesis + Step}
+%%   \begin{itemize}
+%%   \item Last term can be found by two-term chain rule, since it is a composition
+%%     of linear and sigmoid transformation: $D\left(\sigma\left(W^{k +
+%%       1}h_{k}\right)\right)$
+%%   \item Therefore, we compute any $D\ell\left(h_k\right)$
+%%     \begin{itemize}
+%%     \item Abuse of notation: $\ell$ is not directly a function of $h_k$.
+%%       Interpret this as change in $\ell$ when you perturb upstream $h_k$
+%%     \end{itemize}
+%%   \end{itemize}
+%% \begin{figure}[ht]
+%%   \centering
+%%   \includegraphics[width=0.5\paperwidth]{figure/backprop_inductive_step}
+%%   \caption{Assuming we know how to take derivatives of all layers, we can take
+%%     derivatives with respect to the $k^{th}$
+%%     layer. \label{fig:backprop_inductive_step} }
+%% \end{figure}
+%% \end{frame}
+
+%% \begin{frame}
+%%   \frametitle{Backpropagation: Updating $W_k$'s}
+%%   \begin{itemize}
+%%   \item Know how loss changes when intermediate layers $h_k$ are perturbed
+%%   \item But for SGD, we need derivatives with respect to $W_k$'s
+%%   \item Again abusing notation, use known derivatives w.r.t. inputs
+%%     \begin{align*}
+%%       D\ell\left(W_k\right) &= D \left(\ell \circ f^{k + 1}\right)\left(W_k\right) \\
+%%         &= D\ell\left(h_{k + 1}\right)Df_{k + 1}\left(W_k\right)
+%%     \end{align*}
+%%   \item Derivatives of $f_{k + 1}$ with respect to weights is just like logistic
+%%     regression
+%%   \end{itemize}
+%% \begin{figure}[ht]
+%%   \centering
+%%   \includegraphics[width=0.35\paperwidth]{figure/backprop_inductive_w}
+%%   \caption{To get derivatives with respect to weights, multiply by one more edge
+%%     in the computational flow graph. \label{fig:backprop_inductive_w} }
+%% \end{figure}
+%% \end{frame}
 
 \begin{frame}
   \frametitle{Modularity}
@@ -724,8 +866,14 @@
   \item Depending on various hyperparameters,
     \begin{itemize}
     \item Sequence of (per-layer) learning rates
+      \begin{itemize}
+      \item Other optimization parameters (e.g., momentum)
+      \end{itemize}
     \item Weight initialization
+    \item Regularization
+    \item Preprocessing (e.g., standardization, PCA, or quantile transformation)
     \item Type, number, and width of each layer
+    \item Batch size
     \item Activation functions
     \end{itemize}
     the model may or may not train properly
@@ -751,6 +899,20 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Search Strategy}
+  \begin{itemize}
+  \item Multiresolution search: Coarse exploration followed by detailed
+    investigation
+  \item Semi-automated strategy: Analyze simple sweeps, launch new jobs
+    accordingly
+  \item Alternatives to grid search: Search in random grid, or use Bayesian
+    Optimization
+  \item Cheap validation alternatives: Instead of full training in all
+    experiments, use cheap proxies
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
   \frametitle{Training Analysis}
   \begin{figure}[ht]
     \centering
@@ -767,7 +929,7 @@
     \item Number and widths of layers
     \item Learning rates
     \item Number of iterations
-  \end{itemize} 
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -794,6 +956,18 @@
     \caption{Detective work to understand failures in training, from
       \citep{glorot2010understanding}.\label{fig:detective_work} }
   \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Training Analysis}
+  Other (more exotic) forms of visualization that can be useful,
+  \begin{itemize}
+  \item Study low-dimensional representation of function as it trains
+  \item Vary subset of weights for a given example, see how maps change
+  \end{itemize}
+  \begin{itemize}
+  \end{itemize}
+
 \end{frame}
 
 % I really dislike blogs that just show screenshots of network architectures or worse benchmarking results
