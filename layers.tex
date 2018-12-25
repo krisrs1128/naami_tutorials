@@ -56,7 +56,7 @@
   \begin{itemize}
   \item Reason for the name: Every output layer coordinate can see every input
     layer coordinate
-  \item Nice shorthand: ``layer coordinate'' $\rightarrow$ neuron
+  \item Biologically motivated shorthand: ``layer coordinate'' $\rightarrow$ neuron
   \item The two layers are \textit{fully connected}
   \end{itemize}
 \begin{figure}
@@ -72,7 +72,7 @@
   \begin{itemize}
   \item Reason for the name: Every output layer coordinate can see every input
     layer coordinate
-  \item Nice shorthand: ``layer coordinate'' $\rightarrow$ neuron
+  \item Biologically motivated shorthand: ``layer coordinate'' $\rightarrow$ neuron
   \item The two layers are \textit{fully connected}
   \end{itemize}
 \begin{figure}
@@ -87,7 +87,7 @@
   \begin{itemize}
   \item Reason for the name: Every output layer coordinate can see every input
     layer coordinate
-  \item Nice shorthand: ``layer coordinate'' $\rightarrow$ neuron
+  \item Biologically motivated shorthand: ``layer coordinate'' $\rightarrow$ neuron
   \item The two layers are \textit{fully connected}
   \end{itemize}
 \begin{figure}
@@ -267,7 +267,7 @@
     \includegraphics[width=0.32\paperwidth]{figure/convolution_image_function}
     \caption{Think of an image as a function in 2D. Each pixel would be the
       endpoint for a branch in the ``dropping ball'' example we've been working
-      with. \citep. \label{fig:convolution_image_fun} }
+      with. \label{fig:convolution_image_fun} }
   \end{figure}
 \end{frame}
 
@@ -342,7 +342,7 @@
   \end{itemize}
   \begin{figure}
     \centering
-    \includegraphics[width=0.3\paperwidth]{figures/max_pooling}
+    \includegraphics[width=0.3\paperwidth]{figure/max_pooling}
     \caption{Max pooling reduces the size of a feature map by taking only the
       largest value within patch.
       \label{fig:max_pooling}}
@@ -356,7 +356,7 @@
     learning
     \begin{itemize}
     \item Causal convolution \citep{van2016wavenet}
-    \item Dynamic Convolutions \citep{kalchbrenner2014convolutions}
+    \item Dynamic Convolutions \citep{kalchbrenner2014convolutional}
     \item Atrous convolution \citep{chen2018deeplab}
     \item Deconvolution \citep{ronneberger2015u}
     \end{itemize}
@@ -364,7 +364,7 @@
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.5\paperwidth]{figure/conv_collage}
+    \includegraphics[width=0.9\paperwidth]{figure/conv_collage}
     \caption{Examples of the four types of convolutions above. \label{fig:conv_collage} }
   \end{figure}
 \end{frame}
@@ -387,7 +387,7 @@
   \item Introduce complexity on top of existing approximation
   \item Try to transform the previous layer in an intelligent way
   \item Has a feel of forwards stagewise fitting or boosting, and is inspiration
-    for deep ODEs
+    for neural ODEs \citep{chen2018neural}
   \end{itemize}
 \begin{figure}[ht]
   \centering
@@ -494,7 +494,8 @@
  \item Modularity in backprop $\rightarrow$ design independent layers
  \item Convolution and residual layers enjoy empirical success in range of
    domains
- \item Many types of layers that we haven't discussed
+ \item Many types of layers that we haven't discussed, but all work using the
+   same chain rule and local updating types of ideas
    \begin{itemize}
    \item Sequential data: LSTM Cells \citep{schmidhuber1997long}, Gatted
      Recurrent Units \citep{chung2014empirical}
@@ -502,6 +503,11 @@
    \item Feature-wise Modulation \citep{perez2017film}
    \end{itemize}
  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\bibliographystyle{plain}
+\bibliography{refs}
 \end{frame}
 
 \end{document}

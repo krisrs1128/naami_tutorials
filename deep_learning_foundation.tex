@@ -59,7 +59,7 @@
   \item Imagine $n$ flips of a coin with probability $\pi$ of coming up heads.
   \item Loglikelihood function (independent bernoulli trials)
     \begin{align*}
-      \log p\left(y \vert \pi \right) &= \log \left[\prod_{i = 1}^{n} \pi^{\indic{y_i = 1}}\left(1 - \pi\right)^{y_i = 0}\right] \\
+      \log p\left(y \vert \pi \right) &= \log \left[\prod_{i = 1}^{n} \pi^{\indic{y_i = 1}}\left(1 - \pi\right)^{\indic{y_i = 0}}\right] \\
       &= \sum_{i = 1}^{n} \indic{y_i = 1}\log \pi + \indic{y_i = 0}\log\left(1 - \pi\right)
     \end{align*}
     where we use the shorthand $y = \left(y_1, \dots, y_n\right)$.
@@ -78,7 +78,7 @@
   \item Imagine $n$ flips of a coin with probability $\pi$ of coming up heads.
   \item Loglikelihood function (independent bernoulli trials)
     \begin{align*}
-      \log p\left(y \vert \pi \right) &= \log \left[\prod_{i = 1}^{n} \pi^{\indic{y_i = 1}}\left(1 - \pi\right)^{y_i = 0}\right] \\
+      \log p\left(y \vert \pi \right) &= \log \left[\prod_{i = 1}^{n} \pi^{\indic{y_i = 1}}\left(1 - \pi\right)^{\indic{y_i = 0}}\right] \\
       &= \sum_{i = 1}^{n} \indic{y_i = 1}\log \pi + \indic{y_i = 0}\log\left(1 - \pi\right)
     \end{align*}
     where we use the shorthand $y = \left(y_1, \dots, y_n\right)$.
@@ -127,14 +127,14 @@
   \frametitle{Using Input Data}
   \begin{itemize}
   \item What if the probability depended on input data?
-  \item Depending on some input $x_i$, we flip coin with probability
-    $\pi\left(x_i\right)$ of heads
+  \item Depending on some input $x_i$, we have probability $\pi\left(x_i\right)$
+    of heads
   \end{itemize}
   \begin{figure}
     \centering
     \includegraphics[width=0.3\paperwidth]{figure/logistic_scatter}
     \caption{Example of a classification problem when $x_i$ are two dimensional,
-      heads are green, and tails are purple. \label{fig:logistic_scatter} }
+      heads are green, and tails are red. \label{fig:logistic_scatter} }
   \end{figure}
 \end{frame}
 
@@ -142,14 +142,14 @@
   \frametitle{Using Input Data}
   \begin{itemize}
   \item What if the probability depended on input data?
-  \item Depending on some input $x_i$, we flip coin with probability
-    $\pi\left(x_i\right)$ of heads
+  \item Depending on some input $x_i$, we have probability $\pi\left(x_i\right)$
+    of heads
   \end{itemize}
   \begin{figure}
     \centering
     \includegraphics[width=0.3\paperwidth]{figure/logistic_scatter_plane}
     \caption{Example of a classification problem when $x_i$ are two dimensional,
-      heads are green, and tails are purple. \label{fig:logistic_scatter} }
+      heads are green, and tails are red. \label{fig:logistic_scatter} }
   \end{figure}
 \end{frame}
 
@@ -157,12 +157,12 @@
   \frametitle{Using Input Data}
   \begin{itemize}
   \item What if the probability depended on input data?
-  \item Depending on some input $x_i$, we flip coin with probability
-    $\pi\left(x_i\right)$ of heads
+  \item Depending on some input $x_i$, we have probability $\pi\left(x_i\right)$
+    of heads
   \end{itemize}
   \begin{figure}
     \centering
-    \includegraphics[width=0.3\paperwidth]{figure/logistic_scatter_nonlinear_points}
+    \includegraphics[width=0.45\paperwidth]{figure/logistic_scatter_nonlinear_points}
     \caption{Example with a nonlinear
       boundary. \label{fig:logistic_nonlinear_scatter_points} }
   \end{figure}
@@ -172,12 +172,12 @@
   \frametitle{Using Input Data}
   \begin{itemize}
   \item What if the probability depended on input data?
-  \item Depending on some input $x_i$, we flip coin with probability
-    $\pi\left(x_i\right)$ of heads
+  \item Depending on some input $x_i$, we have probability $\pi\left(x_i\right)$
+    of heads
   \end{itemize}
   \begin{figure}
     \centering
-    \includegraphics[width=0.3\paperwidth]{figure/logistic_scatter_nonlinear}
+    \includegraphics[width=0.45\paperwidth]{figure/logistic_scatter_nonlinear}
     \caption{Example with a nonlinear
       boundary. \label{fig:logistic_nonlinear_scatter_points} }
   \end{figure}
@@ -186,10 +186,7 @@
 \begin{frame}
   \frametitle{Using Input Data}
   \begin{itemize}
-  \item What if the probability depended on input data?
-  \item Depending on some input $x_i$, we flip coin with probability
-    $\pi\left(x_i\right)$ of heads
-  \item Can adapt previous loglikelihood
+  \item Can adapt previous loglikelihood to this setting
     \begin{align*}
       \log p\left(y \vert x\right) &= \sum_{i = 1}^{n} \indic{y_i = 1}\log \pi\left(x\right) + \indic{y_i = 0}\log\left(1 - \pi\left(x\right)\right)
     \end{align*}
@@ -247,8 +244,8 @@
       \includegraphics[width=0.17\paperwidth]{figure/sigmoid_plot_10}
     \end{subfigure}
     \caption{Example sigmoid functions $\pi_{\theta}$ for random draws of
-      $\theta$, when we assume $x$ has an intercept term ($x = \left(1,
-      \dots\right)$). Notice that there are no nonlinear boundaries...
+      $\theta$, when we assume $x$ has an intercept term. Notice that there are
+      no nonlinear boundaries...
       \label{fig:logistic_scatter_nonlinear} }
   \end{figure}
 \end{frame}
@@ -297,8 +294,8 @@
   \centering
   \includegraphics[width=0.7\paperwidth]{figure/logistic_comp_graph}
   \caption{The loss function is a series of compositions of relatively simple
-    functions. This is an example of a flow graph, which is often used in the
-    deep learning literature.
+    functions. This is an example of a flow graph, which we will revisit in more
+    generality soon.
     \label{fig:logistic_comp_graph} }
 \end{figure}
 \end{frame}
@@ -362,7 +359,7 @@
   \frametitle{Chain Rule for Logistic Regression}
   \begin{itemize}
   \item Multiply the derivatives and substitute input from the flow graph
-  \item Gives the (negative) gradient,
+  \item Gives the gradient,
     \begin{align*}
       &\left(\frac{y_i}{\sigma\left(\theta^{T}x_i\right)} - \frac{1 - y_i}{1 - \sigma\left(\theta^{T}x_i\right)}\right)\sigma\left(\theta^{T}x_i\right)\left(1 - \sigma\left(\theta^{T}x_i\right)\right)x_i \\
       = &\left[y_i\left(1 - \sigma\left(\theta^{T} x_i\right)\right) - \left(1 - y_i\right)\sigma\left(\theta^T x_i\right)\right]x_i \\
@@ -551,7 +548,8 @@
     \centering
     \includegraphics[width=0.7\paperwidth]{figure/deep_learning_basic}
     \caption{The basic idea of deep learning is to compose nonlinearities in a
-      way that encourages discovery of complex intermediate representations.
+      way that encourages discovery of complex intermediate representations
+      $h_k$.
       \label{fig:deep_learning_basic} }
   \end{figure}
 \end{frame}
@@ -582,6 +580,10 @@
 \end{figure}
 \end{frame}
 
+\section{Optimization}
+\label{sec:optimization}
+
+
 \begin{frame}
   \frametitle{Optimization: Stochastic Gradient Descent}
   \begin{itemize}
@@ -606,8 +608,8 @@
     with respect to the parameters
   \item When you perturb $W_k$ a little, it changes all the downstream $h_k, h_{k +
     1}, \dots, h_{K}$ up to the prediction, which uses that final representation
-  \item There is a lot of composition going on here... could become much more
-    complicated than logistic regression
+  \item There is a lot of composition going on here... courage alone won't help
+    you take these derivatives
   \item Chain rule saves the day again!
   \end{itemize}
 \end{frame}
@@ -616,14 +618,19 @@
   \frametitle{Chain Rule Revisited}
   \begin{itemize}
   \item Chain rule for vector-valued transformations $x \xrightarrow{g} h
-    \xrightarrow{y}$,
+    \xrightarrow{f} y$,
     \begin{align*}
       D\left(f \circ g\right)\left(x\right) &= Df\left(h\right)Dg\left(x\right)
     \end{align*}
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.4\paperwidth]{figure/chain_rule_matrices}
+    \begin{subfigure}{0.2\paperwidth}
+      \includegraphics[width=0.2\paperwidth]{figure/layer_flow}
+    \end{subfigure}
+    \begin{subfigure}{0.7\paperwidth}
+      \includegraphics[width=0.7\paperwidth]{figure/chain_rule_matrices}
+    \end{subfigure}
     \caption{The first row shows the sequence of vector-valued transformations.
       The $ij^{th}$ cell of the derivative matrices tells you how the $i^{th}$
       output changes when you perturb the $j^{th}$ input
@@ -637,14 +644,15 @@
   \item A flow graph shows how different vectors are computed from one another
     \begin{itemize}
     \item Nodes are vectors
-    \item Edges are specific operations on input, which yield the output
+    \item Edges are specific operations on input, which when combined with other
+      incoming edges gives the output
     \end{itemize}
   \item Crucial: Operations along each edge should be easily differentiable with
     respect to input
   \end{itemize}
 \begin{figure}[ht]
   \centering
-  \includegraphics[width=0.6\paperwidth]{figure/flow_graph}
+  \includegraphics[width=0.2\paperwidth]{figure/flow_graph}
   \caption{The main idea of a flow graph. \label{fig:flow_graph} }
 \end{figure}
 \end{frame}
@@ -659,6 +667,13 @@
       Df_{i}\left(h_{j}\right)Dh_{j}\left(h_{i}\right)
     \end{align*}
   \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\paperwidth]{figure/graph_chain_rule}
+    \caption{The graph version of the chain rule sums over the immediate
+      children, referring recursively to similar gradients.
+       \label{fig:flow_graph} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -666,12 +681,12 @@
   \begin{itemize}
   \item This may look unfamiliar, but it's really the earlier matrix product in
     disguise
-  \item Consider the case where we conceptually split the intermediary $h$ into
-    $h^{1}$ and $h^{2}$
+  \item Consider the case where we conceptually split $h$ into $h^{1}$ and
+    $h^{2}$
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\paperwidth]{figure/fg_intuition1}
+    \includegraphics[width=0.3\paperwidth]{figure/fg_intuition2}
     \caption{If we are splitting $h$, we can split all the derivatives in the
       matrix product. \label{fig:fg_intuition1} }
   \end{figure}
@@ -687,44 +702,29 @@
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.6\paperwidth]{figure/fg_intuition1}
+    \includegraphics[width=0.5\paperwidth]{figure/fg_intuition1}
     \caption{If we are splitting $h$, we can split all the derivatives in the
-      matrix product. \label{fig:fg_intuition1} }
-  \end{figure}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Argument for Formula}
-  \begin{itemize}
-  \item This may look unfamiliar, but it's really the earlier matrix product in
-    disguise
-  \item Consider the case where we conceptually split the intermediary $h$ into
-    $h^{1}$ and $h^{2}$
-  \end{itemize}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.6\paperwidth]{figure/fg_intuition1}
-    \caption{This matrix multiplication can then be written as a sum, which is
-      exactly the same as the earlier formula.
-      \label{fig:fg_intuition1} }
+      matrix product. This can be written exactly as a sum, as in the earlier
+      formula. \label{fig:fg_intuition1} }
   \end{figure}
 \end{frame}
 
 \begin{frame}
   \frametitle{Organized Gradient Computation}
+  \begin{align*}
+    Df_{i}\left(h_k\right) &= \sum_{j \in C\left(i\right)}
+    Df_{i}\left(h_{j}\right)Dh_{j}\left(h_{i}\right)
+  \end{align*}
   \begin{itemize}
-    \begin{align*}
-      Df_{i}\left(h_k\right) &= \sum_{j \in C\left(i\right)}
-      Df_{i}\left(h_{j}\right)Dh_{j}\left(h_{i}\right)
-    \end{align*}
   \item This gives a natural way of organizing gradient computation
   \item Start with output nodes and flow back towards inputs
   \item Remember each edge w.r.t input is straightforwards
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.4\paperwidth]{figure/organized_comp1}
-    \caption{The \label{fig:organized_comp1} }
+    \includegraphics[width=0.3\paperwidth]{figure/organized_comp1}
+    \caption{Organization of computation to get gradients with respect to all
+      inputs. \label{fig:organized_comp1} }
   \end{figure}
 \end{frame}
 
@@ -737,21 +737,6 @@
     \centering
     \includegraphics[width=0.6\paperwidth]{figure/layer_flow_graph}
     \caption{The flow of computation within a single layer. \label{fig:layer_flow_graph} }
-  \end{figure}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Consequence: Backpropagation}
-  \begin{itemize}
-  \item The $W_{k}$'s are input nodes in this flow graph
-  \item We have to propagate all the way backwards, but at least have an
-    organized way of getting gradients
-  \end{itemize} 
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.6\paperwidth]{figure/composed_flow_graph}
-    \caption{We can compose these units to build the overall flow
-      graph. \label{fig:composed_flow_graph} }
   \end{figure}
 \end{frame}
 
@@ -785,12 +770,12 @@
       \begin{itemize}
       \item Other optimization parameters (e.g., momentum)
       \end{itemize}
-    \item Weight initialization
-    \item Regularization
-    \item Preprocessing (e.g., standardization, PCA, or quantile transformation)
     \item Type, number, and width of each layer
     \item Batch size
+    \item Regularization
+    \item Weight initialization
     \item Activation functions
+    \item Preprocessing (e.g., standardization, PCA, or quantile transformation)
     \end{itemize}
     the model may or may not train properly
   \end{itemize}
@@ -808,9 +793,10 @@
       \centering
       \includegraphics[width=0.17\paperwidth]{figure/architecture_choice}
     \end{subfigure}
-  \caption{Three types of hyperparameters that can affect training: Learning
-    rates, weight initialization, and architecture
-    design. \label{fig:hyperparameters} }
+    \caption{Three types of hyperparameters that can affect training: Those
+      associated with optimization, regularization of the loss, and model
+      architecture.
+    \label{fig:hyperparameters} }
 \end{figure}
 \end{frame}
 
@@ -881,8 +867,7 @@
   \item Study low-dimensional representation of function as it trains
   \item Vary subset of weights for a given example, see how maps change
   \end{itemize}
-  \begin{itemize}
-  \end{itemize}
+  Many, many more ideas in \citep{bengio2012practical}.
 
 \end{frame}
 
@@ -911,5 +896,8 @@
   \end{itemize}
 \end{frame}
 
+\begin{frame}
+\bibliographystyle{plain}
 \bibliography{refs}
+\end{frame}
 \end{document}
