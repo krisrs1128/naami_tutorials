@@ -389,26 +389,35 @@ Nepal Winter School in AI}
   \frametitle{Discussion}
   \begin{itemize}
   \item Consider the collection of points below
-  \item 1D version of mixture of Gaussians
+  \item $q\left(z_i \vert x_i\righT)$ gives assignment probabilities to each
+    point
+  \item Which has higher reconstruction error?
+  \item Which has higher approximation complexity?
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\paperwidth]{figure/1d_mog_points}
+    \includegraphics[width=0.7\paperwidth]{figure/1d_mog_q}
   \end{figure}
-
 \end{frame}
 
 \begin{frame}
   \frametitle{Discussion}
   \begin{itemize}
+  \item Consider the collection of points below
   \item $q\left(z_i \vert x_i\righT)$ gives assignment probabilities to each
     point
-  \item Which has higher reconstruction error: $q^1$ or $q^2$?
+  \item Which has higher reconstruction error?
+    \begin{itemize}
+    \item The second distribution has higher error 
+    \end{itemize}
   \item Which has higher approximation complexity?
+    \begin{itemize}
+    \item The second distribution has higher complexity 
+    \end{itemize}
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\paperwidth]{figure/1d_mog_assignments}
+    \includegraphics[width=0.7\paperwidth]{figure/1d_mog_overlaid}
   \end{figure}
 \end{frame}
 

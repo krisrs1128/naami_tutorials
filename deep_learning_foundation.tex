@@ -812,6 +812,52 @@
   \item Cheap validation alternatives: Instead of full training in all
     experiments, use cheap proxies
   \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/random_search}
+    \caption{A comparison of grid and random search, from
+      \citep{bergstra2012random}. \label{fig:random_search} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Search Strategy}
+  \begin{itemize}
+  \item Multiresolution search: Coarse exploration followed by detailed
+    investigation
+  \item Semi-automated strategy: Analyze simple sweeps, launch new jobs
+    accordingly
+  \item Alternatives to grid search: Search in random grid, or use Bayesian
+    Optimization
+  \item Cheap validation alternatives: Instead of full training in all
+    experiments, use cheap proxies
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\paperwidth]{figure/random_search}
+    \caption{A comparison of grid and random search, from
+      \citep{bergstra2012random}. \label{fig:random_search} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Search Strategy}
+  \begin{itemize}
+  \item Multiresolution search: Coarse exploration followed by detailed
+    investigation
+  \item Semi-automated strategy: Analyze simple sweeps, launch new jobs
+    accordingly
+  \item Alternatives to grid search: Search in random grid, or use Bayesian
+    Optimization
+  \item Cheap validation alternatives: Instead of full training in all
+    experiments, use cheap proxies
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\paperwidth]{figure/freeze_thaw}
+    \caption{An example of freeze-thaw bayesian optimization, from 
+      \citep{swersky2014freeze}. \label{fig:random_search} }
+  \end{figure}
 \end{frame}
 
 \begin{frame}
@@ -825,7 +871,7 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Discussion}
+  \frametitle{Exercise}
   Discuss the bias-variance tradeoffs associated with these training parameters
   \begin{itemize}
     \item Number and widths of layers
@@ -862,12 +908,20 @@
 
 \begin{frame}
   \frametitle{Training Analysis}
-  Other (more exotic) forms of visualization that can be useful,
+  Other (more sophisticated) forms of visualization that can be useful,
   \begin{itemize}
   \item Study low-dimensional representation of function as it trains
   \item Vary subset of weights for a given example, see how maps change
   \end{itemize}
   Many, many more ideas in \citep{bengio2012practical}.
+\begin{figure}[ht]
+  \centering
+  \includegraphics[width=0.4\paperwidth]{figure/pretraining_example}
+  \caption{The model may be invariant to certain transformations of the
+    parameters, but you can directly visualization a dimensionality reduction
+    done on the functions over the course of training, as discussed in
+    \citep{erhan2010does}. \label{fig:pretraining_example} }
+\end{figure}
 
 \end{frame}
 
@@ -892,12 +946,13 @@
     \begin{itemize}
     \item First of all, there's stackoverflow
     \item No amount of natural talent can make up for dedicated effort
+    \item You can't learn everything overnight, but it's a journey worth taking
     \end{itemize}
   \end{itemize}
 \end{frame}
 
-\begin{frame}
-\bibliographystyle{plain}
-\bibliography{refs}
+\begin{frame}[allowframebreaks]
+    \bibliographystyle{plain}
+    \bibliography{refs}
 \end{frame}
 \end{document}
