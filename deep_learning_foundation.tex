@@ -729,6 +729,63 @@
 \end{frame}
 
 \begin{frame}
+  \frametitle{Organized Gradient Computation}
+  \begin{align*}
+    Df_{i}\left(h_k\right) &= \sum_{j \in C\left(i\right)}
+    Df_{i}\left(h_{j}\right)Dh_{j}\left(h_{i}\right)
+  \end{align*}
+  \begin{itemize}
+  \item This gives a natural way of organizing gradient computation
+  \item Start with output nodes and flow back towards inputs
+  \item Remember each edge w.r.t input is straightforwards
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\paperwidth]{figure/organized_comp1}
+    \caption{Organization of computation to get gradients with respect to all
+      inputs. \label{fig:organized_comp2} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Organized Gradient Computation}
+  \begin{align*}
+    Df_{i}\left(h_k\right) &= \sum_{j \in C\left(i\right)}
+    Df_{i}\left(h_{j}\right)Dh_{j}\left(h_{i}\right)
+  \end{align*}
+  \begin{itemize}
+  \item This gives a natural way of organizing gradient computation
+  \item Start with output nodes and flow back towards inputs
+  \item Remember each edge w.r.t input is straightforwards
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\paperwidth]{figure/organized_comp1}
+    \caption{Organization of computation to get gradients with respect to all
+      inputs. \label{fig:organized_comp3} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Organized Gradient Computation}
+  \begin{align*}
+    Df_{i}\left(h_k\right) &= \sum_{j \in C\left(i\right)}
+    Df_{i}\left(h_{j}\right)Dh_{j}\left(h_{i}\right)
+  \end{align*}
+  \begin{itemize}
+  \item This gives a natural way of organizing gradient computation
+  \item Start with output nodes and flow back towards inputs
+  \item Remember each edge w.r.t input is straightforwards
+  \end{itemize}
+  \begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\paperwidth]{figure/organized_comp1}
+    \caption{Organization of computation to get gradients with respect to all
+      inputs. \label{fig:organized_comp4} }
+  \end{figure}
+\end{frame}
+
+\begin{frame}
   \frametitle{Consequence: Backpropagation}
   \begin{itemize}
   \item The flow graph for a standard deep neural net is straightforwards

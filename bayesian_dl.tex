@@ -389,6 +389,7 @@ Nepal Winter School in AI}
   \frametitle{Discussion}
   \begin{itemize}
   \item Consider the collection of points below
+  \item They are a mixture of gaussians with latent $z_i$
   \item $q\left(z_i \vert x_i\righT)$ gives assignment probabilities to each
     point
   \item Which has higher reconstruction error?
@@ -396,7 +397,10 @@ Nepal Winter School in AI}
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\paperwidth]{figure/1d_mog_q}
+    \includegraphics[width=0.5\paperwidth]{figure/1d_mog_q}
+    \caption{Each point is an $x_i$. The two vertical bars over each point give
+      a Bernoulli $q\left(z_i \vert x_\right)$ latent assignment probabilities
+      for each point.}
   \end{figure}
 \end{frame}
 
@@ -417,7 +421,11 @@ Nepal Winter School in AI}
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.7\paperwidth]{figure/1d_mog_overlaid}
+    \includegraphics[width=0.4\paperwidth]{figure/1d_mog_overlaid}
+    \caption{The $q$'s which separate the components have higher likelihoods
+      (doesn't have to spread all over), and so lower reconstruction errors.
+      However, since Bernoulli's with $p = 0.5$ have the highest entropy, this
+      assignment distribution also has higher approximation complexity.}
   \end{figure}
 \end{frame}
 
