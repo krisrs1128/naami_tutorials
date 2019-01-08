@@ -1,0 +1,174 @@
+\documentclass{article}
+\usepackage{graphicx,amsmath,amssymb}
+\input{preamble}
+
+\title{Exercises for Advanced Deep Learning}
+
+\begin{document}
+
+\section{Interpretability}
+
+\begin{enumerate}
+\item Visualizing learned features using t-SNE. t-distributed Stochastic
+  Neighbor Embedding (t-SNE) is a method for visualizing high dimensional data
+  in low-dimensional space, such that points close toghether in the
+  high-dimensional space remain close in the low-dimensional visualization.
+  Propose a method for visualizing features learned at various depth in a deep
+  learning model, and then compare your approach to the one described at
+  \url{https://cs.stanford.edu/people/karpathy/cnnembed/}.
+
+  \item Testing with CAVs. There is a risk when working with CAVs that you learn
+    a totally meaningless concept -- the procedure returns a CAV even if you
+    defined a concept using totally random features. Define a statistic based on
+    the CAV scores for class $k$ and layer $l$ by
+    \begin{align*}
+      \frac{\#\{S_{C, k, l}\left(x_i\right) > 0\}}{\#\{\text{examples in class } k\}}
+    \end{align*}
+    which measures the fraction of samples in class $k$ which are positively
+    activated by the given concept. Propose a statistical test for finding out
+    whether this fraction is meaningfully large; i.e., that it is larger than
+    you would have if you had used totally random images to define a (totally
+    meaningless) concept.
+\end{enumerate}
+
+\section{GANs}
+
+\begin{enumerate}
+\item Using the figure on the first formulation slide, come up with a visual
+  interpretation of the change of variables formula, which says that if $x
+  \xrightarrow{f} y$ and if $x \sim p\left(x\right)$, then $y \sim
+  p\left(f^{-1}\left(y\right)\right)\absarg{\frac{df}{dx}}^{-1}$.
+\item GANs and VAEs are both generative models in the sense that you can sample
+  new data from them. One however allows you to sample latent encodings $z$ for
+  any $x$ of interest, and the other does not, which is which?
+\item Verify the density ratio estimation claim from the lecture that
+  $\frac{p^{\ast}\left(x \vert y = 1\right)}{q_{\theta}\left(x\right)} =
+  \frac{p\left(y = 1\vert x\right)}{p\left(y = 0\right)}\frac{1 - \pi}{\pi}$.
+  Hint: Use Bayes' rule.
+\item Instead of a completely unsupervised GAN, you can learn to generate
+  samples conditional on a class label $y$. Explain why an objective like,
+
+  \begin{align*}
+    \min_{G}\max_{D} V\left(D, G\right) := \Esubarg{p_{\text{data}}}{\log D\left(x \vert y\right)} + \Esubarg{p\left(z\right)}{\log\left(1 - D\left(G\left(z \vert y\right)\right)\right)}
+  \end{align*}
+\end{enumerate}
+might be able to work (see Mirza and Osindro for an actual implementation).
+
+\section{Metalearning}
+
+\begin{enumerate}
+\item Identify some contexts where metalearning could be applied in practice.
+  Are there limitations in the metalearning setup that make it less useful in
+  scenarios you think of?
+
+\item In transfer learning, you may choose to fine tune the lower layer weights
+  on your new task, rather than simply copying the original features verbatim.
+  If this is your goal, how should you choose your learning rates for the
+  low-level features, versus the new high-level weights?
+
+\item For $k$-nearest neighbors, larger $k$ reduces variance but increases bias
+  -- it controls model complexity. In the nearest neighbors metalearner, we
+  aren't using nearest neighbors direction, but some smoothed-out version of it.
+  How might you control model complexity for this alternative version of nearest
+  neighbors?
+
+\item How would you adapt the ordinary classification-based nearest neighbors
+  metalearner to work with continuous $y_i$ instead?
+
+\end{enumerate}
+
+\section{Bayesian Deep Learning}
+
+\begin{enumerate}
+
+\item Assignments in mixture of Gaussians. Suppose $x_i$ is drawn from a mixture
+  of two gaussians, which have parameters $\left(\mu_{1}, \sigma_{1}^2\right) =
+  \left(0, 1\right)$ and $\left(\mu_{2}, \sigma_{2}^{2}\right) = \left(2,
+  1\right)$. Show that $p\left(z = 1\vert x = 1\right) = \frac{1}{2}$ and
+  $p\left(z = 1 \vert x = 0\right) = \frac{1}{1 + \exp{-2}} \approx 0.881$. In
+  general the posterior is Bernoulli with probability $\varphi\left(x\right)$ of
+  assigning to class 1. Can you find a formula for $\varphi\left(x\right)$ that
+  applies to general (or multivariate?) $\mu_{k}, \Sigma_{k}$?
+
+%% \item Jensen's inequality. The proof that $D_{KL}$ is nonnegative hinges heavily
+%%   on a fact called Jensen's inequality. We prove this inequality here.
+%% \begin{itemize}
+%% \item A convex function is one for which, for any $\lambda \left(0, 1\right)$,
+%%   we have $f\left(\lambda x + \left(1 - \lambda\right) y\right) \leq \lambda
+%%   f\left(x\right) + \left(1 - \lambda\right)f\left(y\right)$. Interpret this
+%%   inequality geometrically. (hint: consider the case of $\lambda = \frac{1}{2}$.
+%% \item Let $f\left(x\right) = x^2$, and suppose $X \sim \Unif\left(-1, 1\right)$.
+%% \item Hence, argue that $D_{KL}\left(q \vert \vert p\right)$
+%% \end{itemize}
+
+\item More general reparameterization. We saw that the Gaussian distribution
+$\Gsn\left(x \vert \mu, \sigma^2 I\right)$ can be reparameterized as $g_{\mu,
+  \sigma}\left(x\right) = \mu + \sigma \bigodot \eps$, where $\eps \sim
+\Gsn\left(\eps \vert 0, I\right)$ doesn't depend on any parameters. This trick
+actually applies for a variety of other distributions, which this exercise
+explores.
+\begin{itemize}
+\item Random Variable generation using inverse CDFs\footnote{Cumulative Distribution Functions}. Suppose
+  that $Z$, which we assume is one-dimensional, has CDF $F\left(z\right)$. Let
+  $U \sim \Unif\left(0, 1\right)$. Verify that the transformation of $u$ defined
+  by $F^{-1}\left(U\right)$ has CDF $F\left(z\right)$, and so has the same
+  distribution as $Z$.
+\item Argue that whenever the CDF of the density $q_{\varphi}\left(z \vert
+  x\right)$ is known, this allows for a version of the reparameterization trick.
+\item Suppose that $Z \sim \Exp{\lambda}$, meaning that it has CDF function
+  $F\left(z\right) = 1 - \exp{-\lambda z}$. How can you simulate this?
+\item Can you think of downsides of this approach?
+\end{itemize}
+
+\item Amortization vs. Approximation gaps. Recall that in the derivation of the
+  ELBO, we had an expression like
+  \begin{align*}
+    \log p_{\theta}\left(x\right) &= \Esubarg{q}{\log p_{\theta}\left(x \vert
+      z\right)} - D_{KL}\left(q\left(z \vert x\right) \vert \vert
+    p\left(z\right)\right) + D_{KL}\left(q\left(z \vert x\right) \vert \vert
+    p\left(z \vert x\right)\right)
+  \end{align*}
+  and we dropped the last term from the optimization, because it is intractable.
+  We now study the role of that term when proposing variational families.
+
+  \begin{itemize}
+  \item In the usual VAE, we set $q_{\varphi}\left(z \vert x\right) =
+    \Gsn\left(z \vert \mu_{\varphi}\left(x\right),
+    \sigma_{\varphi}^{2}\left(x\right)I\right)$; i.e., a diagonal gaussian..
+    Suppose you had approximated it instead by a Gaussian with general
+    $\Sigma\left(x\right)$. What effect would this have on
+    $D_{KL}\left(q_{\varphi^{\ast}}\left(z \vert x\right) \vert \vert p\left(z
+    \vert x\right)\right)$, when considering the best possible
+    $q_{\varphi^\ast}$ from either of these two (diagonal or dense covariance)
+    variational families?
+  \item Let $\hat{\varphi}$ be the parameters of the fitted inference network
+    after optimizing the ELBO. Express the final inference quality
+    $D_{KL}\left(q_{\hat{\varphi}}\left(z \vert x\right) \vert \vert p\left(z
+    \vert x\right)\right)$ as,
+    \begin{align*}
+      D_{KL}\left(q_{\varphi^{\ast}}\left(z \vert x\right) \vert \vert p\left(z
+      \vert x\right)\right) + \left(D_{KL}\left(q_{\hat{\varphi}}\left(z \vert
+      \vert x\right)\right) - D_{KL}\left(q_{\varphi^{\ast}}\left(z \vert x
+        \right)\right)\right).
+    \end{align*}
+    The first term (outside parenthesis) is called the ``approximation gap,''
+    and refers to the difference between the true posterior and the best
+    possible element of the variational approximation, while the second term (in
+    parenthesis) is called the ``amortization gap,'' and refers to the
+    difference between the best possible approximation within the family and
+    what is actually found by the network. In light of this discussion, why
+    might we choose not to proceed with the full $\Sigma\left(x\right)$
+    parameterization in the previous part?
+  \item A normalizing flow is a sequence of transformations to a simple variable
+    that results in a variable with a more complicated density, but one which
+    can still be written in closed form, using the change of variables formula.
+    For example, you might iteratively apply $f\left(z\right) = z +
+    u\sigma\left(w^T z + b\right)$ to what is intiially a simple (say gaussian
+    $z$), since this transformation is easy to differentiate (which is the only
+    thing you need to apply the change of variables formula). Does this proposed
+    procedure reduce the approximation or amortization gap?
+  \item What are some general strategies for reducing the amortization gap?
+  \end{itemize}
+\end{enumerate}
+
+\end{document}
