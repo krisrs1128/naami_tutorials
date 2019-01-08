@@ -180,7 +180,7 @@ Nepal Winter School in AI}
    \item How should $D$ guide updates to $G$?
    \item Objective function
      \begin{align*}
-       \min_{G}\max_{D} V\left(D, G\right) = \Esubarg{p_{\text{data}}}{D\left(x\right)} + \Esubarg{p\left(z\right)}{\log\left(1 - D\left(G\left(z\right)\right)\right)}
+       \min_{G}\max_{D} V\left(D, G\right) = \Esubarg{p_{\text{data}}}{\log D\left(x\right)} + \Esubarg{p\left(z\right)}{\log\left(1 - D\left(G\left(z\right)\right)\right)}
      \end{align*}
    \item Alternate gradient steps, first update $D$, then $G$, then $D$, ...
 \begin{itemize}
@@ -349,7 +349,7 @@ Nepal Winter School in AI}
   \includegraphics[width=0.9\paperwidth]{figure/image_to_image}
   \caption{Adding on a GAN objective when learning to map one class of images to
     another results in realistic looking translated
-    images. \label{fig:image_to_image} }
+    images \citep{isola2017image}. \label{fig:image_to_image} }
 \end{figure}
 \end{frame}
 
@@ -360,7 +360,7 @@ Nepal Winter School in AI}
   \includegraphics[width=0.45\paperwidth]{figure/inpainting}
   \caption{Similarly, when applied to inpainting, the GAN loss leads to much
     less blurry images than the traditional $\ell^{2}$
-    loss. \label{fig:inpainting} }
+    loss \citep{pathak2016context}. \label{fig:inpainting} }
 \end{figure}
 \end{frame}
 
@@ -371,7 +371,7 @@ Nepal Winter School in AI}
   \includegraphics[width=0.45\paperwidth]{figure/adversarial_domain}
   \caption{A downstream model can be taught to adapt to changes in domain by
     making sure its predictions don't have any information that can be used to
-    (adversarially) predict the source context.
+    (adversarially) predict the source context. \citep{ganin2016domain}
     \label{fig:adapt} }
 \end{figure}
 \end{frame}
@@ -383,7 +383,7 @@ Nepal Winter School in AI}
   \includegraphics[width=0.9\paperwidth]{figure/srgan}
   \caption{It's interesting to note that some of the details that appear in the
     GAN super-resolved image were not present in the original high-resolution
-    version.}
+    version \citep{ledig2017photo}.}
   \end{figure}
 \end{frame}
 

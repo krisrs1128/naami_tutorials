@@ -57,22 +57,6 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Deep Learning and Poetry}
-  \begin{itemize}
-  \item Algorithms and words are only as remarkable as human creativity
-    \begin{itemize}
-    \item Discover patterns and make connections unseen by others
-    \end{itemize}
-  \item Knowing SGD is like knowing meter
-  \item I want to teach you the form, so you can write the poetry
-  \end{itemize}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.4\paperwidth]{figure/mila_poetry}
-\end{figure}
-\end{frame}
-
-\begin{frame}
   \frametitle{Learning Objectives}
   \begin{itemize}
     \item Understand goals of deep learning, especially representation learning
@@ -137,7 +121,7 @@
   \item Imagine $n$ flips of a coin with probability $\pi$ of coming up heads.
   \item Loglikelihood function (independent bernoulli trials)
     \begin{align*}
-      \log p\left(y \vert \pi \right) &= \log \left[\prod_{i = 1}^{n} \pi^{\indic{y_i = 1}}\left(1 - \pi\right)^{y_i = 0}\right] \\
+      \log p\left(y \vert \pi \right) &= \log \left[\prod_{i = 1}^{n} \pi^{\indic{y_i = 1}}\left(1 - \pi\right)^{\indic{y_i = 0}}\right] \\
       &= \sum_{i = 1}^{n} \indic{y_i = 1}\log \pi + \indic{y_i = 0}\log\left(1 - \pi\right)
     \end{align*}
     where we use the shorthand $y = \left(y_1, \dots, y_n\right)$.

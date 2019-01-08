@@ -1,7 +1,7 @@
 \documentclass[10pt,mathserif]{beamer}
 
 \input{preamble.tex}
-\usepackage{graphicx,amsmath,amssymb}
+\usepackage{graphicx,amsmath,amssymb,natbib}
 
 %% formatting
 \setbeamertemplate{navigation symbols}{}
@@ -80,7 +80,7 @@ Nepal Winter School in AI}
   \item Different hospital databases
   \item Pest detection across types of crops
   \item Satellite imagery analysis across diverse environments
-  \item ``Training Medical Image Analysis Systems like Radiologists''
+  \item ``Training Medical Image Analysis Systems like Radiologists'' \citep{maicas2018training}
   \end{itemize}
 \end{frame}
 
@@ -96,7 +96,6 @@ Nepal Winter School in AI}
     \includegraphics[width=0.4\paperwidth]{figure/transfer_annotated}
   \end{figure}
 \end{frame}
-
 
 \begin{frame}
   \frametitle{Transfer Learning}
@@ -184,17 +183,6 @@ Nepal Winter School in AI}
   \frametitle{Discussion}
   Brainstorm some problems or application areas where metalearning might
   be useful?
-\end{frame}
-
-\begin{frame}
-  \frametitle{Discussion}
-  Brainstorm some problems or application areas where metalearning might
-  be useful?
-  \begin{itemize}
-  \item ``Training Medical Image Analysis Systems like Radiologists''
-  \item Pest detection across types of crops
-  \item Satellite imagery analysis across diverse environments
-  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -351,7 +339,7 @@ Nepal Winter School in AI}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Overall Process}
+  \frametitle{Overall Process \citep{vinyals2016matching}}
  \begin{itemize}
  \item  Across all the tasks, learn a common embedding
  \item Task-specific nearest neighbors classifiers (since task-specific classes)
@@ -367,7 +355,7 @@ Nepal Winter School in AI}
 \end{frame}
 
 \begin{frame}
-  \frametitle{Prototypes}
+  \frametitle{Prototypes \citep{snell2017prototypical}}
  \begin{itemize}
  \item An alternative to nearest neighbors that also works with new classes is
    the prototype method
@@ -453,7 +441,7 @@ Nepal Winter School in AI}
 \section{Perturbation Based}
 
 \begin{frame}
-  \frametitle{Model Agnostic Meta-Learning}
+  \frametitle{Model Agnostic Meta-Learning \citep{finn2017model}}
  \begin{itemize}
  \item Imagine that the model parameters will be similar across tasks
  \item Learn a global parameter and adapt it on a task-by-task basis
@@ -540,6 +528,11 @@ Nepal Winter School in AI}
     paper
     \label{fig:maml_paper} }
 \end{figure}
+\end{frame}
+
+\begin{frame}[allowframebreaks]
+  \bibliographystyle{plain}
+    \bibliography{refs}
 \end{frame}
 
 \end{document}
