@@ -113,7 +113,7 @@ Nepal Winter School in AI}
   \centering
   \includegraphics[width=0.35\paperwidth]{figure/gan_image_interpolations}
   \caption{Example interpolations between LSUN images in
-    \citep{radford2015unsupervised}. This was a convincing result at the time,
+    \citep{radford2015unsupervised}. This was an important result to include,
     because it showed that the samples weren't simply memorized training
     data. \label{fig:gan_interpolations} }
 \end{figure}
@@ -307,10 +307,15 @@ Nepal Winter School in AI}
    \item $p\left(x \vert y = 1\right) = p^{\ast}\left(x\right)$
    \item $p\left(x \vert y = 0\right) = q_{\theta}\left(x\right)$
    \end{itemize}
- \item We can't evaluate either $p^\ast$ or $q_{\theta}$ directly, but by Bayes' rule,
+ \item We can't evaluate either $p^\ast$ or $q_{\theta}$ directly, but by your exercise,
+   %% \begin{align*}
+   %%   \frac{p^{\ast}\left(x\right)}{q_{\theta}\left(x\right)} &= \frac{p\left(y =
+   %%     1 \vert x\right)p\left(x\right)}{p\left(y = 1\right)} \frac{p\left(y =
+   %%     0\right)}{p\left(y = 0 \vert x\right)p\left(x\right)} \\
+   %%   &= \frac{p\left(y = 1 \vert x\right)}{p\left(y = 0 \vert x\right)} \frac{1 - \pi}{\pi}
+   %% \end{align*}
    \begin{align*}
-     \frac{p^{\ast}\left(x\right)}{q_{\theta}\left(x\right)} &= \frac{p\left(y = 1 \vert x\right)p\left(x\right)}{p\left(y = 1\right)} \frac{p\left(y = 0\right)}{p\left(y = 0 \vert x\right)p\left(x\right)} \\
-     &= \frac{p\left(y = 1 \vert x\right)}{p\left(y = 0 \vert x\right)} \frac{1 - \pi}{\pi}
+     \frac{p^{\ast}\left(x\right)}{q_{\theta}\left(x\right)} &= \frac{p\left(y = 1 \vert x\right)}{p\left(y = 0 \vert x\right)} \frac{1 - \pi}{\pi}
    \end{align*}
    where $\pi = p\left(y = 1\right)$.
    \item We just need a classifier $D_{\varphi}\left(x\right)$ to tell difference between
@@ -392,5 +397,8 @@ Nepal Winter School in AI}
   \end{itemize}
 \end{frame}
 
-\bibliography{refs}
+\begin{frame}[allowframebreaks]
+    \bibliographystyle{plain}
+    \bibliography{refs}
+\end{frame}
 \end{document}

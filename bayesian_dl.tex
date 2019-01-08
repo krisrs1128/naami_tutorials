@@ -302,10 +302,10 @@ Nepal Winter School in AI}
   \end{itemize}
   \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.2\paperwidth]{figure/mohamed_latent_variable}
+    \includegraphics[width=0.15\paperwidth]{figure/mohamed_latent_variable}
     \caption{General form of a latent variable model, as given in
-      \citep{mohamed2011generalised}. Replace our $z_i$'s with
-      $v_n$'s. \label{fig:mohamed_latent_variable} }
+      \citep{mohamed2011generalised}. 
+       \label{fig:mohamed_latent_variable} }
   \end{figure}
 \end{frame}
 
@@ -320,10 +320,10 @@ Nepal Winter School in AI}
       k}}\right)\right] \\
 = &\sum_{i = 1}^{n} \sum_{k = 1}^{K} \indic{z_i = k} \left[\log \pi_{k} + \log
   \Gsn\left(x_i \vert \mu_k, \Sigma_k\right)\right] \\
-= &\sum_{i = 1}^{n} \sum_{k = 1}^{K} \indic{z_i = k} \left[\log \pi_{k}
-  -\frac{D}{2}\log\left(2\pi\right) - \frac{1}{2}\log \left|\Sigma_k\right| -
-  \frac{1}{2} \left(x_i - \mu_k\right)^{T}\Sigma^{-1}_{k} \left(x_i -
-  \mu_k\right)\right]
+\stackrel{c}{=} &\sum_{i, k}\indic{z_i = k}
+\left[\log \pi_{k} -
+  \frac{1}{2}\log \left|\Sigma_k\right| - \frac{1}{2} \left(x_i -
+  \mu_k\right)^{T}\Sigma^{-1}_{k} \left(x_i - \mu_k\right)\right]
   \end{align*}
 \end{frame}
 
@@ -375,7 +375,7 @@ Nepal Winter School in AI}
     estimate?
   \item \textcolor{blue}{Approximation complexity}: How far is the approximating
     $q\left(z \vert x\right)$ from the prior?
-  \item \textcolor{orange}{Approximation quality}: How different is the
+  \item \textcolor{orange}{Inference quality}: How different is the
     posterior approximation $p\left(z \vert x\right)$
     from the actual posterior?
     \begin{itemize}
@@ -390,7 +390,7 @@ Nepal Winter School in AI}
   \begin{itemize}
   \item Consider the collection of points below
   \item They are a mixture of gaussians with latent $z_i$
-  \item $q\left(z_i \vert x_i\righT)$ gives assignment probabilities to each
+  \item $q\left(z_i \vert x_i\right)$ gives assignment probabilities to each
     point
   \item Which has higher reconstruction error?
   \item Which has higher approximation complexity?
@@ -408,7 +408,7 @@ Nepal Winter School in AI}
   \frametitle{Discussion}
   \begin{itemize}
   \item Consider the collection of points below
-  \item $q\left(z_i \vert x_i\righT)$ gives assignment probabilities to each
+  \item $q\left(z_i \vert x_i\right)$ gives assignment probabilities to each
     point
   \item Which has higher reconstruction error?
     \begin{itemize}
@@ -426,19 +426,6 @@ Nepal Winter School in AI}
       (doesn't have to spread all over), and so lower reconstruction errors.
       However, since Bernoulli's with $p = 0.5$ have the highest entropy, this
       assignment distribution also has higher approximation complexity.}
-  \end{figure}
-\end{frame}
-
-\begin{frame}
-  \frametitle{Discussion}
-  \begin{itemize}
-  \item Suppose $q\left(z_i \vert x_i\righT)$
-  \item Which has higher reconstruction error: $q^1$ or $q^2$?
-  \item Which has higher approximation complexity?
-  \end{itemize}
-  \begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.7\paperwidth]{figure/1d_mog_overlaid}
   \end{figure}
 \end{frame}
 
@@ -654,7 +641,7 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
 \begin{itemize}
 \item Instead of optimizing one coordinate at a time, optimize all at once
   through $\varphi$
-\item Simulatneously optimize parameters $\theta$
+\item Simultaneously optimize parameters $\theta$
 \item Essentially variational EM, but where $q$ is a parameterized function of
   the $x_{i}$
 \end{itemize}
@@ -810,5 +797,12 @@ q_i\left(z_i\right) \propto \exp{\Esubarg{q_{-i}}{\log p\left(x, z_i, z_{-i}\rig
     \end{itemize}
   \end{itemize}
 \end{frame}
+
+
+\begin{frame}[allowframebreaks]
+    \bibliographystyle{plain}
+    \bibliography{refs}
+\end{frame}
+
 
 \end{document}
